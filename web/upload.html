@@ -39,14 +39,14 @@
             <div class="col-12 col-md-6 pt-3">
 
                 <!-- Form for uploading an image -->
-                <form action="jsp/uploadImg.jsp" method="post">
+                <form action="http://cis-linux2.temple.edu/~tuf92968/capstoneImageUpload/web/php/uploadFile.php" id="form" method="post" enctype="multipart/form-data">
                     <div class="form-group row">
                         <!-- Image Upload Button-->
                         <label  class="col-sm-3 col-form-label">Image</label>
                         <div class="col-sm-9">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="fileInput">
-                                <label class="custom-file-label" for="fileInput">Choose file</label>
+                                <input type="file" class="custom-file-input" name="file" id="fileInput">
+                                <label id=fileName class="custom-file-label" for="fileInput">Choose file</label>
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                     <!-- Upload Button -->
                     <div class="form-group row">
                         <div class="col-12">
-                            <input type="submit" class="btn btn-primary w-100" value="Upload"></input>
+                            <input type="submit" name="submit" class="btn btn-primary w-100" value="Upload"></input>
                         </div>
                 </form>
                 
@@ -68,7 +68,7 @@
                 <img src="img/placeholder.svg" class="img-fluid img-thumbnail mt-3">
 
                 <!-- Button to approve the image and begin printing -->
-                <button type="submit" class="btn btn-primary w-100 mt-3">Print</button>
+                <button class="btn btn-primary w-100 mt-3">Print</button>
 
             </div>
         </div>
@@ -76,6 +76,7 @@
 
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+	<script src="js/uploadTriggers.js"></script>
 </body>
 
 </html>
