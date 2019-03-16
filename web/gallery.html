@@ -45,24 +45,28 @@
                 "gallery" folder. -->
                 <div class="col-md-4">
                     <div class="card mb-4 shadow-sm">
-						<script>
-						// Populate the gallary with the contents of the upload folder
-						var folder = "uploads/";
-
-						$.ajax({
-							url : folder,
-							success: function (data) {
-								$(data).find("a").attr("href", function (i, val) {
-									if( val.match(/\.(jpe?g|png|gif)$/) ) { 
-										$("body").append( "<img src='"+ folder + val +"'>" );
-									} 
-								});
-							}
-						});
-						</script>
                         <img class="card-img-top" src="gallery/Hands004.jpg">
                     </div>
                 </div>
+				
+				<script>
+				// Populate the gallary with the contents of the upload folder
+				var folder = "uploads/";
+
+				$.ajax({
+					url : folder,
+					success: function (data) {
+						$(data).find("a").attr("href", function (i, val) {
+							if( val.match(/\.(jpe?g|png|gif)$/) ) { 
+								$(".row").append(  "<div class=\"col-md-4\">" );
+								$(".row").append(  "<div class=\"card mb-4 shadow-sm\">"  );
+								$(".row").append(  "<img src='"+ folder + val +"'>"  );
+								$(".row").append(  "</div>"  );
+							} 
+						});
+					}
+				});
+				</script>
                 
 
             </div>
