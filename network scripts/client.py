@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 
 s = socket.socket() # new socket object
-host = socket.gethostname()
+host = "35.239.126.169"
 port = 377
 s.connect((host,port))
 

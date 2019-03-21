@@ -4,6 +4,7 @@ import os
 
 s = socket.socket() # new socket object
 host = socket.gethostname()
+print (host)
 port = 377
 s.bind((host,port))
 
