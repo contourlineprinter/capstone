@@ -2,10 +2,9 @@ function shape(shapetype){
 	input = shapetype
 	$.ajax({
 		type: "POST",
-		url: "~/testscript.py",
+		url: "/demo1/testscript.py",
 		data: { param: input}
 		}).done(function(o) {
-		    console.log(data);
-		    console.log(input);
+		    console.log('shape ' + input + ' sent');
 	});
 }
