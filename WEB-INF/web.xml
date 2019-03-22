@@ -1,0 +1,36 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  
+  <context-param> 
+      <param-name>file-upload-path</param-name> 
+      <param-value>
+      	images
+      </param-value> 
+      <description>Location to store uploaded file</description> 
+   </context-param>
+  
+  <servlet>
+  	<servlet-name>ImageUploadServler</servlet-name>
+  	<display-name>ImageUploadServler</display-name>
+  	<description></description>
+  	<servlet-class>app.ImageUploadServler</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>ImageGallery</servlet-name>
+  	<display-name>ImageGallery</display-name>
+  	<description></description>
+  	<servlet-class>app.ImageGallery</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>ImageUploadServler</servlet-name>
+  	<url-pattern>/image_upload</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ImageGallery</servlet-name>
+  	<url-pattern>/gallery.html</url-pattern>
+  </servlet-mapping>
+</web-app>

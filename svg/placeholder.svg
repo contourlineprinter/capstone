@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 2000 2000" width="2000" height="2000">
+	<style>
+		rect, path {
+			fill: none;
+			stroke: #000;
+			stroke-width: 5px;
+			
+			shape-rendering: geometricPrecision;
+		}
+		rect {
+			stroke-width: 10px;
+		}
+	</style>
+	<path d="M 0,0 L 2000,2000 M 2000,0 L 0,2000"/>
+	<rect width="2000" height="2000"/>
+</svg>

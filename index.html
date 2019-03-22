@@ -12,7 +12,7 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="index.html">Contour Line Printer</a>
+        <a class="navbar-brand" href="#">Contour Line Printer</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -39,7 +39,7 @@
             <div class="col-12 col-md-6 pt-3">
 
                 <!-- Form for uploading an image -->
-                <form action="http://cis-linux2.temple.edu/~tuf92968/capstoneImageUpload/web/php/uploadFile.php" id="form" method="post" enctype="multipart/form-data">
+                <form action="image_upload" id="form" method="post" enctype="multipart/form-data">
                     <div class="form-group row">
                         <!-- Image Upload Button-->
                         <label  class="col-sm-3 col-form-label">Image</label>
@@ -65,7 +65,7 @@
                 </form>
                 
                 <!-- This is where we will show the contour image for user approval -->
-                <img src="img/placeholder.svg" class="img-fluid img-thumbnail mt-3">
+                <img src="svg/placeholder.svg" class="img-fluid img-thumbnail mt-3">
 
                 <!-- Button to approve the image and begin printing -->
                 <button class="btn btn-primary w-100 mt-3">Print</button>
