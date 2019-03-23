@@ -1,1 +1,0 @@
-print('testscript.py called')	
