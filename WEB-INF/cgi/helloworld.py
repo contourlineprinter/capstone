@@ -1,2 +1,5 @@
 print "Content-type: text/html\n\n";
-print "Hello, world!\n"
+count = 0
+while (count < 3):     
+    count = count + 1
+    print("Hello Geek")
