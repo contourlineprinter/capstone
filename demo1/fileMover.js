@@ -4,7 +4,7 @@ function shape(shapetype){
 	input = shapetype
 	$.ajax({
 		type: "POST",
-		url: "/demo1/moveline.py",
+		url: "/demo1/helloworld.py",
 		data: { param: input}
 		}).done(function(o) {
 		    console.log('shape ' + input + ' sent');
