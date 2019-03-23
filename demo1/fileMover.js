@@ -5,7 +5,7 @@ function shape(shapetype){
 	if (shapetype == 0){ //line
 		$.ajax({
 			type: "POST",
-			url: "/cgi-bin/helloworld.py",
+			url: "/cgi-bin/moveline.py",
 			data: { param: input}
 			}).done(function(o) {
 			    console.log('shape ' + input + ' sent');
@@ -14,7 +14,7 @@ function shape(shapetype){
 		else if (shapetype == 1){ //circle
 			$.ajax({
 				type: "POST",
-				url: "/cgi-bin/helloworld.py",
+				url: "/cgi-bin/movecircle.py",
 				data: { param: input}
 				}).done(function(o) {
 				    console.log('shape ' + input + ' sent');
@@ -24,7 +24,7 @@ function shape(shapetype){
 		else if (shapetype == 2) { //rectangle
 			$.ajax({
 				type: "POST",
-				url: "/cgi-bin/helloworld.py",
+				url: "/cgi-bin/moverectangle.py",
 				data: { param: input}
 				}).done(function(o) {
 				    console.log('shape ' + input + ' sent');
