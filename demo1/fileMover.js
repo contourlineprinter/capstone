@@ -8,5 +8,6 @@ function shape(shapetype){
 		data: { param: input}
 		}).done(function(o) {
 		    console.log('shape ' + input + ' sent');
-	});
+				console.log(o);
+		});
 }
