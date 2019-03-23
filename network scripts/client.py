@@ -25,4 +25,5 @@ while True: # listen for new file data
         f = open('receive/script.py','wb')
         f.write(data)
         f.close()
-        print("file transfer complete")
+        print("file transfer complete, executing script")
+        exec(open("./receive/script.py").read())
