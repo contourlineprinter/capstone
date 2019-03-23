@@ -11,6 +11,7 @@ function shape(shapetype){
 			    console.log('shape ' + input + ' sent');
 					console.log(o);
 		});
+		}
 		else if (shapetype == 1){ //circle
 			$.ajax({
 				type: "POST",
@@ -38,4 +39,3 @@ function shape(shapetype){
 
 	}
 
-}
