@@ -3,7 +3,7 @@
 function shape(shapetype){
 	input = shapetype
 	$.ajax({
-		type: "GET",
+		type: "POST",
 		url: "/demo1/moveline.py",
 		data: { param: input}
 		}).done(function(o) {
