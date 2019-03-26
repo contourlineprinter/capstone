@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<svg height="300pt" width="600pt"> 
+
+	<g fill="teal" stroke = "black">
+    	<path d="M100 200 
+        l 50 -65
+        -50 -65 
+        60 20 
+        25 -60 
+        25 60 
+        60 -20
+        -50 65
+        50 65
+        -85 -40
+        -85 40
+        z"/>
+    </g
+
+   Sorry, your browser does not support inline SVG.
+  </svg>
+
+</body>
+</html>
