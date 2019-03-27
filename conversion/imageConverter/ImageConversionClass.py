@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+import svgwrite
 
 class ImageConversion:    
     "Class to perform image conversion to contour, svg, and robot instructions\n"
@@ -143,6 +144,7 @@ class ImageConversion:
             # Gaussian Blur
             blurImage = cv2.GaussianBlur(image,(5,5),0)
             self.showImage("Blur Image", blurImage)
+            cv2.moveWindow("Blur Image",0,0)
                 
             # adaptive threshold
             # image, max pixel value, type of threshold,
@@ -151,6 +153,7 @@ class ImageConversion:
             # only the threshold picture
             adaptThresImage = cv2.adaptiveThreshold(blurImage, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 295, 1)
             self.showImage("Threshold Image", adaptThresImage)
+            cv2.moveWindow("Threshold Image",300,0)
 
             height, width = image.shape[:2]         # get image size
 
@@ -177,10 +180,13 @@ class ImageConversion:
             #dilation
             dilationImage = cv2.dilate(adaptThresImage, kernel, iterations = iterationValue)
             self.showImage("Dilation Image", dilationImage)
+            cv2.moveWindow("Dilation Image",600,0)
+
 
             #erosion
             erosionImage = cv2.erode(dilationImage, kernel, iterations = iterationValue)
             self.showImage("Erosion Image", erosionImage)
+            cv2.moveWindow("Erosion Image",900,0)
 
             return erosionImage
         
@@ -202,7 +208,7 @@ class ImageConversion:
     #   smaller range - more points, more lines in the image 
     #   larger range - less points, less lines in the image
     # parameters: image, range for x, range for y, line thickness in pixel
-    # return: new contour image, old contour image
+    # return: old contour image, new contour image, points for new contours
     def createContours(self, image, lineThickness = 2):
         try:
             contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)   # find countour
@@ -211,6 +217,8 @@ class ImageConversion:
             height, width = image.shape[:2]     # get image size
             
             pointC = []                         # new set of points
+
+            #self.filterPoints(contours, pointC,0,0) # filter points - no range
 
             # filter points by size of image
             if (height <= 800):                     # if height is less than or equal to 800
@@ -221,6 +229,8 @@ class ImageConversion:
                 self.filterPoints(contours, pointC, 15, 15, 1200) # filter points
                 
             newContours = np.array([pointC])    # make a numpy array with the new points for contour image
+
+            self.DrawSVG(newContours, height, width)
 
             #don't sort - doesn't work?
             #vec = np.sort(np.array([pointC]))
@@ -233,7 +243,7 @@ class ImageConversion:
 
             self.showTwoImages(imageContourOld, imageContourNew, "Contour Old", "Contour New")
 
-            return imageContourNew, imageContourOld
+            return imageContourOld, imageContourNew, newContours
 
         except Exception as e:
             print("Error: There is a problem with creating the contour image - \n" + e.args[0] ) 
@@ -243,7 +253,7 @@ class ImageConversion:
     #   smaller range - more points, more lines in the image 
     #   larger range - less points, less lines in the image
     # parameters: set of points that make up contour, range for x, range for y, minimum contour area accepted 
-    def filterPoints(self, contourPoints, newContourPoints, rangeForX = 8, rangeForY = 8, minContourArea = 200):
+    def filterPoints(self, contourPoints, newContourPoints, rangeForX = 7, rangeForY = 7, minContourArea = 200):
         try:
             contoursToDelete = [] # list of indexes of contours to delete
             
@@ -268,6 +278,7 @@ class ImageConversion:
             xsave = -1
             ysave = -1
             count = 0
+            count2 = 0
 
             # process points in contour - remove some points based on x and y ranges
             for i in contourPoints:
@@ -277,6 +288,7 @@ class ImageConversion:
                         yget = k[1] #get y
                         #print(xget)
                         #print(yget)
+                        count2 +=1
 
                         # if x and y found is within range of saved x and y, don't save it
                         if (abs(xsave-xget) <= rangeForX) or xget == xsave:
@@ -294,54 +306,31 @@ class ImageConversion:
 
             print("Last saved x: %d" % xsave) # last save x
             print("Last saved y: %d" % ysave) # last save y
+            print("\nNumber of points in old contour image: %d" % count2) # number of points
             print("Number of points in contour image: %d\n" % count) # number of points
-
+            
         except Exception as e:
             print("Error: There is a problem with filtering the points - \n" + e.args[0] ) 
 #-----------------------------------------
-
-name = "1.jpg"
-path = "./" + name
-
-# create an ImageConversion object
-imgConvert1 = ImageConversion(name, path)
-
-# print class documentation
-print ("ImageConversion.__doc__:", ImageConversion.__doc__)
-
-# print employee
-imgConvert1.printImgInfo()
-
-# load in image
-img = imgConvert1.readImageOriginal(name)
-imgGray = imgConvert1.readImageGrayscale(name)
-
-# show image
-imgConvert1.showImage("Original Image", img)
-#imgConvert1.showImage("Gray Image", imgGray)
-
-# show two images - original and gray
-#imgConvert1.showTwoImages(img, imgGray, "Original Image", "Gray Image")
-
-# get image ready
-eroImg = imgConvert1.getImageReady(imgGray)
-eroImg2 = eroImg.copy()
-
-# find edges of image
-edgeImg = imgConvert1.getEdges(eroImg)
-imgConvert1.showImage("Edge Image", edgeImg)
-
-# find contour lines using Canny edges
-conImgEdge, conImgEdgeOld = imgConvert1.createContours(edgeImg)
-
-# find contour lines not using Canny edges
-conImgNoEdge, conImgNoEdgeOld = imgConvert1.createContours(eroImg2)
-
-# compare three images - using Canny contour pic and not using Canny edge pic
-#imgConvert1.showThreeImages(img, conImgEdge, conImgNoEdge, "Original Image", "Contour with Canny", "Contour without Canny")
-
-# compare three images - original, edges found, final contour image 
-imgConvert1.showThreeImages(img, conImgNoEdgeOld, conImgNoEdge, "Original", "Edges Found", "Final Contour")
-
-# close all windows
-imgConvert1.closeAllWindows()
+    # write a svg file with all the contour points found in the original image
+    # parameters: the list of sequence of contour points 
+    def DrawSVG(self, ContourPoints, height, width):
+        try:
+            #create a svg file
+            dwg = svgwrite.Drawing('./test.svg', size=(width, height))
+            shapes = dwg.add(dwg.g(id='shapes', fill='none'))
+            
+            #interatively write points into the svg file
+            lengthOfTheList = len(ContourPoints[0]) - 1
+            for x in range(lengthOfTheList):
+                print(ContourPoints[0][x][0],ContourPoints[0][x][1],ContourPoints[0][x+1][0],ContourPoints[0][x+1][1])
+                shapes.add(dwg.line(start = (str(ContourPoints[0][x][0]), str(ContourPoints[0][x][1])), 
+                                 end = (str(ContourPoints[0][x+1][0]),str(ContourPoints[0][x+1][1])), 
+                                 stroke=svgwrite.rgb(10, 10, 16, '%')
+                ))
+            
+            #save the file
+            dwg.save()       
+            
+        except Exception as e:
+            print("Error: There is a problem with writing a svg file - \n" + e.args[0] ) 
