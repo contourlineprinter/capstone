@@ -11,6 +11,7 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <title>Contour Line Printer</title>
       <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="icon" href="/favicon.ico" type="image/x-icon">
       <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
@@ -19,8 +20,8 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="index.html">Contour Line Printer</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSuppo$
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigatio$
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -58,7 +59,6 @@
     
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/uploadTriggers.js"></script>
 
     </body>
 </html>
