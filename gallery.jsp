@@ -47,7 +47,11 @@
            <% if(index%3 == 0) {%>
            		<div class="row">
            <% }%>
-                <div class="col-sm-4"><img width="300" height="300" src=<%=s%>></img></div> 
+                <div class="col-md-4">
+					<div class="shadow-sm  mb-5 thumb">
+						<img class="card-img " src=<%=s%>></img>
+						</div> 
+					</div>
              
              <% if(index%3 == 2) {%>
            		</div>
@@ -55,6 +59,19 @@
             <% index++; }%>  
         </div>
     </div>
+	<style>
+	.thumb {
+	  display: inline-flex;
+	  width: 300px;
+	  height: 300px;
+	  vertical-align: middle;
+	}
+	.thumb img {
+	  max-width: 100%;
+	  max-height: 100%;
+	  margin: auto;
+	}
+	</style>
 
     
     <script src="js/jquery-3.3.1.min.js"></script>
