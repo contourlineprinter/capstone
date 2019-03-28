@@ -143,8 +143,8 @@ class ImageConversion:
         try:
             # Gaussian Blur
             blurImage = cv2.GaussianBlur(image,(5,5),0)
-            self.showImage("Blur Image", blurImage)
-            cv2.moveWindow("Blur Image",0,0)
+            #self.showImage("Blur Image", blurImage)
+            #cv2.moveWindow("Blur Image",0,0)
                 
             # adaptive threshold
             # image, max pixel value, type of threshold,
@@ -152,8 +152,8 @@ class ImageConversion:
             # mean subtraction from the end result
             # only the threshold picture
             adaptThresImage = cv2.adaptiveThreshold(blurImage, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 295, 1)
-            self.showImage("Threshold Image", adaptThresImage)
-            cv2.moveWindow("Threshold Image",300,0)
+            #self.showImage("Threshold Image", adaptThresImage)
+            #cv2.moveWindow("Threshold Image",300,0)
 
             height, width = image.shape[:2]         # get image size
 
@@ -179,14 +179,14 @@ class ImageConversion:
 
             #dilation
             dilationImage = cv2.dilate(adaptThresImage, kernel, iterations = iterationValue)
-            self.showImage("Dilation Image", dilationImage)
-            cv2.moveWindow("Dilation Image",600,0)
+            #self.showImage("Dilation Image", dilationImage)
+            #cv2.moveWindow("Dilation Image",600,0)
 
 
             #erosion
             erosionImage = cv2.erode(dilationImage, kernel, iterations = iterationValue)
-            self.showImage("Erosion Image", erosionImage)
-            cv2.moveWindow("Erosion Image",900,0)
+            #self.showImage("Erosion Image", erosionImage)
+            #cv2.moveWindow("Erosion Image",900,0)
 
             return erosionImage
         
@@ -241,7 +241,7 @@ class ImageConversion:
             imageContourOld = cv2.drawContours(blankCanvas1, contours, -1, (0,255,0), lineThickness)        # draw the contour image with old point
             imageContourNew = cv2.drawContours(blankCanvas2, newContours, -1, (0,255,0), lineThickness)     # draw the contour image with new point
 
-            self.showTwoImages(imageContourOld, imageContourNew, "Contour Old", "Contour New")
+            #self.showTwoImages(imageContourOld, imageContourNew, "Contour Old", "Contour New")
 
             return imageContourOld, imageContourNew, newContours
 
