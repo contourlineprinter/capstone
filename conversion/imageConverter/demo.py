@@ -21,7 +21,7 @@ img = imgConvert1.readImageOriginal(name)
 imgGray = imgConvert1.readImageGrayscale(name)
 
 # show image
-imgConvert1.showImage("Original Image", img)
+#imgConvert1.showImage("Original Image", img)
 
 # get image ready
 eroImg = imgConvert1.getImageReady(imgGray)
@@ -30,7 +30,7 @@ eroImg = imgConvert1.getImageReady(imgGray)
 conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert1.createContours(eroImg)
 
 # compare three images - original, edges found, final contour image 
-imgConvert1.showThreeImages(img, conImgNoEdgeOld, conImgNoEdge, "Original", "Edges Found", "Final Contour")
+#imgConvert1.showThreeImages(img, conImgNoEdgeOld, conImgNoEdge, "Original", "Edges Found", "Final Contour")
 
 # close all windows
 imgConvert1.closeAllWindows()
