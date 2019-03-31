@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from ImageConversionClass import ImageConversion
 
 #-----------------------------------------         
-name = "1.jpg"
+name = "2.png"
 path = "./" + name
 
 # create an ImageConversion object
