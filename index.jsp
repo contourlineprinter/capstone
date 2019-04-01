@@ -36,7 +36,7 @@
 
     <!-- Content -->
     <div class="container-fluid">
-             <div class="alert alert-info alert-dismissible" id="alert">
+             <div class="alert alert-info alert-dismissible" id="alert" style="display:none">
 		  		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 		  		<strong><span id="alertText"><%=  request.getAttribute("message") %></span></strong>
 			</div>
