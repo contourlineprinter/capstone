@@ -329,7 +329,7 @@ class ImageConversion:
             # set up for svg
             extension = ".svg"  # extension for svg
             number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
-            
+			
             #create a svg file
             dwg = svgwrite.Drawing(path+name+number+extension, size=(width, height))
             shapes = dwg.add(dwg.g(id="shapes", fill="none"))
