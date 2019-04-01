@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup as bs # This is my personal favorite library for H
 import re
 import math
 import time
+import sys
 
 import Robot
 
@@ -155,8 +156,9 @@ def go_to(state, points):
     state.angle =  polar['theta'] 
     return state
 
-def main(file_name):
+def main():
     try:
+        file_name = sys.argv[0]
         state = State()
         lines = svg_to_lines(file_name)
     except Exception as e:
