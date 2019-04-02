@@ -10,13 +10,13 @@ from ImageConversionClass import ImageConversion
 #----------------------------------------- 
 
 
-if len(sys.argv) != 3:
-	print ("Please give a filename and path as arguments")
-	print ("usage: python3 convertFileInput.py [file name] [path]")
+if len(sys.argv) != 2:
+	print ("Please give a filename as an argument")
+	print ("usage: python3 convertFileInput.py [file name]")
 	exit()
       
 name = sys.argv[1]
-path = sys.argv[2]
+path = "not used"
 
 
 print (name)
