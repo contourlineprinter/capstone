@@ -3,6 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import svgwrite
 import os, sys
+import ntpath
 
 class ImageConversion:    
     "Class to perform image conversion to contour, svg, and robot instructions\n"
@@ -233,18 +234,23 @@ class ImageConversion:
             newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
 
             # make svg of contour
-            nameSVG = self.origImgName + "_SVG"                     # set filename for svg file
+            nameSVG = ntpath.basename(self.origImgName) + "_SVG"    # set filename for svg file
             path = "./"                                             # set directory path for svg file
+            print("cp-1")
             self.drawSVG(newContours, height, width, nameSVG, path) # draw it in the svg
-
+            print("cp0")
             #don't sort - doesn't work?
             #vec = np.sort(np.array([pointC]))
 
             # draw the contour images
-            blankCanvas1 = 255*np.ones((height, width, 3), np.uint8)                                        # make blank canvas
+            blankCanvas1 = 255*np.ones((height, width, 3), np.uint8)					    				# make blank canvas
+            print("cp1")
             blankCanvas2 = 255*np.ones((height, width, 3), np.uint8)                                        # make blank canvas
+            print("cp2")
             imageContourOld = cv2.drawContours(blankCanvas1, contours, -1, (0,255,0), lineThickness)        # draw the contour image with old point
+            print("cp3")
             imageContourNew = cv2.drawContours(blankCanvas2, newContours, -1, (0,255,0), lineThickness)     # draw the contour image with new point
+            print("cp4")
 
             #self.showTwoImages(imageContourOld, imageContourNew, "Contour Old", "Contour New")
 
@@ -320,11 +326,12 @@ class ImageConversion:
     # write a svg file with all the contour points found in the original image
     # parameters: the list of sequence of contour points, height of image, width of image, image name, directory of svg file
     def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./"):
+        print("before try")
         try:
 
             # make sure the path is a path
-            if not path.endswith("/"):
-                path = path + "/"
+##            if not path.endswith("/"):
+##                path = path + "/"
 
             # set up for svg
             extension = ".svg"  # extension for svg
@@ -335,6 +342,7 @@ class ImageConversion:
             shapes = dwg.add(dwg.g(id="shapes", fill="none"))
             
             #interatively write points into the svg file
+            print("before writing points to svg file")
             lengthOfTheList = len(contourPoints[0]) - 1
             for x in range(lengthOfTheList):
                 print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
@@ -342,9 +350,11 @@ class ImageConversion:
                                  end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
                                  stroke=svgwrite.rgb(10, 10, 16, "%")
                 ))
-            
+
+            print("after writing points to svg file")				
             #save the file
-            dwg.save()       
+            dwg.save()
+            print("after saving the svg file")			
             
         except Exception as e:
             print("Error: There is a problem with writing a svg file - \n" + e.args[0] ) 
