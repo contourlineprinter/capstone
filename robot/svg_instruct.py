@@ -9,7 +9,7 @@ import sys
 import Robot
 
 LEFT_TRIM   = 0
-RIGHT_TRIM  = -1
+RIGHT_TRIM  = 0
 
 
 # Create an instance of the robot with the specified trim values.
@@ -18,8 +18,9 @@ RIGHT_TRIM  = -1
 #  - left_id: The ID of the left motor, default is 1.
 #  - right_id: The ID of the right motor, default is 2.
 robot = Robot.Robot(left_trim=LEFT_TRIM, right_trim=RIGHT_TRIM) # UNCOMMENT THIS LINE ON ROBOT
-FULL_REV = 4.85
-DEF_SPEED = 50
+#FULL_REV = 4.85
+DEF_SPEED = 65
+SCALE = 0.001 * int(sys.argv[2])
 
 def svg_to_lines(file_name):
     '''
@@ -31,17 +32,21 @@ def svg_to_lines(file_name):
     '''
     #load file_name and get svg tag
     soup = bs(open(file_name), 'xml')
+    print(soup)
     svg = soup.svg
-    
-    lines = []
-    for line in svg.find_all('line'):
-        x1 = int(line.get('x1'))
-        y1 = int(line.get('y1'))
-        x2 = int(line.get('x2'))
-        y2 = int(line.get('y2'))
+    lines=[]
+
+    try:
+        for line in svg.find_all('line'):
+            x1 = int(line.get('x1'))
+            y1 = int(line.get('y1'))
+            x2 = int(line.get('x2'))
+            y2 = int(line.get('y2'))
         
-        lines.append((x1,y1,x2,y2))
-        
+            lines.append((x1,y1,x2,y2))
+    except AttributeError as e:
+        print(svg)
+        raise e
         
     return lines
 
@@ -61,14 +66,18 @@ class State:
         self.y = y
         self.angle = angle
 
-def get_theta(x1, y1, x2, y2):
+def get_theta(x1, y1, x2, y2, angle):
     '''
         takes four arguments x1, y1, x2, y2
-        returns the angle in radians of arctan(y2-y1, x2-x1)
+        returns the angle in degrees of arctan(y2-y1, x2-x1)
         
         Use this to convert from cartesian coordinates to polar coordinates
     '''
+    print('in get_theta @ (',x1,',',y1,') going to (',x2,',',y2,')')
     r = math.atan2(y2-y1, x2-x1)
+    print('arctan(', y2-y1, '/', x2-x1, '=', r*180/math.pi)
+    r = r*180/math.pi
+    r = r-angle
     return r
 
 def get_distance(x1, y1, x2, y2):
@@ -81,7 +90,7 @@ def get_distance(x1, y1, x2, y2):
     x, y = x2 - x1, y2-y1
     return(math.sqrt(math.pow(x, 2) + math.pow(y, 2)))
 
-def cart_to_polar(x1, y1, x2, y2):
+def cart_to_polar(x1, y1, x2, y2,state):
     '''
         takes four arguments x1, y1, x2, y2
         returns a dictionary with the angle in radians and distance between the points 
@@ -89,29 +98,7 @@ def cart_to_polar(x1, y1, x2, y2):
         
         Use this to convert from cartesian coordinates to polar coordinates
     '''
-    return({'theta': get_theta(x1, y1, x2, y2), 'dist': get_distance(x1, y1, x2, y2)})
-
-def rotate(theta):
-    ''' 
-        this is going to be the place where we calibrate our robot, and we enter the real world, translating radians to
-        1. direction of rotation (a simple if statement to turn the shortest way)
-        2. speed of rotation (This should be fixed)
-        3. duration of rotation 
-    '''
-    rev = FULL_REV # duration for one revolution or 2pi radians
-    speed = DEF_SPEED # default speed
-    
-    #get smallest positive equivolent angle, which should never be needed
-    while(theta > math.pi):
-        theta = theta - math.pi*2
-        
-    if theta > math.pi: # rotate left
-        #get equivolent negative angle
-        dur = ((theta - 2*math.pi) - (2*math.pi)) * rev * -1 #keep time positive! rotate opposite
-        robot.left(speed, dur) # UNCOMMENT THIS LINE ON ROBOT
-    else: # rotate right
-        dur = (theta / (2*math.pi)) * rev # 
-        robot.right(speed, dur) # UNCOMMENT THIS LINE ON ROBOT
+    return({'theta': get_theta(x1, y1, x2, y2,state.angle), 'dist': get_distance(x1, y1, x2, y2)})
 
 def go(distance):
     ''' 
@@ -121,8 +108,9 @@ def go(distance):
         2. For how long?
     '''
     speed = DEF_SPEED
-    dur = 12/1000 * distance
-    robot.forward(speed, dur)# UNCOMMENT THIS LINE ON ROBOT
+    dur = distance * SCALE
+    #robot.forward(speed, dur)# UNCOMMENT THIS LINE ON ROBOT
+    robot.backward(speed, dur)
     
 def go_to(state, points):
     '''
@@ -144,21 +132,23 @@ def go_to(state, points):
         print('state does not match command: (',state.x,',',state.y,') != (',x1,',',x2,') \ignorning, output may suffer' )
     
     # get vector in polar cordinates
-    polar = cart_to_polar(x1, y1, x2, y2)
+    polar = cart_to_polar(x1, y1, x2, y2,state)
     # rotate angle
-    rotate(polar['theta'])
+    print('theta =',polar['theta'],'distance =',polar['dist'],'state =',state.x,state.y,state.angle,'target =',x2,y2)
+    robot.rotate(polar['theta']) # UNCOMMENT THIS LINE ON ROBOT
+    #rotate(polar['theta'])
     # go to there
     go(polar['dist'])
     
     # update and return? state, now at new point and angled in direction just travelled 
     state.x = x2 
     state.y = y2 
-    state.angle =  polar['theta'] 
+    state.angle += polar['theta'] 
     return state
 
 def main():
     try:
-        file_name = sys.argv[0]
+        file_name = sys.argv[1]
         state = State()
         lines = svg_to_lines(file_name)
     except Exception as e:
@@ -170,16 +160,17 @@ def main():
         return
     
     if lines[0][0] != 0 and lines[0][1] != 0:
-        state = go_to(state, (0,0,lines[0][0],lines[0][1]))
         print('Moving to starting point (',lines[0][0],',',lines[0][1],') from origin')
+        state = go_to(state, (0,0,lines[0][0],lines[0][1]))
     
     for line in lines:
         #print(line)
         if len(line) == 0:
             pass
         else:
-            state = go_to(state, line)
             print('moving from (',line[0],',',line[1],') to (',line[2],',',line[3],')')
+            state = go_to(state, line)
+
 
 
 if __name__ == '__main__':
