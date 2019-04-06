@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<svg height="210" width="500">
+  <line x1="0" y1="0" x2="0" y2="50" style="stroke:rgb(255,0,0);" />
+  <line x1="0" y1="50" x2="25" y2="50" style="stroke:rgb(255,0,0);" />
+  <line x1="25" y1="50" x2="25" y2="0" style="stroke:rgb(255,0,0);" />
+  <line x1="25" y1="0" x2="0" y2="0" style="stroke:rgb(255,0,0);" />
+  Sorry, your browser does not support inline SVG.
+</svg>
+
+</body>
+</html>
