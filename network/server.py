@@ -26,8 +26,14 @@ def newConnection():
                 c.send(bytes("","UTF-8")) 
             except socket.error: 
                 print('client disconnected')
-                c.shutdown(socket.SHUT_RDWR)
-                c.close()
+                try:
+                    c.shutdown(socket.SHUT_RDWR)
+                except:
+                    pass
+                try:
+                    c.close()
+                except:
+                    pass
                 return
             if listenPath.is_file(): # check if there is file to send
                 try:

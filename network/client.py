@@ -6,7 +6,7 @@ import time
 def newConnection():
 
     s = socket.socket() # new socket object
-    host = "35.239.126.169"
+    host = "35.227.87.153"
     # host = socket.gethostname()
     port = 377
 
