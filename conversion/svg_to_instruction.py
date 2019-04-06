@@ -204,5 +204,4 @@ def robot_convert(file_name,scale=3):
             
     # close our file
     file.close()
-    print(SCALE)
     return True
