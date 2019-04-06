@@ -10,6 +10,7 @@ def newConnection():
     port = 377
     s.bind((host,port))
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # allows faster reconnects
+    s.setdefaulttimeout(2)
     print("now listening on", host, port)
     s.listen()
 
