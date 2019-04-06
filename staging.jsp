@@ -44,7 +44,7 @@
 			<div class="col-12 col-md-6 pt-3">
 			    
 				<!-- This is where we will show the contour image for user approval -->
-				<img src="svg/placeholder.svg" class="img-fluid img-thumbnail mt-3">
+				<img src=  "<%= "svg/"+ request.getAttribute("file") + "_SVG1.svg" %>" class="img-fluid img-thumbnail mt-3">
 				
 				<!-- Button to approve the image and begin printing -->
 				<button class="btn btn-primary w-100 mt-3">Print</button>
