@@ -19,7 +19,7 @@ RIGHT_TRIM  = -1
 #  - right_id: The ID of the right motor, default is 2.
 robot = Robot.Robot(left_trim=LEFT_TRIM, right_trim=RIGHT_TRIM) # UNCOMMENT THIS LINE ON ROBOT
 FULL_REV = 4.85
-DEF_SPEED = 50
+DEF_SPEED = 85
 
 def svg_to_lines(file_name):
     '''
@@ -31,17 +31,21 @@ def svg_to_lines(file_name):
     '''
     #load file_name and get svg tag
     soup = bs(open(file_name), 'xml')
+    print(soup)
     svg = soup.svg
-    
-    lines = []
-    for line in svg.find_all('line'):
-        x1 = int(line.get('x1'))
-        y1 = int(line.get('y1'))
-        x2 = int(line.get('x2'))
-        y2 = int(line.get('y2'))
+    lines=[]
+
+    try:
+        for line in svg.find_all('line'):
+            x1 = int(line.get('x1'))
+            y1 = int(line.get('y1'))
+            x2 = int(line.get('x2'))
+            y2 = int(line.get('y2'))
         
-        lines.append((x1,y1,x2,y2))
-        
+            lines.append((x1,y1,x2,y2))
+    except AttributeError as e:
+        print(svg)
+        raise e
         
     return lines
 
@@ -69,6 +73,7 @@ def get_theta(x1, y1, x2, y2):
         Use this to convert from cartesian coordinates to polar coordinates
     '''
     r = math.atan2(y2-y1, x2-x1)
+    r = r*180/math.pi
     return r
 
 def get_distance(x1, y1, x2, y2):
@@ -121,7 +126,7 @@ def go(distance):
         2. For how long?
     '''
     speed = DEF_SPEED
-    dur = 12/1000 * distance
+    dur = 12/500 * distance
     robot.forward(speed, dur)# UNCOMMENT THIS LINE ON ROBOT
     
 def go_to(state, points):
@@ -146,7 +151,9 @@ def go_to(state, points):
     # get vector in polar cordinates
     polar = cart_to_polar(x1, y1, x2, y2)
     # rotate angle
-    rotate(polar['theta'])
+    print(polar['theta'])
+    robot.rotate(polar['theta'])
+    #rotate(polar['theta'])
     # go to there
     go(polar['dist'])
     
@@ -158,7 +165,7 @@ def go_to(state, points):
 
 def main():
     try:
-        file_name = sys.argv[0]
+        file_name = sys.argv[1]
         state = State()
         lines = svg_to_lines(file_name)
     except Exception as e:
@@ -170,16 +177,16 @@ def main():
         return
     
     if lines[0][0] != 0 and lines[0][1] != 0:
-        state = go_to(state, (0,0,lines[0][0],lines[0][1]))
         print('Moving to starting point (',lines[0][0],',',lines[0][1],') from origin')
+        state = go_to(state, (0,0,lines[0][0],lines[0][1]))
     
     for line in lines:
         #print(line)
         if len(line) == 0:
             pass
         else:
-            state = go_to(state, line)
             print('moving from (',line[0],',',line[1],') to (',line[2],',',line[3],')')
+            state = go_to(state, line)
 
 
 if __name__ == '__main__':

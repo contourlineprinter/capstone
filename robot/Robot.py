@@ -74,7 +74,6 @@ class Robot(object):
             time.sleep(seconds)
             self.stop()
 
-
     def backward(self, speed, seconds=None):
         """Move backward at the specified speed (0-255).  Will start moving
         backward and return unless a seconds value is specified, in which
@@ -89,7 +88,6 @@ class Robot(object):
         if seconds is not None:
             time.sleep(seconds)
             self.stop()
-
 
     def right(self, speed, seconds=None):
         """Spin to the right at the specified speed.  Will start spinning and
@@ -121,7 +119,6 @@ class Robot(object):
             time.sleep(seconds)
             self.stop()
 
-
     def arcLeft(self, speed, seconds=None):
         self._left_speed(speed/2)
         self._right_speed(speed)
@@ -140,8 +137,14 @@ class Robot(object):
             time.sleep(seconds)
             self.stop()
 
-
-
-
-
-
+    def rotate(self, theta):
+        self._left_speed(50)
+        self._right_speed(50)
+        if theta > 0:
+            self._left.run(Adafruit_MotorHAT.FORWARD)
+            self._right.run(Adafruit_MotorHAT.BACKWARD)
+        else:
+            self._left.run(Adafruit_MotorHAT.BACKWARD)
+            self._right.run(Adafruit_MotorHAT.FORWARD)
+        time.sleep(abs(theta)*.01158)
+        self.stop()
