@@ -16,7 +16,9 @@ def newConnection():
     s.listen()
 
     while True: # wait for robot to connect
+        s.settimeout(None)
         c, addr = s.accept()
+        s.settimeout(2)
         print("connection at", addr)
         print("listening for file at send/script.py")
         listenPath = Path("send/script.py") # for final implementation
