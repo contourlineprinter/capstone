@@ -28,7 +28,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Upload</a>
+                    <a class="nav-link" href="/index.jsp">Upload</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="gallery.html">Gallery</a>
@@ -41,22 +41,22 @@
     </nav>
 	<div class="album py-4">
 		<div class="container">  
-        <% ArrayList<String> images =  (ArrayList<String>)request.getAttribute("images"); 
-         int index = 0;
-         for(String s:images){%>  
-           <% if(index%3 == 0) {%>
+        <% ArrayList<String> images =  (ArrayList<String>)request.getAttribute("images");
+        ArrayList<String> svg =  (ArrayList<String>)request.getAttribute("svg");
+         //int index = 0;
+           for(int i = 0; i<images.size(); i++){ %>  
            		<div class="row">
-           <% }%>
-                <div class="col-md-4">
 					<div class="shadow-sm  mb-5 thumb">
-						<img class="card-img " src=<%=s%>></img>
-						</div> 
-					</div>
-             
-             <% if(index%3 == 2) {%>
+						<img class="card-img " src=<%=images.get(i)%>></img>
+					</div> 
+					<div class="shadow-sm  mb-5 thumb">
+						<img class="card-img " src=<%=svg.get(i)%>></img>					
+					</div>	
+
            		</div>
+			
           	 <% }%>
-            <% index++; }%>  
+              
         </div>
     </div>
 	<style>
