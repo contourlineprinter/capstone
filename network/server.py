@@ -2,6 +2,7 @@ import socket
 from pathlib import Path
 import os
 import time
+import atexit
 
 def newConnection():
 
@@ -21,6 +22,9 @@ def newConnection():
         listenPathLine = Path("send/line.py") # line for demo1
         listenPathCircle = Path("send/circle.py") # circle for demo1
         listenPathRectangle = Path("send/rectangle.py") # rectangle for demo1
+        def close_socket():
+            c.close()
+        atexit.register(close_socket)
         while True:
             try: # check if client disconnect
                 c.send(bytes("","UTF-8")) 

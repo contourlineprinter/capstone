@@ -2,6 +2,7 @@ import socket
 from pathlib import Path
 import os
 import time
+import datetime
 
 def newConnection():
 
@@ -23,6 +24,7 @@ def newConnection():
     try: # this is the main loop, if any error comes up we attempt to reconnect
         while True: # listen for new file data
             l = s.recv(1024)
+            print(datetime.datetime.now())
             if (l): # begin receipt of file
                 print("receiving file")
                 data = bytearray()
