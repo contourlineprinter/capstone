@@ -47,7 +47,7 @@
 				<img src=  "<%= "svg/"+ request.getAttribute("file") + "_SVG1.svg" %>" class="img-fluid img-thumbnail mt-3">
 				
 				<!-- Button to approve the image and begin printing -->
-				<button class="btn btn-primary w-100 mt-3">Print</button>
+				<button onclick="printq()" class="btn btn-primary w-100 mt-3">Print</button>
 			</div>
 
 		</div>
@@ -55,7 +55,8 @@
 
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
-	<script src="js/eventTriggers.js"></script>
+	<script src="js/movesvg.js"></script>
+	
 </body>
 
 </html>
