@@ -6,7 +6,7 @@ import sys
 
 #FULL_REV = 4.85
 DEF_SPEED = 65
-SCALE = 0.001 * int(sys.argv[2])
+SCALE = 3
 
 def svg_to_lines(file_name):
     '''
@@ -18,7 +18,6 @@ def svg_to_lines(file_name):
     '''
     #load file_name and get svg tag
     soup = bs(open(file_name), 'xml')
-    print(soup)
     svg = soup.svg
     lines=[]
 
@@ -94,7 +93,7 @@ def go(distance):
     dur = distance * SCALE
     # UNCOMMENT ONE OF THESE LINES ON ROBOT
     #robot.forward(speed, dur)
-    return "robot.backward(s, d)\n".format(s = speed, d = dur)
+    return "robot.backward({s}, {d})\n".format(s = speed, d = dur)
   
 def rotate(theta):
     ''' 
@@ -102,28 +101,22 @@ def rotate(theta):
     '''
     # UNCOMMENT ONE OF THESE LINES ON ROBOT
     #robot.forward(speed, dur)
-    return "robot.rotate(t)\n".format(t=theta)
+    return "robot.rotate({t})\n".format(t=theta)
 
 
-def init_file(scale):
+def init_file():
     '''
-    Given an integer, scale, this returns a string with the necessary imports and setup
+    Taking no parameters. This returns a string with the necessary imports and setup
     '''
-    try:
-        scale = 0.001 * int(scale)
-    except Exception as e:
-        print(scale,'is an invalid argument for scale')
-        raise e
     s = ('import time\n'
           'import Robot\n\n'
           'LEFT_TRIM = 0\n'
           'RIGHT_TRIM = 0\n\n'
           '#initialize the robot\n'
           'robot = Robot.Robot(left_trim=LEFT_TRIM, right_trim=RIGHT_TRIM)\n'
-          'DEF_SPEED = 65\n'
-          'SCALE = {s}\n\n\n'
+          'DEF_SPEED = 65\n\n\n'
           '#the commands begin now\n'
-           ).format(s=scale)
+        )
     # this try-catch block is pointless right now, but should be useful in the distant future, the year 2000
     return s
 
@@ -173,13 +166,14 @@ def robot_convert(file_name,scale=3):
         it creates or over writes a file named 'script.py', which contains robot commands in python,
         from the given svg file, and scales the drawing according to scale
     '''
-  
+    scale = scale/1000
+    SCALE = scale
+    
     #open the file we're writing to
-    file = open('script.py','wb')
-    file.write(init_file(scale))
+    file = open('script.py','w')
+    file.write(init_file())
     
     try:
-        file_name = sys.argv[1]
         state = State()
         lines = svg_to_lines(file_name)
     except Exception as e:
@@ -202,7 +196,7 @@ def robot_convert(file_name,scale=3):
             else:
                 #print('moving from (',line[0],',',line[1],') to (',line[2],',',line[3],')')
                 state,s = go_to(state, line)
-                f.write(s)
+                file.write(s)
     except Exception as e:
         print('File not written due to following exception')
         print(e)
@@ -210,4 +204,5 @@ def robot_convert(file_name,scale=3):
             
     # close our file
     file.close()
+    print(SCALE)
     return True
