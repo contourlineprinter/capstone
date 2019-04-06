@@ -36,6 +36,7 @@ def newConnection():
                 f = open('receive/script.py','wb')
                 f.write(data)
                 f.close()
+                s.send()
                 print("file transfer complete, executing script")
                 exec(open("./receive/script.py").read())
     except:
