@@ -9,7 +9,7 @@ import sys
 import Robot
 
 LEFT_TRIM   = 0
-RIGHT_TRIM  = -1
+RIGHT_TRIM  = 0
 
 
 # Create an instance of the robot with the specified trim values.
@@ -18,8 +18,9 @@ RIGHT_TRIM  = -1
 #  - left_id: The ID of the left motor, default is 1.
 #  - right_id: The ID of the right motor, default is 2.
 robot = Robot.Robot(left_trim=LEFT_TRIM, right_trim=RIGHT_TRIM) # UNCOMMENT THIS LINE ON ROBOT
-FULL_REV = 4.85
-DEF_SPEED = 85
+#FULL_REV = 4.85
+DEF_SPEED = 65
+SCALE = 0.001 * int(sys.argv[2])
 
 def svg_to_lines(file_name):
     '''
@@ -99,28 +100,6 @@ def cart_to_polar(x1, y1, x2, y2,state):
     '''
     return({'theta': get_theta(x1, y1, x2, y2,state.angle), 'dist': get_distance(x1, y1, x2, y2)})
 
-def rotate(theta):
-    ''' 
-        this is going to be the place where we calibrate our robot, and we enter the real world, translating radians to
-        1. direction of rotation (a simple if statement to turn the shortest way)
-        2. speed of rotation (This should be fixed)
-        3. duration of rotation 
-    '''
-    rev = FULL_REV # duration for one revolution or 2pi radians
-    speed = DEF_SPEED # default speed
-    
-    #get smallest positive equivalent angle, which should never be needed
-    while(theta > math.pi):
-        theta = theta - math.pi*2
-        
-    if theta > math.pi: # rotate left
-        #get equivalent negative angle
-        dur = ((theta - 2*math.pi) - (2*math.pi)) * rev * -1 #keep time positive! rotate opposite
-        robot.left(speed, dur) # UNCOMMENT THIS LINE ON ROBOT
-    else: # rotate right
-        dur = (theta / (2*math.pi)) * rev # 
-        robot.right(speed, dur) # UNCOMMENT THIS LINE ON ROBOT
-
 def go(distance):
     ''' 
         this is going to be the place where we calibrate our robot, and we enter the real world.
@@ -129,8 +108,9 @@ def go(distance):
         2. For how long?
     '''
     speed = DEF_SPEED
-    dur = 12/500 * distance
-    robot.forward(speed, dur)# UNCOMMENT THIS LINE ON ROBOT
+    dur = distance * SCALE
+    #robot.forward(speed, dur)# UNCOMMENT THIS LINE ON ROBOT
+    robot.backward(speed, dur)
     
 def go_to(state, points):
     '''
@@ -166,9 +146,9 @@ def go_to(state, points):
     state.angle += polar['theta'] 
     return state
 
-def main(file_name):
+def main():
     try:
-        #file_name = sys.argv[1]
+        file_name = sys.argv[1]
         state = State()
         lines = svg_to_lines(file_name)
     except Exception as e:

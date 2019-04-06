@@ -8,6 +8,9 @@ import atexit
 
 from Adafruit_MotorHAT import Adafruit_MotorHAT
 
+SCALE = .0145625
+SLEEP = 0.1
+
 
 class Robot(object):
     def __init__(self, addr=0x60, left_id=1, right_id=2, left_trim=0, right_trim=0,
@@ -138,13 +141,35 @@ class Robot(object):
             self.stop()
 
     def rotate(self, theta):
+        time.sleep(SLEEP)
         self._left_speed(50)
         self._right_speed(50)
+
+        #make theta make sense
+        if theta > 180:
+           theta = -1 * (360-theta)
+
+        rots = abs(int(theta/45))
+        rem = theta%45
+
+        for i in range (0,rots):
+            time.sleep(SLEEP)
+            if theta > 0:
+                self._left.run(Adafruit_MotorHAT.FORWARD)
+                self._right.run(Adafruit_MotorHAT.BACKWARD)
+            else:
+                self._left.run(Adafruit_MotorHAT.BACKWARD)
+                self._right.run(Adafruit_MotorHAT.FORWARD)
+            time.sleep(abs(45)*.01158)
+            self.stop()
+
         if theta > 0:
             self._left.run(Adafruit_MotorHAT.FORWARD)
             self._right.run(Adafruit_MotorHAT.BACKWARD)
         else:
             self._left.run(Adafruit_MotorHAT.BACKWARD)
             self._right.run(Adafruit_MotorHAT.FORWARD)
-        time.sleep(abs(theta)*.01158)
+        time.sleep(abs(rem)*SCALE)
         self.stop()
+
+        time.sleep(SLEEP)
