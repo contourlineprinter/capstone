@@ -7,16 +7,26 @@ import os, sys
 from ImageConversionClass import ImageConversion
 
 #----------------------------------------- 
-if len(sys.argv) != 2:
-	print ("Please give a filename as an argument")
-	print ("usage: python3 convertFileInput.py [file name]")
-	exit()
-      
-image = sys.argv[1]
-svg = sys.argv[2]
+if len(sys.argv) < 2:
+        print ("Please give a image name or image path as an argument")
+        print ("usage: python3 convertFileInput.py [image name] ./ [svg path (optional)]")
+        exit()
+if len(sys.argv) == 2:
+        image = sys.argv[1]
+        svg = "./"
+elif len(sys.argv) == 3:
+        image = sys.argv[1]
+        svg = sys.argv[2]
+elif len(sys.argv) > 3:
+        image = sys.argv[1]
+        svg = ""
+        for i in range(len(sys.argv[2:])):
+                svg = svg + str(sys.argv[i])
+for i in range(len(sys.argv)):
+        print(i, " - ", str(sys.argv[i]))
 
-print (image)
-print (svg)
+print (str(image))
+print (str(svg))
 
 # create an ImageConversion object
 imgConvert = ImageConversion(image, svg)
@@ -25,10 +35,10 @@ imgConvert = ImageConversion(image, svg)
 imgConvert.printImgInfo()
 
 # convert to grayscale
-imgGray = imgConvert.readImageGrayscale(name)
+imgGray = imgConvert.readImageGrayscale(image)
 
 # show image
-#imgConvert.showImage("Original Image", img)
+#imgConvert.showImage("Original Image", image)
 
 # get image ready
 eroImg = imgConvert.getImageReady(imgGray)

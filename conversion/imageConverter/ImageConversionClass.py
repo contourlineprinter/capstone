@@ -12,9 +12,12 @@ class ImageConversion:
     # parameters: orignal image name (if in same directory) or path, svg path
     def __init__(self, origImg, svgPath):
         try:
-            if isinstance(origImg, str) and isinstance(svgPath, str):
-                self.origImg = origImg
-                self.svgPath = svgPath
+            if not isinstance(origImg, str):
+                self.origImg = str(origImg)
+            else: self.origImg = origImg
+            if not isinstance(svgPath, str):
+                self.svgPath = str(svgPath)
+            else: self.svgPath = svgPath
         except Exception as e:
             print("Error: There is a problem with creating the class - \n" + e.args[0] )
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -598,6 +601,11 @@ class ImageConversion:
     def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./"):
         try:
 
+            # make sure the path is ready
+            if not path.endswith("/"):
+                path = path + "/"
+
+            print("Path in drawSVG", path)
             # make sure the path is a directory path
             if not os.path.isdir(path):
                 print("The path is not a directory.")
@@ -608,21 +616,21 @@ class ImageConversion:
                     path, file = ntpath.split(path)
 
                 # else use default path
-                else:
-                    path = "./"
+                elif not os.path.isfile(path): path = "./"
 
             # set up for svg
             extension = ".svg"  # extension for svg
             number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
             
             #create a svg file
+            print("SVG to: ", path+name+number+extension)
             dwg = svgwrite.Drawing(path+name+number+extension, size=(width, height))
             shapes = dwg.add(dwg.g(id="shapes", fill="none"))
             
             #interatively write points into the svg file
             lengthOfTheList = len(contourPoints[0]) - 1
             for x in range(lengthOfTheList):
-                print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
+                #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
                 shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
                                  end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
                                  stroke=svgwrite.rgb(10, 10, 16, "%")
