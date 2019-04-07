@@ -355,7 +355,7 @@ class ImageConversion:
             
             pointC = []                         # new set of points
 
-            #self.filterPoints(contours, pointC,0,0) # filter points - no range
+            self.filterPoints(contours, pointC,0,0) # filter points - no range
 
             # filter points by size of image
             if (height <= 800):                     # if height is less than or equal to 800
@@ -626,6 +626,12 @@ class ImageConversion:
             print("SVG to: ", path+name+number+extension)
             dwg = svgwrite.Drawing(path+name+number+extension, size=(width, height))
             shapes = dwg.add(dwg.g(id="shapes", fill="none"))
+
+            #add a starting point
+            shapes.add(dwg.line(start = ('0',str(height)), 
+                             end = (str(contourPoints[0][0][0]),str(contourPoints[0][0][1])), 
+                             stroke=svgwrite.rgb(10, 10, 16, "%")
+            ))
             
             #interatively write points into the svg file
             lengthOfTheList = len(contourPoints[0]) - 1

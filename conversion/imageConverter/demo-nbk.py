@@ -36,6 +36,6 @@ conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert1.createContours(eroI
 #imgConvert1.showThreeImages(img, conImgNoEdgeOld, conImgNoEdge, "Original", "Edges Found", "Final Contour")
 
 # close all windows
-imgConvert1.closeAllWindows()
+#imgConvert1.closeAllWindows()
 
 #-----------------------------------------

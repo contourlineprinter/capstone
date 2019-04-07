@@ -6,7 +6,7 @@ from ImageConversionClass import ImageConversion
 
 #-----------------------------------------         
 image = "2.png"
-svg = "./"
+svg = "./New Folder"
 
 # create an ImageConversion object
 imgConvert = ImageConversion(image, svg)
@@ -36,6 +36,6 @@ conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroIm
 #imgConvert1.showThreeImages(img, conImgNoEdgeOld, conImgNoEdge, "Original", "Edges Found", "Final Contour")
 
 # close all windows
-imgConvert.closeAllWindows()
+#imgConvert.closeAllWindows()
 
 #-----------------------------------------
