@@ -11,13 +11,11 @@ def newConnection():
     host = socket.gethostname()
     port = 377
     s.bind((host,port))
-    s.settimeout(None)
     print("now listening on", host, port)
     s.listen()
 
     while True: # wait for robot to connect
         c, addr = s.accept()
-        s.settimeout(5)
         print("connection at", addr)
         print("listening for file at send/script.py")
         listenPath = Path("send/script.py")
