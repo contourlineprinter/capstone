@@ -14,10 +14,10 @@ class ImageConversion:
         try:
             if not isinstance(origImg, str):
                 self.origImg = str(origImg)
-            else: self.origImg = origImg
+            else: self.origImg = str(origImg)
             if not isinstance(svgPath, str):
                 self.svgPath = str(svgPath)
-            else: self.svgPath = svgPath
+            else: self.svgPath = str(svgPath)
         except Exception as e:
             print("Error: There is a problem with creating the class - \n" + e.args[0] )
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -368,7 +368,7 @@ class ImageConversion:
             newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
 
             # make svg of contour
-            nameSVG = ntpath.basename(self.origImg) + "_SVG"    # set filename for svg file
+            nameSVG = str(ntpath.basename(self.origImg)) + "_SVG"    # set filename for svg file
             path = self.svgPath                                 # set directory path for svg file
             self.drawSVG(newContours, height, width, nameSVG, path) # draw it in the svg
 
@@ -531,7 +531,7 @@ class ImageConversion:
                 #print("Sort", i)
             #print(orderElement)
 
-            print(contourPoints[0])
+            #print(contourPoints[0])
             contourPoints = contourPoints[orderElement] # order the elements
 
             #print("Here")      
@@ -601,9 +601,17 @@ class ImageConversion:
     def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./"):
         try:
 
+            path = str(path)
+
             # make sure the path is ready
-            if not path.endswith("/"):
-                path = path + "/"
+            if "/" in path:
+                if not path.endswith("/"):
+                    path = path + "/"
+            elif "\\" in path:
+                if not path.endswith("\\"):
+                    path = path + "\\"
+            else: path = "./"
+                                     
 
             print("Path in drawSVG", path)
             # make sure the path is a directory path
@@ -615,16 +623,14 @@ class ImageConversion:
                     print("File detected. The location of the file will be used.")
                     path, file = ntpath.split(path)
 
-                # else use default path
-                elif not os.path.isfile(path): path = "./"
 
             # set up for svg
             extension = ".svg"  # extension for svg
             number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
-            
+            location = str(path) + str(name) + str(number) + str(extension)
             #create a svg file
-            print("SVG to: ", path+name+number+extension)
-            dwg = svgwrite.Drawing(path+name+number+extension, size=(width, height))
+            #print("SVG to: ", str(path+name+number+extension))
+            dwg = svgwrite.Drawing(location, size=(width, height))
             shapes = dwg.add(dwg.g(id="shapes", fill="none"))
 
             #add a starting point
@@ -662,9 +668,16 @@ class ImageConversion:
                 print("Error: Name and/or extension cannot be found")
                 return 1
 
-            # make sure the path is a path
-            if not path.endswith("/"):
-                path = path + "/"
+            path = str(path)
+
+            # make sure the path is ready
+            if "/" in path:
+                if not path.endswith("/"):
+                    path = path + "/"
+            elif "\\" in path:
+                if not path.endswith("\\"):
+                    path = path + "\\"
+            else: path = "./"
     
             highest = 0    # the highest number, intialized to 0
 

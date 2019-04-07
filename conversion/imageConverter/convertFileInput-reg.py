@@ -12,16 +12,18 @@ if len(sys.argv) < 2:
         print ("usage: python3 convertFileInput.py [image name] ./ [svg path (optional)]")
         exit()
 if len(sys.argv) == 2:
-        image = sys.argv[1]
+        image = str(sys.argv[1])
         svg = "./"
 elif len(sys.argv) == 3:
-        image = sys.argv[1]
-        svg = sys.argv[2]
+        image = str(sys.argv[1])
+        svg = str(sys.argv[2])
 elif len(sys.argv) > 3:
-        image = sys.argv[1]
+        image = str(sys.argv[1])
         svg = ""
-        for i in range(len(sys.argv[2:])):
-                svg = svg + str(sys.argv[i])
+        for i in sys.argv[2:]:
+                if i is sys.argv[2]:
+                        svg = svg + str(i)
+                else: svg = svg + " " + str(i)
 for i in range(len(sys.argv)):
         print(i, " - ", str(sys.argv[i]))
 
