@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import os, sys
+import parseArguments
 from ImageConversionClass import ImageConversion
 
 #----------------------------------------- 
@@ -18,16 +19,15 @@ elif len(sys.argv) == 3:
         image = str(sys.argv[1])
         svg = str(sys.argv[2])
 elif len(sys.argv) > 3:
-        image = str(sys.argv[1])
-        svg = ""
+        args = str(sys.argv[1])
         for i in sys.argv[2:]:
-                if i is sys.argv[2]:
-                        svg = svg + str(i)
-                else: svg = svg + " " + str(i)
+                args = args + " " + str(i)
+        image, svg = parseArguments.parseArguments(args)
+        
 for i in range(len(sys.argv)):
         print(i, " - ", str(sys.argv[i]))
 
-print (str(image))
+print ("\n", str(image))
 print (str(svg))
 
 # create an ImageConversion object
@@ -49,6 +49,6 @@ eroImg = imgConvert.getImageReady(imgGray)
 conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroImg)
 
 # close all windows
-imgConvert.closeAllWindows()
+#imgConvert.closeAllWindows()
 
 
