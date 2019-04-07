@@ -23,9 +23,7 @@ def newConnection():
         listenPath = Path("send/script.py")
         while True:
             try: # check if client disconnect
-                print("about to send")
                 c.send(bytes("","UTF-8")) 
-                print("sent")
             except socket.error: 
                 print('client disconnected')
                 try:
