@@ -7,10 +7,10 @@ import atexit
 def newConnection():
 
     s = socket.socket() # new socket object
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # allows faster reconnects
     host = socket.gethostname()
     port = 377
     s.bind((host,port))
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # allows faster reconnects
     print("now listening on", host, port)
     s.listen()
 
@@ -18,13 +18,7 @@ def newConnection():
         c, addr = s.accept()
         print("connection at", addr)
         print("listening for file at send/script.py")
-        listenPath = Path("send/script.py") # for final implementation
-        listenPathLine = Path("send/line.py") # line for demo1
-        listenPathCircle = Path("send/circle.py") # circle for demo1
-        listenPathRectangle = Path("send/rectangle.py") # rectangle for demo1
-        def close_socket():
-            c.close()
-        atexit.register(close_socket)
+        listenPath = Path("send/script.py")
         while True:
             try: # check if client disconnect
                 c.send(bytes("","UTF-8")) 

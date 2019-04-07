@@ -24,7 +24,8 @@ def newConnection():
     try: # this is the main loop, if any error comes up we attempt to reconnect
         while True: # listen for new file data
             l = s.recv(1024)
-            print(datetime.datetime.now())
+            # may need to play w/ timeouts here
+            if (l == 0): return
             if (l): # begin receipt of file
                 print("receiving file")
                 data = bytearray()
