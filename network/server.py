@@ -11,6 +11,7 @@ def newConnection():
     host = socket.gethostname()
     port = 377
     s.bind((host,port))
+    s.settimeout(5)
     print("now listening on", host, port)
     s.listen()
 

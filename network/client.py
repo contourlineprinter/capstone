@@ -24,8 +24,6 @@ def newConnection():
     try: # this is the main loop, if any error comes up we attempt to reconnect
         while True: # listen for new file data
             l = s.recv(1024)
-            # may need to play w/ timeouts here
-            if (l == 0): return
             if (l): # begin receipt of file
                 print("receiving file")
                 data = bytearray()
@@ -39,10 +37,10 @@ def newConnection():
                 f = open('receive/script.py','wb')
                 f.write(data)
                 f.close()
-                s.send()
                 print("file transfer complete, executing script")
                 exec(open("./receive/script.py").read())
-    except:
+    except Exception as e:
+        print(e)
         print("error! attempting to reconnect...")
         s.shutdown(socket.SHUT_RDWR)
         s.close()
