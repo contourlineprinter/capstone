@@ -1,7 +1,9 @@
 package app;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -34,6 +36,7 @@ public class ImageUploadServler extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("looking in logs");
 		if (ServletFileUpload.isMultipartContent(request)) {
 			try {
 				List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
@@ -46,36 +49,58 @@ public class ImageUploadServler extends HttpServlet {
 				}
 				//Upload Worked
 				request.setAttribute("message", "Image uploaded successfully");
-					
+				request.setAttribute("file", name);
+				System.out.println("Image success message");
+				System.out.println(name);
+
 				
 			} catch (Exception ex) {
 				request.setAttribute("message", "Image upload failed due to: " + ex);
 				ex.printStackTrace();
+				// return to Index.jsp page with the response text
+				getServletContext().getRequestDispatcher("/index.jsp").include(request, response);
+				return; 
 			}
 
 		} else {
 			request.setAttribute("message", "Unable to upload the file");
 		}
-		
-		
+
+		System.out.println("before try/catch");
 		//Call python script on file
+
+	    String command = "python3 /var/lib/tomcat8/webapps/ROOT/conversion/imageConverter/convertFileInput-reg.py /var/lib/tomcat8/webapps/ROOT/images/" + name +" /var/lib/tomcat8/webapps/ROOT/svg/";
+	    Process p = null;
 	    try {
-	    	Process p = Runtime.getRuntime().exec("python3 /conversion/imageConverter/convertFileInput.py ../../images/" + name);
-	        if(p.waitFor() == 0 ){
-	            System.out.println("Process terminated ");
-	        }
-	    } catch (IOException e) {
+	    	 p = Runtime.getRuntime().exec(command);
+	    } catch (final IOException e) {
 	    	request.setAttribute("message", "IOException: " + e);
 	    	e.printStackTrace();
+	    }
+
+	    //Wait to get exit value
+	    try {
+	        final int exitValue = p.waitFor();
+	        if (exitValue == 0)
+	            System.out.println("Successfully executed the command: " + command);
+	        else {
+	            System.out.println("Failed to execute the following command: " + command + " due to the following error(s):");
+	            try (final BufferedReader b = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
+	                String line;
+	                if ((line = b.readLine()) != null)
+	                    System.out.println(line);
+	            } catch (final IOException e) {
+	                e.printStackTrace();
+	                System.out.println("error1 " + e);
+	            }                
+	        }
 	    } catch (InterruptedException e) {
-	    	request.setAttribute("message", "InterruptedException: " + e);
-	    	e.printStackTrace();
+	        e.printStackTrace();
 	    }
 	    
-	    //request.setAttribute("message", "test test test");
 	    
-		// return to Index.jsp page with the response text
-		getServletContext().getRequestDispatcher("/index.jsp").include(request, response);
+		// move to staging page with the response text
+		getServletContext().getRequestDispatcher("/staging.jsp").include(request, response);
 	}
 
 }
