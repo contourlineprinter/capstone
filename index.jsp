@@ -50,7 +50,7 @@
                         <label  class="col-sm-3 col-form-label">Image</label>
                         <div class="col-sm-9">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="file" id="fileInput">
+                                <input type="file" class="custom-file-input" name="file" id="fileInput" accept="image/*">
                                 <label id="fileName" class="custom-file-label" for="fileInput">Choose file</label>
                             </div>
                         </div>
