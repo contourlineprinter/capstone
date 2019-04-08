@@ -51,19 +51,17 @@ public class ImageGallery extends HttpServlet {
            File f2 = new File(file_directory2);           
            if(f2.exists() && f2.isDirectory()) {
         	  String[] files2 = f2.list();
-        	  System.out.println("cp1");
         	  for(String str2: files2) {
         		  File f3 = new File(file_directory2 + File.separator + str2);
         		  if(f3.isFile()) {
         			  svg.add("svg" + File.separator + str2);
         		  }
         	  }
-        	  System.out.println("cp2");
            }
            else {
         	   System.out.println("directory does not exist");
            }
-           System.out.println("Fethed svg successfully");
+           System.out.println("Fetched svg successfully");
         } catch (Exception ex) {
            request.setAttribute("message", "Images not found: " + ex);
            ex.printStackTrace();

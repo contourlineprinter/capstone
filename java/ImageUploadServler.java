@@ -15,10 +15,13 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import java.util.regex.*;
+
 public class ImageUploadServler extends HttpServlet {
 	// static final long serialVersionUID = 1L;
 	private String file_directory;
 	public String name;
+	private static Pattern fileExtnPtrn = Pattern.compile("([^\\s]+(\\.(?i)(jpg|png|bmp))$)");
 
 	public ImageUploadServler() {
 		super();
@@ -36,14 +39,28 @@ public class ImageUploadServler extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("looking in logs");
+		
 		if (ServletFileUpload.isMultipartContent(request)) {
 			try {
 				List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
 				for (FileItem item : multiparts) {
 					if (!item.isFormField()) {
-						name = new File(item.getName()).getName();
+						name =  new File(item.getName()).toString();
+						// remove spaces, make lowercase
+						name = name.replaceAll(" ", "_"); 
+						
+						// check for valid file extension
+						Matcher mtch = fileExtnPtrn.matcher(name);
+				        if(!mtch.matches()){
+
+							request.setAttribute("message", "Unsupported file format,  please use a common image format such as .jpg or .png ");
+							getServletContext().getRequestDispatcher("/index.jsp").include(request, response);
+							return; 	
+						}
+						
+						System.out.println(item.getName());
+						System.out.println("filename: " + name);
 						item.write(new File(file_directory + File.separator + name));
 					}
 				}
@@ -85,14 +102,11 @@ public class ImageUploadServler extends HttpServlet {
 	            System.out.println("Successfully executed the command: " + command);
 	        else {
 	            System.out.println("Failed to execute the following command: " + command + " due to the following error(s):");
-	            try (final BufferedReader b = new BufferedReader(new InputStreamReader(p.getErrorStream()))) {
-	                String line;
-	                if ((line = b.readLine()) != null)
-	                    System.out.println(line);
-	            } catch (final IOException e) {
-	                e.printStackTrace();
-	                System.out.println("error1 " + e);
-	            }                
+				request.setAttribute("message", "Failed to generate svg for file " + name);
+				// return to Index.jsp page with the response text
+				getServletContext().getRequestDispatcher("/index.jsp").include(request, response);
+				return; 
+	                            
 	        }
 	    } catch (InterruptedException e) {
 	        e.printStackTrace();
