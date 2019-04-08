@@ -5,6 +5,7 @@ import shutil
 import sys
 from svg_to_instruction import robot_convert
 
+
 # srcfile = "../../svg/banana.jpg_SVG1.svg"
 # dstroot = "../../network/send/image.svg"
 

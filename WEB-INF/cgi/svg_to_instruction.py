@@ -6,7 +6,7 @@ import sys
 
 #FULL_REV = 4.85
 DEF_SPEED = 65
-SCALE = 3
+SCALE = 3/1000
 
 def svg_to_lines(file_name):
     '''
