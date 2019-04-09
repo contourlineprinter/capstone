@@ -367,10 +367,16 @@ class ImageConversion:
                 
             newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
 
-            # make svg of contour
-            nameSVG = str(ntpath.basename(self.origImg)) + "_SVG"    # set filename for svg file
-            path = self.svgPath                                 # set directory path for svg file
-            self.drawSVG(newContours, height, width, nameSVG, path) # draw it in the svg
+            # make svg of contour - for gallery
+            nameSVG = str(ntpath.basename(self.origImg)) + "_SVG"           # set filename for svg file
+            path = self.svgPath                                             # set directory path for svg file
+            self.drawSVG(newContours, height, width, nameSVG, path, 1)      # draw it in the svg
+
+            # make svg of contour - ROOT/next
+            nameSVG2 = "imageSVG"                                           # set filename for svg file
+            #path2 = "./ROOT/next"                                          # set directory path for svg file
+            path2 = "./ROOT/next"                                                    # set directory path for svg file
+            self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg            
 
             #don't sort - doesn't work?
             #vec = np.sort(np.array([pointC]))
@@ -597,8 +603,10 @@ class ImageConversion:
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
     # write a svg file with all the contour points found in the original image
-    # parameters: the list of sequence of contour points, height of image, width of image, image name, directory of svg file
-    def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./"):
+    # parameters: the list of sequence of contour points, height of image, width of image,
+    #               image name, directory of svg file,
+    #               mode -> 1 = do not overwrite files with same name, other number = overwrite files with same name
+    def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./", mode = 1):
         try:
 
             path = str(path)
@@ -626,8 +634,13 @@ class ImageConversion:
 
             # set up for svg
             extension = ".svg"  # extension for svg
-            number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
-            location = str(path) + str(name) + str(number) + str(extension)
+
+            if mode == 1:
+                number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
+                location = str(path) + str(name) + str(number) + str(extension)
+            else:
+                location = str(path) + str(name) + str(extension)
+            
             #create a svg file
             #print("SVG to: ", str(path+name+number+extension))
             dwg = svgwrite.Drawing(location, size=(width, height))
