@@ -375,7 +375,7 @@ class ImageConversion:
             # make svg of contour - ROOT/next
             nameSVG2 = "imageSVG"                                           # set filename for svg file
             #path2 = "./ROOT/next"                                          # set directory path for svg file
-            path2 = "./ROOT/next"                                                    # set directory path for svg file
+            path2 = "./ROOT/next/"                                                    # set directory path for svg file
             self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg            
 
             #don't sort - doesn't work?
