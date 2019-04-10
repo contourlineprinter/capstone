@@ -6,7 +6,7 @@ from ImageConversionClass import ImageConversion
 
 #-----------------------------------------         
 image = "2.png"
-svg = "./New Folder"
+svg = "./"
 
 # create an ImageConversion object
 imgConvert = ImageConversion(image, svg)

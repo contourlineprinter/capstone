@@ -70,10 +70,10 @@
                 </form>
 
 		<!-- Spinner to indicate that server is working -->                
-		<div class="bg-light p-3 my-5 d-flex align-items-center">
-			<strong>Building your contour drawling...</strong>
+		<!-- <div class="bg-light p-3 my-5 d-flex align-items-center"> -->
+		<!--	<strong>Building your contour drawling...</strong>
 			<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-		</div>
+		</div> -->
 		
             </div>
         </div>
