@@ -242,8 +242,15 @@ class ImageConversion:
             CANNY_THRESH_1 = 10
             CANNY_THRESH_2 = 200
             edgeImage = cv2.Canny(image=image, threshold1=CANNY_THRESH_1, threshold2=CANNY_THRESH_2)
+
+            # taking a matrix of size n,n as the kernel
+            kernelSizeRow = 2
+            kernelSizeCol = 2
+            kernel = np.ones((kernelSizeRow, kernelSizeCol), np.uint8)
+            
             edgeImage = cv2.dilate(edgeImage, None)
             edgeImage = cv2.erode(edgeImage, None)
+            
             return edgeImage
         
         except Exception as e:
@@ -309,7 +316,8 @@ class ImageConversion:
             #self.showImage("Erosion Image", erosionImage)
             #cv2.moveWindow("Erosion Image",900,0)
 
-            return edgeImage
+            return erosionImage
+            #return edgeImage
         
         except Exception as e:
             print("Error: There is a problem with preprocessing the image - \n" + e.args[0] ) 
@@ -355,7 +363,7 @@ class ImageConversion:
             
             pointC = []                         # new set of points
 
-            self.filterPoints(contours, pointC,0,0) # filter points - no range
+            #self.filterPoints(contours, pointC,0,0) # filter points - no range
 
             # filter points by size of image
             if (height <= 800):                     # if height is less than or equal to 800
@@ -374,8 +382,7 @@ class ImageConversion:
 
             # make svg of contour - ROOT/next
             nameSVG2 = "imageSVG"                                           # set filename for svg file
-            #path2 = "./ROOT/next"                                          # set directory path for svg file
-            path2 = "/var/lib/tomcat8/webapps/ROOT/conversion/next"                                                    # set directory path for svg file
+            path2 = "/var/lib/tomcat8/webapps/ROOT/conversion/next"         # set directory path for svg file
 
             # if folder for svg doesn't exist
             if not os.path.exists(path2):
@@ -492,6 +499,69 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
+    # get the smallest point by y-coordinate
+    # parameters: set of points [[[x1,y1]],[[x2,y2]]...[[xn,yn]]]
+    # return: minimum y value, x at the minimum y value
+    def getMinY(self, setOfPoints):
+        try:
+
+            minY = setOfPoints[0][0][1]
+            xAtMinY = setOfPoints[0][0][0]
+            print("\nStarting min Y: ", minY)
+           
+            # process points in contour - get the last two points
+            for j in range(len(setOfPoints)):
+                        
+                foundY = setOfPoints[j][0][1]
+                #print("FoundY: ", foundY)
+
+                #print("J - ", setOfPoints[j][0][1])
+                if foundY < minY:
+                    print("New Min Y")
+                    minY = foundY
+                    xAtMinY = setOfPoints[j][0][0]
+                        
+            return minY, xAtMinY
+        
+        except Exception as e:
+            print("Error: There is a problem with getting the minimum y points - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
+    # get the indices of the smallest
+    # parameters: set of points that make up contour
+    # return: sorted contourPoints
+    def getSortedIndexListBySmallestY(self, contourPoints):
+        try:
+
+            listOfMinYs = [] # [contour element #, min y, x at min y]
+            for i in range(len(contourPoints)):
+
+                minY, xAtMinY = self.getMinY(contourPoints[i])
+                print("Minimum Found in ", i, ": ", minY)
+                listOfMinYs.append([i, minY, xAtMinY])
+
+            print(listOfMinYs)
+
+            listOfMinYs = np.array(listOfMinYs) # change into a numpy array
+
+            # sort the contour element by y, then x
+            orderElement = []
+            for i in np.argsort(listOfMinYs[:,1]):
+                orderElement.append(i)
+                #print("Sort", i)
+            print(orderElement)
+            
+            return contourPoints
+
+        
+        except Exception as e:
+            print("Error: There is a problem with sortng points by min y - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
     # filter contour points based on minimum areas and specific range of x and y coordinates
     # range is used to filter out some points in contour image:
     #   smaller range - more points, more lines in the image 
@@ -522,8 +592,9 @@ class ImageConversion:
                 if(contourArea < minContourArea) or len(approx2) == 4:
                     contoursToDelete.append(i)  # save the index of that contour
 
-            # delete all the contours that don't meet the area requirement
+            # delete all the contours that don't meet the requirements
             contourPoints = np.delete(contourPoints, contoursToDelete)
+            #contourPoints = np.delete(contourPoints, 0) # delete the first contour element - polygon takes care of this
             
             # set up things for processing points in contour
             x = y = []
@@ -534,31 +605,32 @@ class ImageConversion:
             # printing current state of countour points
             #self.print_contours(contourPoints)
 
-            # process points in contour - get the last two points
-            startEndPoint = np.array(self.getStartEndPoints(contourPoints)) # change into a numpy array
-
-            # sort the contour element
-            orderElement = []
-            for i in np.argsort(startEndPoint[::2,0]):
-                orderElement.append(i)
-                #print("Sort", i)
-            #print(orderElement)
-
-            #print(contourPoints[0])
-            contourPoints = contourPoints[orderElement] # order the elements
+##            # process points in contour - get the last two points
+##            startEndPoint = np.array(self.getStartEndPoints(contourPoints)) # change into a numpy array
+##
+##            # sort the contour element
+##            orderElement = []
+##            for i in np.argsort(startEndPoint[::2,0]): # skip every other element, sort by x
+##                orderElement.append(i)
+##                #print("Sort", i)
+##            #print(orderElement)
+##
+##            #print(contourPoints[0])
+##            contourPoints = contourPoints[orderElement] # order the elements
 
             #print("Here")      
 
+            contourPoints = self.getSortedIndexListBySmallestY(contourPoints)
+
             startEndPoint = self.getStartEndPoints(contourPoints) # get the start and end points again
-   
-                            
+               
             # process points in contour - remove some points based on x and y ranges
             for i in range(len(contourPoints)):
 
-                if i == 0: continue # gets rid of the first contour element
-
+                #if i == 0: continue # gets rid of the first contour element
+                
                 for j in range(len(contourPoints[i])):
-                                            
+                    
                     #for k in contourPoints[i][j]:
                     xget = contourPoints[i][j][0][0] #get x
                     yget = contourPoints[i][j][0][1] #get y
