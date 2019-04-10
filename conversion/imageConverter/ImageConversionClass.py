@@ -552,6 +552,10 @@ class ImageConversion:
                 orderElement.append(i)
                 #print("Sort", i)
             print(orderElement)
+
+            print("Before: ", contourPoints[3])
+            contourPoints = contourPoints[orderElement] # order the elements
+            print("After: ", contourPoints[3])
             
             return contourPoints
 
