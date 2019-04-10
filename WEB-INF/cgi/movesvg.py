@@ -15,6 +15,6 @@ from svg_to_instruction import robot_convert
 
 # shutil.copy(srcfile, dstroot)
 
-robot_convert("/var/lib/tomcat8/webapps/ROOT/svg/die.jpg_SVG1.svg",3)
+robot_convert("/var/lib/tomcat8/webapps/ROOT/next/imageSVG.svg",3)
 
 
