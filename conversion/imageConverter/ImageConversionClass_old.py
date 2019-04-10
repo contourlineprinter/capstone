@@ -552,10 +552,10 @@ class ImageConversion:
                 orderElement.append(i)
                 #print("Sort", i)
             print(orderElement)
-    
-            #print("Before: ", contourPoints[3])
+
+            print("Before: ", contourPoints[3])
             contourPoints = contourPoints[orderElement] # order the elements
-            #print("After: ", contourPoints[3])
+            print("After: ", contourPoints[3])
             
             return contourPoints
 
@@ -624,49 +624,14 @@ class ImageConversion:
 
             #print("Here")      
 
-            #print("\nLength of Contour Points[i] Before: ", contourPoints[3])
             contourPoints = self.getSortedIndexListBySmallestY(contourPoints)
 
             startEndPoint = self.getStartEndPoints(contourPoints) # get the start and end points again
-
-            alternate = 0
-            pointsToSkip = 0
-            numberOfPointsContourElement = 0
-                
+               
             # process points in contour - remove some points based on x and y ranges
             for i in range(len(contourPoints)):
 
                 #if i == 0: continue # gets rid of the first contour element
-
-                
-#---------------------------------------
-                    
-                # testing skipping points
-                if len(contourPoints[i] > 500):
-                    pointsToSkip = int(len(contourPoints[i])/3)
-
-                elif len(contourPoints[i] <= 500) and len(contourPoints[i] > 250):
-                    
-                    pointsToSkip = int(len(contourPoints[i])/3)
-
-                elif len(contourPoints[i] <= 250) and len(contourPoints[i] > 125):
-                    
-                    pointsToSkip = int(len(contourPoints[i])/4)
-
-                elif len(contourPoints[i] <= 125) and len(contourPoints[i] > 62):
-                    
-                    pointsToSkip = int(len(contourPoints[i])/5)
-                
-                elif len(contourPoints[i] <= 62) and len(contourPoints[i] > 31):
-                    
-                    pointsToSkip = int(len(contourPoints[i])/6)
-                    
-                else: pointsToSkip = int(len(contourPoints[i])/8)
-
-                #pointsToSkip = int(len(contourPoints[i])/5)
-                print("\nLength of Contour Points[i]: ", len(contourPoints[i]))
-                print("Points to skip: ", pointsToSkip)
-#---------------------------------------
                 
                 for j in range(len(contourPoints[i])):
                     
@@ -675,6 +640,9 @@ class ImageConversion:
                     yget = contourPoints[i][j][0][1] #get y
                     #print("X Found: ", xget)
                     #print("Y Found: ", yget)
+##                    xsave = xget
+##                    ysave = yget
+##                    newContourPoints.append([xget,yget])
                     
                     for c in startEndPoint:
                         #print("Combine Individual: ", c)
@@ -697,22 +665,11 @@ class ImageConversion:
                                 #print("got here - no")
                                 continue
                             else:
-      
-                                if alternate == pointsToSkip:
-                                    xsave = xget
-                                    ysave = yget
-                                    newContourPoints.append([xget,yget])
-                                    count+=1
-                                    alternate = 0
-                                else:
-                                    alternate+=1
-                                    continue
-##
-##                                #print("got here - yes")
-##                                xsave = xget
-##                                ysave = yget
-##                                newContourPoints.append([xget,yget])
-##                                count+=1
+                                #print("got here - yes")
+                                xsave = xget
+                                ysave = yget
+                                newContourPoints.append([xget,yget])
+                                count+=1
 
                                 
             #print("Inital Number of Objects after processing: ", len(contourPoints))
