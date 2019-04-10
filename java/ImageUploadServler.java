@@ -21,7 +21,7 @@ public class ImageUploadServler extends HttpServlet {
 	// static final long serialVersionUID = 1L;
 	private String file_directory;
 	public String name;
-	private static Pattern fileExtnPtrn = Pattern.compile("([^\\s]+(\\.(?i)(jpg|png|bmp))$)");
+	private static Pattern fileExtnPtrn = Pattern.compile("([^\\s]+(\\.(?i)(jpg|png|bmp|jpeg))$)");
 
 	public ImageUploadServler() {
 		super();
@@ -102,7 +102,7 @@ public class ImageUploadServler extends HttpServlet {
 	            System.out.println("Successfully executed the command: " + command);
 	        else {
 	            System.out.println("Failed to execute the following command: " + command + " due to the following error(s):");
-				request.setAttribute("message", "Failed to generate svg for file " + name);
+				//request.setAttribute("message", "Failed to generate svg for file " + name);
 				// return to Index.jsp page with the response text
 				getServletContext().getRequestDispatcher("/index.jsp").include(request, response);
 				return; 

@@ -3,6 +3,7 @@ package app;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -32,6 +33,7 @@ public class ImageGallery extends HttpServlet {
            File f = new File(file_directory);           
            if(f.exists() && f.isDirectory()) {
         	  String[] files = f.list();
+        	  Arrays.sort(files);
         	  for(String str: files) {
         		  File f1 = new File(file_directory + File.separator + str);
         		  if(f1.isFile()) {
@@ -51,6 +53,7 @@ public class ImageGallery extends HttpServlet {
            File f2 = new File(file_directory2);           
            if(f2.exists() && f2.isDirectory()) {
         	  String[] files2 = f2.list();
+        	  Arrays.sort(files2);
         	  for(String str2: files2) {
         		  File f3 = new File(file_directory2 + File.separator + str2);
         		  if(f3.isFile()) {
