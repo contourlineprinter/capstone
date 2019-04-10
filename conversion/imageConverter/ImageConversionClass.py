@@ -378,7 +378,7 @@ class ImageConversion:
             # make svg of contour - for gallery
             nameSVG = str(ntpath.basename(self.origImg))                  # set filename for svg file
             path = self.svgPath                                             # set directory path for svg file
-            #self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg
+            self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg
 
             # make svg of contour - ROOT/next
             nameSVG2 = "imageSVG"                                           # set filename for svg file
@@ -390,7 +390,7 @@ class ImageConversion:
                 print("A new folder will be created")
                 os.makedirs(path2)
 
-            #self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg            
+            self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg            
 
             #don't sort - doesn't work?
             #vec = np.sort(np.array([pointC]))
