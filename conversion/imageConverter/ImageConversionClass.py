@@ -382,10 +382,6 @@ class ImageConversion:
 
             # make svg of contour - ROOT/next
             nameSVG2 = "imageSVG"                                           # set filename for svg file
-<<<<<<< HEAD
-            #path2 = "./ROOT/next"                                          # set directory path for svg file
-            path2 = "./ROOT/next"                                           # set directory path for svg file
-=======
             path2 = "/var/lib/tomcat8/webapps/ROOT/conversion/next"         # set directory path for svg file
 
             # if folder for svg doesn't exist
@@ -394,7 +390,6 @@ class ImageConversion:
                 print("A new folder will be created")
                 os.makedirs(path2)
 
->>>>>>> 9a5bd27f850443204c6dcc263c37334f8475e771
             self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg            
 
             #don't sort - doesn't work?
