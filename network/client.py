@@ -38,7 +38,10 @@ def newConnection():
                 f.write(data)
                 f.close()
                 print("file transfer complete, executing script")
-                exec(open("./receive/script.py").read())
+                try:
+                    exec(open("./receive/script.py").read())
+                except Exception as e:
+                    print(e)
     except Exception as e:
         print(e)
         print("error! attempting to reconnect...")
