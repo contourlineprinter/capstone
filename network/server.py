@@ -1,15 +1,26 @@
 import socket
 from pathlib import Path
 import os
+import datetime
 import time
 import atexit
+
+def closeConnection(sock):
+    try:
+        sock.shutdown(socket.SHUT_RDWR)
+    except:
+        pass
+    try:
+        sock.close()
+    except:
+        pass
 
 def newConnection():
 
     s = socket.socket() # new socket object
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # allows faster reconnects
     host = socket.gethostname()
-    port = 3777
+    port = 3774
     s.bind((host,port))
     print("now listening on", host, port)
     s.listen()
@@ -21,18 +32,15 @@ def newConnection():
         listenPath = Path("send/script.py")
         while True:
             try: # check if client disconnect
-                c.send(bytes("","UTF-8")) 
-            except socket.error: 
-                print('client disconnected')
-                try:
-                    c.shutdown(socket.SHUT_RDWR)
-                except:
-                    pass
-                try:
-                    c.close()
-                except:
-                    pass
-                return
+                c.settimeout(1)
+                if not (c.recv(1024)):
+                    print("## Socket disconnected! ##")
+                    c.settimeout(None)
+                    closeConnection(c)
+                    return
+            except Exception as e:
+                print(e)
+                c.settimeout(None)
             if listenPath.is_file(): # check if there is file to send
                 try:
                     print("file detected, attempting to send")
@@ -46,8 +54,8 @@ def newConnection():
                     f.close()
                     os.remove("send/script.py")
                 except:
-                    print("error reading file. will reattempt in 1 second")
-                    time.sleep(1)
+                    print("error transferring file. will reattempt in 3 seconds")
+                    time.sleep(3)
 
 while True:
     newConnection()
