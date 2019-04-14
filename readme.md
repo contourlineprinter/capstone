@@ -3,7 +3,7 @@
 
 ## Temple CS Capstone
 
-**Server IP:**   [34.73.159.141](http://34.73.159.141)
+**Server IP:**   [34.73.146.51](http://34.73.146.51)
 
 **location on server** /var/lib/tomcat8/webapps/ROOT
 
