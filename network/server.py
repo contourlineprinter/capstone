@@ -9,7 +9,7 @@ def newConnection():
     s = socket.socket() # new socket object
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # allows faster reconnects
     host = socket.gethostname()
-    port = 377
+    port = 3777
     s.bind((host,port))
     print("now listening on", host, port)
     s.listen()

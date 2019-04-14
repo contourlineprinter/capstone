@@ -9,7 +9,7 @@ def newConnection():
     s = socket.socket() # new socket object
     host = "34.73.159.141"
     # host = socket.gethostname()
-    port = 377
+    port = 3777
 
     while True: # attempt to make connection to server
         try:
