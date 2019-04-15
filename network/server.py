@@ -39,7 +39,6 @@ def newConnection():
                     closeConnection(c)
                     return
             except Exception as e:
-                print(e)
                 c.settimeout(None)
             if listenPath.is_file(): # check if there is file to send
                 try:
