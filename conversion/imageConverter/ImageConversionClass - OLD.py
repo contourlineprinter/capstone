@@ -14,10 +14,13 @@ class ImageConversion:
         try:
             if not isinstance(origImg, str):
                 self.origImg = str(origImg)
-            else: self.origImg = origImg
+            else: self.origImg = str(origImg)
             if not isinstance(svgPath, str):
                 self.svgPath = str(svgPath)
-            else: self.svgPath = svgPath
+            else: self.svgPath = str(svgPath)
+            self.origHeight = -1
+            self.origWidth = -1
+
         except Exception as e:
             print("Error: There is a problem with creating the class - \n" + e.args[0] )
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -28,8 +31,17 @@ class ImageConversion:
     def printImgInfo(self):
         try:
             print("Image: %s\n" \
-                "SVG: %s \n" % (self.origImg, self.svgPath))
-            
+                "SVG: %s" % (self.origImg, self.svgPath))
+            if self.origHeight is -1 :
+                print("Height has not been set. Try loading in the image.")
+            else:
+                print("Height: ", self.origHeight)
+            if self.origWidth is -1 :
+                print("Width has not been set. Try loading in the image.")
+            else:
+                print("Width: ", self.origWidth)
+            print("")
+
         except Exception:
             print("Error: There is a problem with printing the information - \n" + e.args[0] )
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -41,7 +53,10 @@ class ImageConversion:
     # return: original image
     def readImageOriginal(self, image):
         try:
-            imgOriginal = cv2.imread(image, 1)  # read in image original colors
+            imgOriginal = cv2.imread(image, 1)      # read in image original colors
+            height, width = imgOriginal.shape[:2]   # get height and width
+            self.origHeight = height                # set height
+            self.origWidth = width                  # set width
             return imgOriginal
         
         except Exception as e:
@@ -55,7 +70,10 @@ class ImageConversion:
     # return: image in grayscale
     def readImageGrayscale(self, image):
         try:
-            imgGray = cv2.imread(image, 0)  # read in image grayscale
+            imgGray = cv2.imread(image, 0)          # read in image grayscale
+            height, width = imgGray.shape[:2]       # get height and width
+            self.origHeight = height                # set height
+            self.origWidth = width                  # set width
             return imgGray
         
         except Exception as e:
@@ -242,12 +260,70 @@ class ImageConversion:
             CANNY_THRESH_1 = 10
             CANNY_THRESH_2 = 200
             edgeImage = cv2.Canny(image=image, threshold1=CANNY_THRESH_1, threshold2=CANNY_THRESH_2)
+
+            # taking a matrix of size n,n as the kernel
+            kernelSizeRow = 2
+            kernelSizeCol = 2
+            kernel = np.ones((kernelSizeRow, kernelSizeCol), np.uint8)
+            
             edgeImage = cv2.dilate(edgeImage, None)
             edgeImage = cv2.erode(edgeImage, None)
+            
             return edgeImage
         
         except Exception as e:
             print("Error: There is a problem with getting the edges with Canny - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
+    # resize image by height and width
+    # parameter: image, original height, original width, desired height, desired width
+    # return: resized image
+    def resizeImageByHeightAndWidth(self, image, origImgHeight, origImgWidth, desiredImgHeight, desiredImgWidth):
+        try:
+
+            #ratio = W / H → W = H * ratio → H = W / ratio
+            
+            # if the image orig size is not specified
+            if origImgHeight is None:
+                origImgHeight = self.origHeight
+            if origImgWidth is None:
+                origImgWidth = self.origWidth
+
+            ratio = abs(origImgWidth/origImgHeight) # get the ratio of the image at original size - ratio = w/h
+
+            # if the user specified the desired height and width
+            if desiredImgHeight is not None and desiredImgWidth is not None:
+                print("Height and width found")
+                dimension = (desiredImgWidth, desiredImgHeight) # resize based on desired height and width
+                
+            # if the user specified the desired height only
+            elif desiredImgHeight is not None:
+                print("Height found")
+                dimension = (abs(int(ratio*desiredImgHeight)), abs(desiredImgHeight)) # resize based on desired height and width
+                
+            # if the user specfied the desired width
+            elif desiredImgWidth is not None:
+                print("Width found")
+                dimension = (desiredImgWidth, abs(int(ratio*desiredImgWidth))) # resize based on desired height and width
+
+            # else return the image at original size
+            else:
+                print("Image is not changed. Missing parameters.")
+                return image
+
+            if dimension is not None:
+                resizeImg = cv2.resize(image, dimension, interpolation = cv2.INTER_AREA)
+                newHeight, newWidth = resizeImg.shape[:2]
+                print("\nNew Height: ", newHeight)
+                print("New Width: ", newWidth)
+                print("")
+                
+            return resizeImg
+        
+        except Exception as e:
+            print("Error: There is a problem with resizing the image - \n" + e.args[0] ) 
             exc_type, exc_obj, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
@@ -309,7 +385,8 @@ class ImageConversion:
             #self.showImage("Erosion Image", erosionImage)
             #cv2.moveWindow("Erosion Image",900,0)
 
-            return edgeImage
+            return erosionImage
+            #return edgeImage
         
         except Exception as e:
             print("Error: There is a problem with preprocessing the image - \n" + e.args[0] ) 
@@ -350,9 +427,7 @@ class ImageConversion:
         try:
             contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)   # find countour
             print("Found %d objects in intial contour list." % len(contours))                       # length of the contour list
-            
-            #print('hierarchy',hierarchy)
-            #print('contours',contours)
+
             height, width = image.shape[:2]     # get image size
             
             pointC = []                         # new set of points
@@ -366,15 +441,25 @@ class ImageConversion:
                 self.filterPoints(contours, pointC, 10, 10, 600) # filter points
             else:                                   # for images greater than or equal to 1600
                 self.filterPoints(contours, pointC, 15, 15, 1200) # filter points
-            
-            #print(pointC)
-            #newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
-            newContours = pointC
-            
-            # make svg of contour
-            nameSVG = ntpath.basename(self.origImg) + "_SVG"    # set filename for svg file
-            path = self.svgPath                                 # set directory path for svg file
-            self.drawSVG(newContours, height, width, nameSVG, path) # draw it in the svg
+                
+            newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
+
+            # make svg of contour - for gallery
+            nameSVG = str(ntpath.basename(self.origImg))                  # set filename for svg file
+            path = self.svgPath                                             # set directory path for svg file
+            self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg
+
+            # make svg of contour - ROOT/next
+            nameSVG2 = "imageSVG"                                           # set filename for svg file
+            path2 = "/var/lib/tomcat8/webapps/ROOT/next"         # set directory path for svg file
+
+            # if folder for svg doesn't exist
+            if not os.path.exists(path2):
+                print("Folder doesn't exist for: ", path2)
+                print("A new folder will be created")
+                os.makedirs(path2)
+
+            self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg            
 
             #don't sort - doesn't work?
             #vec = np.sort(np.array([pointC]))
@@ -383,33 +468,14 @@ class ImageConversion:
             blankCanvas1 = 255*np.ones((height, width, 3), np.uint8)                                        # make blank canvas
             blankCanvas2 = 255*np.ones((height, width, 3), np.uint8)                                        # make blank canvas
             imageContourOld = cv2.drawContours(blankCanvas1, contours, -1, (0,255,0), lineThickness)        # draw the contour image with old point
-            # convert my nested sets to numpy array
-            #numpyNewContours = np.array([])
-            #for contourObject in newContours:
-            #    temp_arr = np.array([])
-            #    for i in range(0,len(newContours)-1,2):
-            #        p = [newContours[i],newContours[i+1]]
-            #        temp_arr = np.append(temp_arr, p)
-                        #print(temp_arr)
-                        #    numpyNewContours = np.append(numpyNewContours, temp_arr)
-            
-            #for contourObject in newContours:
-            #    temp_arr = np.array([])
-            #    for con in contourObject:
-            #        temp_arr = np.append(temp_arr, con)
-            #    numpyNewContours = np.append(numpyNewContours, temp_arr)
-        
-        #print(contours)
-        #   print(numpyNewContours)
-        #   print(newContours)
-        #   imageContourNew = cv2.drawContours(blankCanvas2, numpyNewContours, -1, (0,255,0), lineThickness)     # draw the contour image with new point
+            imageContourNew = cv2.drawContours(blankCanvas2, newContours, -1, (0,255,0), lineThickness)     # draw the contour image with new point
 
-        #self.showTwoImages(imageContourOld, imageContourNew, "Contour Old", "Contour New")
+            self.showTwoImages(imageContourOld, imageContourNew, "Contour Old", "Contour New")
 
-            return imageContourOld, None, newContours #imageContourNew,
+            return imageContourOld, imageContourNew, newContours
 
         except Exception as e:
-            print("Error: There is a problem with creating the contour image - \n" + e.args[0] )
+            #print("Error: There is a problem with creating the contour image - \n" + e.args[0] )
             exc_type, exc_obj, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
@@ -502,6 +568,73 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
+    # get the smallest point by y-coordinate
+    # parameters: set of points [[[x1,y1]],[[x2,y2]]...[[xn,yn]]]
+    # return: minimum y value, x at the minimum y value
+    def getMinY(self, setOfPoints):
+        try:
+
+            minY = setOfPoints[0][0][1]
+            xAtMinY = setOfPoints[0][0][0]
+            print("\nStarting min Y: ", minY)
+           
+            # process points in contour - get the last two points
+            for j in range(len(setOfPoints)):
+                        
+                foundY = setOfPoints[j][0][1]
+                #print("FoundY: ", foundY)
+
+                #print("J - ", setOfPoints[j][0][1])
+                if foundY < minY:
+                    print("New Min Y")
+                    minY = foundY
+                    xAtMinY = setOfPoints[j][0][0]
+                        
+            return minY, xAtMinY
+        
+        except Exception as e:
+            print("Error: There is a problem with getting the minimum y points - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
+    # get the indices of the smallest
+    # parameters: set of points that make up contour
+    # return: sorted contourPoints
+    def getSortedIndexListBySmallestY(self, contourPoints):
+        try:
+
+            listOfMinYs = [] # [contour element #, min y, x at min y]
+            for i in range(len(contourPoints)):
+
+                minY, xAtMinY = self.getMinY(contourPoints[i])
+                print("Minimum Found in ", i, ": ", minY)
+                listOfMinYs.append([i, minY, xAtMinY])
+
+            print(listOfMinYs)
+
+            listOfMinYs = np.array(listOfMinYs) # change into a numpy array
+
+            # sort the contour element by y, then x
+            orderElement = []
+            for i in np.argsort(listOfMinYs[:,1]):
+                orderElement.append(i)
+                #print("Sort", i)
+            print(orderElement)
+    
+            #print("Before: ", contourPoints[3])
+            contourPoints = contourPoints[orderElement] # order the elements
+            #print("After: ", contourPoints[3])
+            
+            return contourPoints
+
+        
+        except Exception as e:
+            print("Error: There is a problem with sortng points by min y - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
     # filter contour points based on minimum areas and specific range of x and y coordinates
     # range is used to filter out some points in contour image:
     #   smaller range - more points, more lines in the image 
@@ -532,8 +665,9 @@ class ImageConversion:
                 if(contourArea < minContourArea) or len(approx2) == 4:
                     contoursToDelete.append(i)  # save the index of that contour
 
-            # delete all the contours that don't meet the area requirement
+            # delete all the contours that don't meet the requirements
             contourPoints = np.delete(contourPoints, contoursToDelete)
+            #contourPoints = np.delete(contourPoints, 0) # delete the first contour element - polygon takes care of this
             
             # set up things for processing points in contour
             x = y = []
@@ -544,44 +678,72 @@ class ImageConversion:
             # printing current state of countour points
             #self.print_contours(contourPoints)
 
-            # process points in contour - get the last two points
-            startEndPoint = np.array(self.getStartEndPoints(contourPoints)) # change into a numpy array
-
-            # sort the contour element
-            orderElement = []
-            for i in np.argsort(startEndPoint[::2,0]):
-                orderElement.append(i)
-                #print("Sort", i)
-            #print(orderElement)
-
-            print(contourPoints[0])
-            contourPoints = contourPoints[orderElement] # order the elements
+##            # process points in contour - get the last two points
+##            startEndPoint = np.array(self.getStartEndPoints(contourPoints)) # change into a numpy array
+##
+##            # sort the contour element
+##            orderElement = []
+##            for i in np.argsort(startEndPoint[::2,0]): # skip every other element, sort by x
+##                orderElement.append(i)
+##                #print("Sort", i)
+##            #print(orderElement)
+##
+##            #print(contourPoints[0])
+##            contourPoints = contourPoints[orderElement] # order the elements
 
             #print("Here")      
 
+            #print("\nLength of Contour Points[i] Before: ", contourPoints[3])
+            contourPoints = self.getSortedIndexListBySmallestY(contourPoints)
+
             startEndPoint = self.getStartEndPoints(contourPoints) # get the start and end points again
-   
-                            
+
+            alternate = 0
+            pointsToSkip = 0
+            numberOfPointsContourElement = 0
+                
             # process points in contour - remove some points based on x and y ranges
             for i in range(len(contourPoints)):
 
-                if i == 0: continue # gets rid of the first contour element
-                else:
-                    if i != 1:
-                        newContourPoints.append(temp_set)
-                    temp_set = []
+                #if i == 0: continue # gets rid of the first contour element
+
+                
+#---------------------------------------
+                    
+                # testing skipping points
+                if len(contourPoints[i] > 500):
+                    pointsToSkip = int(len(contourPoints[i])/3)
+
+                elif len(contourPoints[i] <= 500) and len(contourPoints[i] > 250):
+                    
+                    pointsToSkip = int(len(contourPoints[i])/3)
+
+                elif len(contourPoints[i] <= 250) and len(contourPoints[i] > 125):
+                    
+                    pointsToSkip = int(len(contourPoints[i])/4)
+
+                elif len(contourPoints[i] <= 125) and len(contourPoints[i] > 62):
+                    
+                    pointsToSkip = int(len(contourPoints[i])/5)
+                
+                elif len(contourPoints[i] <= 62) and len(contourPoints[i] > 31):
+                    
+                    pointsToSkip = int(len(contourPoints[i])/6)
+                    
+                else: pointsToSkip = int(len(contourPoints[i])/8)
+
+                #pointsToSkip = int(len(contourPoints[i])/5)
+                print("\nLength of Contour Points[i]: ", len(contourPoints[i]))
+                print("Points to skip: ", pointsToSkip)
+#---------------------------------------
                 
                 for j in range(len(contourPoints[i])):
-                                            
+                    
                     #for k in contourPoints[i][j]:
                     xget = contourPoints[i][j][0][0] #get x
                     yget = contourPoints[i][j][0][1] #get y
-                    #print('@',i,j,'=',xget,yget)
                     #print("X Found: ", xget)
                     #print("Y Found: ", yget)
-##                    xsave = xget
-##                    ysave = yget
-##                    newContourPoints.append([xget,yget])
                     
                     for c in startEndPoint:
                         #print("Combine Individual: ", c)
@@ -590,7 +752,7 @@ class ImageConversion:
 
                             xsave = xget
                             ysave = yget
-                            temp_set.append([xget,yget])
+                            newContourPoints.append([xget,yget])
                             count+=1
                         
                         else:
@@ -604,11 +766,22 @@ class ImageConversion:
                                 #print("got here - no")
                                 continue
                             else:
-                                #print("got here - yes")
-                                xsave = xget
-                                ysave = yget
-                                temp_set.append([xget,yget])
-                                count+=1
+      
+                                if alternate == pointsToSkip:
+                                    xsave = xget
+                                    ysave = yget
+                                    newContourPoints.append([xget,yget])
+                                    count+=1
+                                    alternate = 0
+                                else:
+                                    alternate+=1
+                                    continue
+##
+##                                #print("got here - yes")
+##                                xsave = xget
+##                                ysave = yget
+##                                newContourPoints.append([xget,yget])
+##                                count+=1
 
                                 
             #print("Inital Number of Objects after processing: ", len(contourPoints))
@@ -625,51 +798,23 @@ class ImageConversion:
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
     # write a svg file with all the contour points found in the original image
-    # parameters: the list of sequence of contour points, height of image, width of image, image name, directory of svg file
-    def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./", command = 'C'):
-        # This is inefficient, but we must limit the choice to 'L', 'S', or ideally 'C'
-        if command.upper().startswith('L'):
-            command = 'L'
-        elif command.upper().startswith('S'):
-            command = 'S'
-        else:
-            command = 'C'
-        
-        
-        s = ('<?xml version="1.0" standalone="no"?>\n'
-             '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"\n'
-             '"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">\n\n'
-             '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" '
-             'width="{w}pt" height="{h}pt"> \n\n'
-             #'preserveAspectRatio="xMidYMid meet">\n'
-             '\t<metadata>\n'
-             '\t\tCreated by openCV 4.0, written by Andrew Ditty, Ivy Pan, Kenny Sexton, Jesse Dewald,\n'
-             '\t\tAndrew Eels, Sage Vega, Zhuonan Zhou, Nan Wang, Ty Dollas, Hodgy Daddies, Left Brizzle, \n'
-             '\t\tDomyon, Frankie Ocean, Syd the Dude, L-Boy\n\n'
-             '\t\t2019 - Temple University - CIS 4398 - Professor Wang - Spring\n'
-             '\t</metadata>\n\n'
-             #'<g transform="translate(0.000000,932.000000) scale(0.100000,-0.100000)"' # unnecessary?
-             '\t<g fill="none" stroke="#000000">\n').format(h=height, w=width)
-        for contour in contourPoints:
-            #print('M', end='')
-            s += '\t\t<path d="M' + str(contour[0][0]) + ' ' + str(contour[0][1]) + ' '
-            #print(contour[0][0],contour[0][1])
-            #print('S', end="")
-            s += command
-            for i in range(1 , len(contour)-1):
-                s += str(contour[i][0]) +' ' + str(contour[i][1]) + ' '
-        #print(contour[i][0],contour[i][1], end="")
-            s += '"/>\n'
-        s += '\t</g>\n\tSorry, your browser does not support inline SVG.\n</svg>'
-    
-    #print("\n--------\ns:\n",s,end='')
-            #print('\nLast = ',contour[len(contour)-1],'\n')
-            # make sure the path is ready
-        if not path.endswith("/"):
-            path = path + "/"
-
-
+    # parameters: the list of sequence of contour points, height of image, width of image,
+    #               image name, directory of svg file,
+    #               mode -> 1 = do not overwrite files with same name, other number = overwrite files with same name
+    def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./", mode = 1):
         try:
+
+            path = str(path)
+
+            # make sure the path is ready
+            if "/" in path:
+                if not path.endswith("/"):
+                    path = path + "/"
+            elif "\\" in path:
+                if not path.endswith("\\"):
+                    path = path + "\\"
+            else: path = "./"
+                                     
 
             print("Path in drawSVG", path)
             # make sure the path is a directory path
@@ -681,29 +826,44 @@ class ImageConversion:
                     print("File detected. The location of the file will be used.")
                     path, file = ntpath.split(path)
 
-                # else use default path
-                elif not os.path.isfile(path): path = "./"
 
             # set up for svg
             extension = ".svg"  # extension for svg
-            number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
-            fp = path+name+number+extension
+
+            if mode == 1:
+                number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
+                location = str(path) + str(name) + str(number) + str(extension)
+            else:
+                location = str(path) + str(name) + str(extension)
             
             #create a svg file
-            try:
-                file = open(fp,'w')
-                file.write(s)
-            except Exception as e:
-                raise e
-            finally:
-                file.close()
-    
+            #print("SVG to: ", str(path+name+number+extension))
+            dwg = svgwrite.Drawing(location, size=(width, height))
+            shapes = dwg.add(dwg.g(id="shapes", fill="none"))
+
+            #add a starting point
+            shapes.add(dwg.line(start = ('0',str(height)), 
+                             end = (str(contourPoints[0][0][0]),str(contourPoints[0][0][1])), 
+                             stroke=svgwrite.rgb(10, 10, 16, "%")
+            ))
+            
+            #interatively write points into the svg file
+            lengthOfTheList = len(contourPoints[0]) - 1
+            for x in range(lengthOfTheList):
+                #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
+                shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
+                                 end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
+                                 stroke=svgwrite.rgb(10, 10, 16, "%")
+                ))
+            
+            #save the file
+            dwg.save()       
+            
         except Exception as e:
             print("Error: There is a problem with writing a svg file - \n" + e.args[0] )
             exc_type, exc_obj, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
-
 #-----------------------------------------
     # get the next highest number in filename
     # parameters: directory path where file is located, name of the file to look for, extension of the file to look for
@@ -716,9 +876,16 @@ class ImageConversion:
                 print("Error: Name and/or extension cannot be found")
                 return 1
 
-            # make sure the path is a path
-            if not path.endswith("/"):
-                path = path + "/"
+            path = str(path)
+
+            # make sure the path is ready
+            if "/" in path:
+                if not path.endswith("/"):
+                    path = path + "/"
+            elif "\\" in path:
+                if not path.endswith("\\"):
+                    path = path + "\\"
+            else: path = "./"
     
             highest = 0    # the highest number, intialized to 0
 
@@ -734,11 +901,11 @@ class ImageConversion:
                 and file.endswith(extension) \
                 and file[len(name):len(file)-len(extension)].isdigit():
                     digitFound = int(file[len(name):len(file)-len(extension)])  # save the number as digit found
-                    print("Digit found: ", digitFound)
+                    print("Digit found: ", digitFound) 
                     if digitFound > highest:                                    # if the digit found is greater than the highest number
                         highest = digitFound                                    # set as the new highest number
 
-            highest+=1 # increment count at the end for new file
+            highest+=1 # increment count at the end for new file        
             print("New highest number: ", highest)
             return highest
 
@@ -747,3 +914,4 @@ class ImageConversion:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
+#-----------------------------------------       
