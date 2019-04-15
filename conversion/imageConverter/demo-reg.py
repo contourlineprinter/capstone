@@ -5,7 +5,9 @@ import os, sys
 from ImageConversionClass import ImageConversion
 
 #-----------------------------------------         
-image = "2.png"
+#image = "2.png"
+image = "2.jpg"
+#image = "water.jpg"
 svg = "./"
 
 # create an ImageConversion object
@@ -21,11 +23,16 @@ imgConvert.printImgInfo()
 imgGray = imgConvert.readImageGrayscale(image) # turn on for regular
 #img = imgConvert1.readImageOriginal(image) # turn on for background removal
 
+imgResize = imgConvert.resizeImageByHeightAndWidth(imgGray, None, None, desiredImgHeight = 500, desiredImgWidth = None)
+
+# print info
+imgConvert.printImgInfo()
+
 # show image
 #imgConvert1.showImage("Original Image", img)
 
 # get image ready
-eroImg = imgConvert.getImageReady(imgGray)     # regular
+eroImg = imgConvert.getImageReady(imgResize)     # regular
 #eroImg = imgConvert1.getImageReadyNoBackground(img) # background removal - need orig image
 
 

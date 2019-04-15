@@ -277,6 +277,57 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
+    # resize image by height and width
+    # parameter: image, original height, original width, desired height, desired width
+    # return: resized image
+    def resizeImageByHeightAndWidth(self, image, origImgHeight, origImgWidth, desiredImgHeight, desiredImgWidth):
+        try:
+
+            #ratio = W / H → W = H * ratio → H = W / ratio
+            
+            # if the image orig size is not specified
+            if origImgHeight is None:
+                origImgHeight = self.origHeight
+            if origImgWidth is None:
+                origImgWidth = self.origWidth
+
+            ratio = abs(origImgWidth/origImgHeight) # get the ratio of the image at original size - ratio = w/h
+
+            # if the user specified the desired height and width
+            if desiredImgHeight is not None and desiredImgWidth is not None:
+                print("Height and width found")
+                dimension = (desiredImgWidth, desiredImgHeight) # resize based on desired height and width
+                
+            # if the user specified the desired height only
+            elif desiredImgHeight is not None:
+                print("Height found")
+                dimension = (abs(int(ratio*desiredImgHeight)), abs(desiredImgHeight)) # resize based on desired height and width
+                
+            # if the user specfied the desired width
+            elif desiredImgWidth is not None:
+                print("Width found")
+                dimension = (desiredImgWidth, abs(int(ratio*desiredImgWidth))) # resize based on desired height and width
+
+            # else return the image at original size
+            else:
+                print("Image is not changed. Missing parameters.")
+                return image
+
+            if dimension is not None:
+                resizeImg = cv2.resize(image, dimension, interpolation = cv2.INTER_AREA)
+                newHeight, newWidth = resizeImg.shape[:2]
+                print("\nNew Height: ", newHeight)
+                print("New Width: ", newWidth)
+                print("")
+                
+            return resizeImg
+        
+        except Exception as e:
+            print("Error: There is a problem with resizing the image - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
     # preprocess the image to find better edges
     # parameter: grayscale image to preprocess (note: image has be this type to work)
     # return: preprocessed image
