@@ -18,6 +18,9 @@ class ImageConversion:
             if not isinstance(svgPath, str):
                 self.svgPath = str(svgPath)
             else: self.svgPath = str(svgPath)
+            self.origHeight = -1
+            self.origWidth = -1
+
         except Exception as e:
             print("Error: There is a problem with creating the class - \n" + e.args[0] )
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -28,8 +31,17 @@ class ImageConversion:
     def printImgInfo(self):
         try:
             print("Image: %s\n" \
-                "SVG: %s \n" % (self.origImg, self.svgPath))
-            
+                "SVG: %s" % (self.origImg, self.svgPath))
+            if self.origHeight is -1 :
+                print("Height has not been set. Try loading in the image.")
+            else:
+                print("Height: ", self.origHeight)
+            if self.origWidth is -1 :
+                print("Width has not been set. Try loading in the image.")
+            else:
+                print("Width: ", self.origWidth)
+            print("")
+
         except Exception:
             print("Error: There is a problem with printing the information - \n" + e.args[0] )
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -41,7 +53,10 @@ class ImageConversion:
     # return: original image
     def readImageOriginal(self, image):
         try:
-            imgOriginal = cv2.imread(image, 1)  # read in image original colors
+            imgOriginal = cv2.imread(image, 1)      # read in image original colors
+            height, width = imgOriginal.shape[:2]   # get height and width
+            self.origHeight = height                # set height
+            self.origWidth = width                  # set width
             return imgOriginal
         
         except Exception as e:
@@ -55,7 +70,10 @@ class ImageConversion:
     # return: image in grayscale
     def readImageGrayscale(self, image):
         try:
-            imgGray = cv2.imread(image, 0)  # read in image grayscale
+            imgGray = cv2.imread(image, 0)          # read in image grayscale
+            height, width = imgGray.shape[:2]       # get height and width
+            self.origHeight = height                # set height
+            self.origWidth = width                  # set width
             return imgGray
         
         except Exception as e:
