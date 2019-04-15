@@ -41,13 +41,16 @@
     </nav>
 	<div class="album py-4">
 		<div class="container">  
+		<!-- Recieves two array lists of filenames from ImageGallery -->
+		<!-- images = contents of images/ directory 				 -->
+		<!-- svg 	= contents of svg/ directory					 -->
         <% ArrayList<String> images =  (ArrayList<String>)request.getAttribute("images");
         ArrayList<String> svg =  (ArrayList<String>)request.getAttribute("svg");
         int size = 0;
-	size = Math.min(images.size(), svg.size());
+		size = Math.min(images.size(), svg.size());
            for(int i = 0; i<size; i++){ %>  
-           		<div class="row d-flex justify-content-center">
-					<div class="shadow-sm  mx-5 mb-5 thumb">
+           		<div class="row mb-5 d-flex justify-content-center">
+					<div class="shadow-sm  mx-5 thumb">
 						<img class="card-img " src=<%=images.get(i)%>></img>
 					</div> 
 					<div class="shadow-sm  mb-5 thumb">

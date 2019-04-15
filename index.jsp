@@ -44,6 +44,7 @@
 
             <div class="col-12 col-md-6 pt-3">
                 <!-- Form for uploading an image -->
+				<!-- On "upload" button click, the ImageUploadServler is called -->
                 <form action="image_upload" id="form" method="post" enctype="multipart/form-data">
                     <div class="form-group row">
                         <!-- Image Upload Button-->
