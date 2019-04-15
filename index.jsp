@@ -65,17 +65,18 @@
                     <!-- Upload Button -->
                     <div class="form-group row">
                         <div class="col-12">
-                            <input type="submit" name="submit" class="btn btn-primary w-100" value="Upload"></input>
+                            <input id="upload" type="submit" name="submit" class="btn btn-primary w-100" value="Upload"></input>
                         </div>
+					</div>
                 </form>
-
+			
 		<!-- Spinner to indicate that server is working -->                
-		<!-- <div class="bg-light p-3 my-5 d-flex align-items-center"> -->
-		<!--	<strong>Building your contour drawling...</strong>
+		<div id="spinner" class="d-none bg-light p-3 my-5  align-items-center">
+			<strong>Building your contour drawling...</strong>
 			<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-		</div> -->
+		</div> 
 		
-            </div>
+            
         </div>
     </div>
 

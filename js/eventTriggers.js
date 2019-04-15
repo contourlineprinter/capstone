@@ -17,7 +17,12 @@ $(document).ready(function(){
 			document.getElementById("fileName").innerHTML = selectedFile;
 			
 		};
-		
-
 });
+
+	// When form is submitted then the spinner displays
+	$( "#upload" ).click(function() {
+		document.getElementById("spinner").classList.remove("d-none");
+		document.getElementById("spinner").classList.add('d-flex');
+			
+	});
 

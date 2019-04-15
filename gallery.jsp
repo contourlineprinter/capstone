@@ -46,8 +46,8 @@
         int size = 0;
 	size = Math.min(images.size(), svg.size());
            for(int i = 0; i<size; i++){ %>  
-           		<div class="row">
-					<div class="shadow-sm  mb-5 thumb">
+           		<div class="row d-flex justify-content-center">
+					<div class="shadow-sm  mx-5 mb-5 thumb">
 						<img class="card-img " src=<%=images.get(i)%>></img>
 					</div> 
 					<div class="shadow-sm  mb-5 thumb">
