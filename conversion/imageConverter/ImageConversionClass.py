@@ -470,7 +470,7 @@ class ImageConversion:
             imageContourOld = cv2.drawContours(blankCanvas1, contours, -1, (0,255,0), lineThickness)        # draw the contour image with old point
             imageContourNew = cv2.drawContours(blankCanvas2, newContours, -1, (0,255,0), lineThickness)     # draw the contour image with new point
 
-            self.showTwoImages(imageContourOld, imageContourNew, "Contour Old", "Contour New")
+            #self.showTwoImages(imageContourOld, imageContourNew, "Contour Old", "Contour New")
 
             return imageContourOld, imageContourNew, newContours
 
