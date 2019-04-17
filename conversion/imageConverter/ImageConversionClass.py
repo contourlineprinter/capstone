@@ -703,21 +703,26 @@ class ImageConversion:
 
 
                 deleteChildren = []
-                startChildIndex = 3
+                #startChildIndex = 3
 
                 # get the children to be deleted
                 for i in parentChild:
                     for j in i:
                         for k in range(len(j)):
-    ##                        if len(j) <= 3:
-    ##                            startChildIndex = 2
-    ##                        elif len(j) <= 10:
-    ##                            startChildIndex = 3
+                            if len(j) <= 3:
+                                startChildIndex = 2
+                            elif len(j) <= 10:
+                                startChildIndex = 5
+                            elif len(j) <= 50: 
+                                startChildIndex = 6
+                            elif len(j) <= 100: 
+                                startChildIndex = 8
+                            else: 
+                                startChildIndex = 10
                                 
                             
                             if k >= startChildIndex and j[k] not in deleteChildren:
                                 deleteChildren.append(j[k])
-
                 
                 if deleteChildren:
                     print("\nChildren to delete: ", deleteChildren)
