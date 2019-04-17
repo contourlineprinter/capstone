@@ -49,8 +49,7 @@
         int size = 0;
 		size = Math.min(images.size(), svg.size());
            for(int i = 0; i<size; i++){ %>  
-			<form action="use_previous" id="form" method="post">
-           		<div class="row pointer my-4 d-flex justify-content-center">
+			<div class="row pointer my-4 d-flex justify-content-center">
 					<div class="shadow-sm  mx-5 my-5 thumb">
 						<img class="card-img " src=<%=images.get(i)%>></img>
 					</div> 
@@ -59,7 +58,7 @@
 					</div>	
 
            		</div>
-			</form>
+			
           	 <% }%>
               
         </div>
@@ -94,6 +93,7 @@
     
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+	<script src="js/selectFromGallery.js"></script>
 
     </body>
 </html>
