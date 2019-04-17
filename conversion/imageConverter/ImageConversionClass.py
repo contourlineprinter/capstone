@@ -776,7 +776,7 @@ class ImageConversion:
                     contoursToDelete.append(i)  # save the index of that contour
 
             # if the first contour element isn't in the deleted index, add it
-            #if 0 not in contoursToDelete: contoursToDelete.append(0)
+            if 0 not in contoursToDelete: contoursToDelete.append(0)
 
             if contoursToDelete:
                 print("Contours to delete reached")
