@@ -654,82 +654,82 @@ class ImageConversion:
     def filterPoints(self, contourPoints, newContourPoints, hierarchy, rangeForX = 5, rangeForY = 5, minContourArea = 200):
         try:
 
-
-            # hierarchy
-            # - info about the image topology
-            # - has as many elements as the number of contours.
-            # - For each i-th contour contours[i] ,
-            #   hierarchy[i][0] - next
-            #   hiearchy[i][1]  - previous
-            #   hiearchy[i][2]  - first child
-            #   hiearchy[i][3]  - parent 
-            # - [Next, Previous, First_Child, Parent]
-            # - 0 -> same hierarchical level
-            # - negative number -> does not exist
-            
-            #print(hierarchy[[0,1,2,3]])
-            #print("Contours: ", contours)
-            print("Hierarchy: ", hierarchy)
-
-            
-            parentChild = [] # parent-child list
-
-            # organize hierarchy info - get the parents and all children
-            for i in hierarchy:
-
-                print("I length: ", len(i))
-
-                l = [[] for j in range(len(i))] # create a list with the number of contour elements
-
-                # for each contour element
-                for j in range(len(i)):
-                    #print("J: ", j) 
-                    
-                    #for k in j:
-                        #print("K: ", k)
-
-                    # if the contour element has a parent
-                    if i[j][3] >= 0:
-                        
-                        child = j               # get the child
-                        parent = i[j][3]        # get the parent
-                        print("Parent found: ", parent, " at child : ", child)   
-                        l[parent].append(child) # add to list -> index = parent, value = child
-                        
-                parentChild.append(l) # add the results to parent-child list
-
-            if parentChild:
-                print("\nParent-Child List: ", parentChild, "\n")
-
-
-                deleteChildren = []
-                #startChildIndex = 3
-
-                # get the children to be deleted
-                for i in parentChild:
-                    for j in i:
-                        for k in range(len(j)):
-                            if len(j) <= 3:
-                                startChildIndex = 2
-                            elif len(j) <= 10:
-                                startChildIndex = 5
-                            elif len(j) <= 50: 
-                                startChildIndex = 6
-                            elif len(j) <= 100: 
-                                startChildIndex = 8
-                            else: 
-                                startChildIndex = 10
-                                
-                            
-                            if k >= startChildIndex and j[k] not in deleteChildren:
-                                deleteChildren.append(j[k])
-                
-                if deleteChildren:
-                    print("\nChildren to delete: ", deleteChildren)
-                    print("")
-
-                    # delete the children conours
-                    contourPoints = np.delete(contourPoints, deleteChildren)
+##
+##            # hierarchy
+##            # - info about the image topology
+##            # - has as many elements as the number of contours.
+##            # - For each i-th contour contours[i] ,
+##            #   hierarchy[i][0] - next
+##            #   hiearchy[i][1]  - previous
+##            #   hiearchy[i][2]  - first child
+##            #   hiearchy[i][3]  - parent 
+##            # - [Next, Previous, First_Child, Parent]
+##            # - 0 -> same hierarchical level
+##            # - negative number -> does not exist
+##            
+##            #print(hierarchy[[0,1,2,3]])
+##            #print("Contours: ", contours)
+##            print("Hierarchy: ", hierarchy)
+##
+##            
+##            parentChild = [] # parent-child list
+##
+##            # organize hierarchy info - get the parents and all children
+##            for i in hierarchy:
+##
+##                print("I length: ", len(i))
+##
+##                l = [[] for j in range(len(i))] # create a list with the number of contour elements
+##
+##                # for each contour element
+##                for j in range(len(i)):
+##                    #print("J: ", j) 
+##                    
+##                    #for k in j:
+##                        #print("K: ", k)
+##
+##                    # if the contour element has a parent
+##                    if i[j][3] >= 0:
+##                        
+##                        child = j               # get the child
+##                        parent = i[j][3]        # get the parent
+##                        print("Parent found: ", parent, " at child : ", child)   
+##                        l[parent].append(child) # add to list -> index = parent, value = child
+##                        
+##                parentChild.append(l) # add the results to parent-child list
+##
+##            if parentChild:
+##                print("\nParent-Child List: ", parentChild, "\n")
+##
+##
+##                deleteChildren = []
+##                #startChildIndex = 3
+##
+##                # get the children to be deleted
+##                for i in parentChild:
+##                    for j in i:
+##                        for k in range(len(j)):
+##                            if len(j) <= 3:
+##                                startChildIndex = 2
+##                            elif len(j) <= 10:
+##                                startChildIndex = 5
+##                            elif len(j) <= 50: 
+##                                startChildIndex = 6
+##                            elif len(j) <= 100: 
+##                                startChildIndex = 8
+##                            else: 
+##                                startChildIndex = 10
+##                                
+##                            
+##                            if k >= startChildIndex and j[k] not in deleteChildren:
+##                                deleteChildren.append(j[k])
+##                
+##                if deleteChildren:
+##                    print("\nChildren to delete: ", deleteChildren)
+##                    print("")
+##
+##                    # delete the children conours
+##                    contourPoints = np.delete(contourPoints, deleteChildren)
 
 ##            contoursToDelete = []
 ##            
