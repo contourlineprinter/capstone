@@ -53,9 +53,9 @@ class ImageConversion:
     def readImageOriginal(self, image):
         try:
             imgOriginal = cv2.imread(image, 1)          # read in image original colors
-            height, width = imgOriginal.shape[:2]       # get height and width
-            self.origHeight = height                    # set height
-            self.origWidth = width                      # set width
+            #height, width = imgOriginal.shape[:2]       # get height and width
+            #self.origHeight = height                    # set height
+            #self.origWidth = width                      # set width
             return imgOriginal
         
         except Exception as e:
@@ -70,9 +70,9 @@ class ImageConversion:
     def readImageGrayscale(self, image):
         try:
             imgGray = cv2.imread(image, 0)          # read in image grayscale
-            height, width = imgGray.shape[:2]       # get height and width
-            self.origHeight = height                # set height
-            self.origWidth = width                  # set width
+            #height, width = imgGray.shape[:2]       # get height and width
+            #self.origHeight = height                # set height
+            #self.origWidth = width                  # set width
             return imgGray
         
         except Exception as e:

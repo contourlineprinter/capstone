@@ -46,10 +46,10 @@ img = imgConvert.readImageOriginal(image)
 eroImg = imgConvert.getImageReadyNoBackground(img)
 
 # resize image
-imgResize = imgConvert.resizeImageByHeightAndWidth(eroImg, None, None, desiredImgHeight = 400, desiredImgWidth = None)
+#imgResize = imgConvert.resizeImageByHeightAndWidth(eroImg, None, None, desiredImgHeight = 400, desiredImgWidth = None)
 
 # find contour lines not using Canny edges
-conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(imgResize)
+conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroImg)
 
 # close all windows
 #imgConvert.closeAllWindows()
