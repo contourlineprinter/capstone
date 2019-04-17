@@ -447,8 +447,8 @@ class ImageConversion:
             newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
 
             # make svg of contour - for gallery
-            nameSVG = str(ntpath.basename(self.origImg))                  # set filename for svg file
-            path = self.svgPath                                             # set directory path for svg file
+            nameSVG = str(ntpath.basename(self.origImg))                    # set filename for svg file
+            path = str(self.svgPath)                                        # set directory path for svg file
             self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg
 
             # make svg of contour - ROOT/next
@@ -930,10 +930,10 @@ class ImageConversion:
             # make sure the path is ready
             if "/" in path:
                 if not path.endswith("/"):
-                    path = path + "/"
+                    path = str(path) + "/"
             elif "\\" in path:
                 if not path.endswith("\\"):
-                    path = path + "\\"
+                    path = str(path) + "\\"
             else: path = "./"
                                      
 
