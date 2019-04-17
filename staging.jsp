@@ -39,8 +39,8 @@
              <div class="alert alert-info alert-dismissible" id="alert" style="display:none">
 		  		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 		  		<strong><span id="alertText"><%=  request.getAttribute("message") %></span></strong>
-			</div>
-        <div class="row justify-content-center">
+			</div> 
+		<div class="row justify-content-center">
 			<div class="col-12 col-md-6 pt-3">
 			    
 				<!-- This is where we will show the contour image for user approval -->

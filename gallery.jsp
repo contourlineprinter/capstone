@@ -49,16 +49,17 @@
         int size = 0;
 		size = Math.min(images.size(), svg.size());
            for(int i = 0; i<size; i++){ %>  
-           		<div class="row mb-5 d-flex justify-content-center">
-					<div class="shadow-sm  mx-5 thumb">
+			<form action="use_previous" id="form" method="post">
+           		<div class="row pointer my-4 d-flex justify-content-center">
+					<div class="shadow-sm  mx-5 my-5 thumb">
 						<img class="card-img " src=<%=images.get(i)%>></img>
 					</div> 
-					<div class="shadow-sm  mb-5 thumb">
+					<div class="shadow-sm  mx-5 my-5 thumb">
 						<img class="card-img " src=<%=svg.get(i)%>></img>					
 					</div>	
 
            		</div>
-			
+			</form>
           	 <% }%>
               
         </div>
@@ -75,7 +76,20 @@
 	  max-height: 100%;
 	  margin: auto;
 	}
+	.pointer {
+		cursor: pointer;
+	}
+	
+	.row{
+		transition-duration: 0.8s
+	}
 	</style>
+	<script>
+	$('.row').hover(
+       function(){ $(this).addClass('shadow-lg') },
+       function(){ $(this).removeClass('shadow-lg') }
+	)
+	</script>
 
     
     <script src="js/jquery-3.3.1.min.js"></script>

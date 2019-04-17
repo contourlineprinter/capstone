@@ -1,5 +1,5 @@
-// need to write javascript to post to a different spot for each shape
-// need to have result on server side for moving the file.
+// Called when the print button is click on staging.jsp
+// movesvg will move the most recent svg to a designated move folder
 function printq(){
 	//String input = filename;
 	console.log("test");
