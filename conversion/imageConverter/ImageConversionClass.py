@@ -446,11 +446,15 @@ class ImageConversion:
 ##                
             newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
 
+            print("newContours: ", newContours)
+
             # make svg of contour - for gallery
             nameSVG = str(ntpath.basename(self.origImg))                    # set filename for svg file
             path = str(self.svgPath)                                        # set directory path for svg file
             self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg
 
+            print("got to ROOT/next")
+    
             # make svg of contour - ROOT/next
             nameSVG2 = "imageSVG"                                           # set filename for svg file
             path2 = "/var/lib/tomcat8/webapps/ROOT/next"         # set directory path for svg file
