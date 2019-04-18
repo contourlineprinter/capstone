@@ -33,6 +33,8 @@
             </ul>
         </div>
     </nav>
+	
+	<%= request.getParameter("data")%>
 
     <!-- Content -->
     <div class="container-fluid">
