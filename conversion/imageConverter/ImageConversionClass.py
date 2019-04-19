@@ -14,10 +14,10 @@ class ImageConversion:
         try:
             if not isinstance(origImg, str):
                 self.origImg = str(origImg)
-            else: self.origImg = str(origImg)
+            else: self.origImg = origImg
             if not isinstance(svgPath, str):
                 self.svgPath = str(svgPath)
-            else: self.svgPath = str(svgPath)
+            else: self.svgPath = svgPath
         except Exception as e:
             print("Error: There is a problem with creating the class - \n" + e.args[0] )
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -350,12 +350,14 @@ class ImageConversion:
         try:
             contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)   # find countour
             print("Found %d objects in intial contour list." % len(contours))                       # length of the contour list
-
+            
+            #print('hierarchy',hierarchy)
+            #print('contours',contours)
             height, width = image.shape[:2]     # get image size
             
             pointC = []                         # new set of points
 
-            self.filterPoints(contours, pointC,0,0) # filter points - no range
+            #self.filterPoints(contours, pointC,0,0) # filter points - no range
 
             # filter points by size of image
             if (height <= 800):                     # if height is less than or equal to 800
@@ -364,11 +366,13 @@ class ImageConversion:
                 self.filterPoints(contours, pointC, 10, 10, 600) # filter points
             else:                                   # for images greater than or equal to 1600
                 self.filterPoints(contours, pointC, 15, 15, 1200) # filter points
-                
-            newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
-
+            
+            #print(pointC)
+            #newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
+            newContours = pointC
+            
             # make svg of contour
-            nameSVG = str(ntpath.basename(self.origImg)) + "_SVG"    # set filename for svg file
+            nameSVG = ntpath.basename(self.origImg) + "_SVG"    # set filename for svg file
             path = self.svgPath                                 # set directory path for svg file
             self.drawSVG(newContours, height, width, nameSVG, path) # draw it in the svg
 
@@ -531,7 +535,7 @@ class ImageConversion:
                 #print("Sort", i)
             #print(orderElement)
 
-            #print(contourPoints[0])
+            print(contourPoints[0])
             contourPoints = contourPoints[orderElement] # order the elements
 
             #print("Here")      
@@ -543,12 +547,17 @@ class ImageConversion:
             for i in range(len(contourPoints)):
 
                 if i == 0: continue # gets rid of the first contour element
-
+                else:
+                    if i != 1:
+                        newContourPoints.append(temp_set)
+                    temp_set = []
+                
                 for j in range(len(contourPoints[i])):
                                             
                     #for k in contourPoints[i][j]:
                     xget = contourPoints[i][j][0][0] #get x
                     yget = contourPoints[i][j][0][1] #get y
+                    #print('@',i,j,'=',xget,yget)
                     #print("X Found: ", xget)
                     #print("Y Found: ", yget)
 ##                    xsave = xget
@@ -562,7 +571,7 @@ class ImageConversion:
 
                             xsave = xget
                             ysave = yget
-                            newContourPoints.append([xget,yget])
+                            temp_set.append([xget,yget])
                             count+=1
                         
                         else:
@@ -579,7 +588,8 @@ class ImageConversion:
                                 #print("got here - yes")
                                 xsave = xget
                                 ysave = yget
-                                newContourPoints.append([xget,yget])
+                                ##Changed 
+                                temp_set.append([xget,yget])
                                 count+=1
 
                                 
@@ -599,63 +609,46 @@ class ImageConversion:
     # write a svg file with all the contour points found in the original image
     # parameters: the list of sequence of contour points, height of image, width of image, image name, directory of svg file
     def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./"):
-        try:
-
-            path = str(path)
-
+        s = ('<?xml version="1.0" standalone="no"?>\n'
+             '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"\n'
+             '"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">\n'
+             '<svg version="1.0" xmlns="http://www.w3.org/2000/svg"\n'
+             'width="1400.000000pt" height="932.000000pt" viewBox="0 0 1400.000000 932.000000"\n'
+             'preserveAspectRatio="xMidYMid meet">\n'
+             '<metadata>\n'
+             'Created by openCV 4.0, written by Andrew Ditty, Ivy Pan, Kenny Sexton, Jesse Dewald,\n'
+             'Andrew Eels, Sage Vega, Zhuonan Zhou, Nan Wang, Ty Dollas, Hodgy Daddies, Left Brizzle, \n'
+             'Domyon, Frankie Ocean, Syd the Dude, L-Boy\n\n'
+             '2019 - Temple University - CIS 4398 - Professor Wang - Spring\n'
+             '</metadata>\n\n'
+             #'<g transform="translate(0.000000,932.000000) scale(0.100000,-0.100000)"' # unnecessary?
+             '<g fill="#none" stroke="#000000">\n')
+        for contour in contourPoints:
+            print('M', end='')
+            s += '<path d="M' + str(contour[0][0]) + ' ' + str(contour[0][1]) + ' '
+            print(contour[0][0],contour[0][1])
+            print('S', end="")
+            s += 'S'
+            for i in range(1 , len(contour)-1):
+                s += str(contour[i][0]) +' ' + str(contour[i][1]) + ' '
+                print(contour[i][0],contour[i][1], end="")
+        s += '"/>\n\n'
+        s += '</g>\n</svg>'
+    
+        print("\n--------\ns:\n",s,end='')
+            #print('\nLast = ',contour[len(contour)-1],'\n')
             # make sure the path is ready
-            if "/" in path:
-                if not path.endswith("/"):
-                    path = path + "/"
-            elif "\\" in path:
-                if not path.endswith("\\"):
-                    path = path + "\\"
-            else: path = "./"
-                                     
-
-            print("Path in drawSVG", path)
-            # make sure the path is a directory path
-            if not os.path.isdir(path):
-                print("The path is not a directory.")
-
-                # if the path is a file
-                if os.path.isfile(path):
-                    print("File detected. The location of the file will be used.")
-                    path, file = ntpath.split(path)
-
-
-            # set up for svg
-            extension = ".svg"  # extension for svg
-            number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
-            location = str(path) + str(name) + str(number) + str(extension)
-            #create a svg file
-            #print("SVG to: ", str(path+name+number+extension))
-            dwg = svgwrite.Drawing(location, size=(width, height))
-            shapes = dwg.add(dwg.g(id="shapes", fill="none"))
-
-            #add a starting point
-            shapes.add(dwg.line(start = ('0',str(height)), 
-                             end = (str(contourPoints[0][0][0]),str(contourPoints[0][0][1])), 
-                             stroke=svgwrite.rgb(10, 10, 16, "%")
-            ))
-            
-            #interatively write points into the svg file
-            lengthOfTheList = len(contourPoints[0]) - 1
-            for x in range(lengthOfTheList):
-                #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
-                shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
-                                 end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
-                                 stroke=svgwrite.rgb(10, 10, 16, "%")
-                ))
-            
-            #save the file
-            dwg.save()       
-            
+        if not path.endswith("/"):
+            path = path + "/"
+        
+        try:
+            file = open('path+name+number+extension','w')
+            file.write(s)
         except Exception as e:
-            print("Error: There is a problem with writing a svg file - \n" + e.args[0] )
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            tb = traceback.extract_tb(exc_tb)[-1]
-            print(exc_type, tb[2], tb[1])
+            raise e
+        finally:
+            file.close()
+
 #-----------------------------------------
     # get the next highest number in filename
     # parameters: directory path where file is located, name of the file to look for, extension of the file to look for
@@ -668,16 +661,9 @@ class ImageConversion:
                 print("Error: Name and/or extension cannot be found")
                 return 1
 
-            path = str(path)
-
-            # make sure the path is ready
-            if "/" in path:
-                if not path.endswith("/"):
-                    path = path + "/"
-            elif "\\" in path:
-                if not path.endswith("\\"):
-                    path = path + "\\"
-            else: path = "./"
+            # make sure the path is a path
+            if not path.endswith("/"):
+                path = path + "/"
     
             highest = 0    # the highest number, intialized to 0
 
@@ -706,4 +692,3 @@ class ImageConversion:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
-#-----------------------------------------       

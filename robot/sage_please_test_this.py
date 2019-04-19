@@ -1,4 +1,3 @@
-import time
 import Robot
 
 LEFT_TRIM = 0

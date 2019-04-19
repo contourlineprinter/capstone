@@ -5,8 +5,8 @@ import time
 import sys
 
 #FULL_REV = 4.85
-DEF_SPEED = 65
-SCALE = 3
+#DEF_SPEED = 30
+SCALE = .003
 
 def svg_to_lines(file_name):
     '''
@@ -89,11 +89,10 @@ def go(distance):
     ''' 
         Given an integer, distance, this returns a string of the backward command of the given distance
     '''
-    speed = DEF_SPEED
-    dur = distance * SCALE
+    steps = distance * SCALE
     # UNCOMMENT ONE OF THESE LINES ON ROBOT
     #robot.forward(speed, dur)
-    return "robot.backward({s}, {d})\n".format(s = speed, d = dur)
+    return "robot.forward({s})\n".format(s = steps)
   
 def rotate(theta):
     ''' 
@@ -108,13 +107,9 @@ def init_file():
     '''
     Taking no parameters. This returns a string with the necessary imports and setup
     '''
-    s = ('import time\n'
-          'import Robot\n\n'
-          'LEFT_TRIM = 0\n'
-          'RIGHT_TRIM = 0\n\n'
+    s = ('from Robot import Robot\n\n'
           '#initialize the robot\n'
-          'robot = Robot.Robot(left_trim=LEFT_TRIM, right_trim=RIGHT_TRIM)\n'
-          'DEF_SPEED = 65\n\n\n'
+          'robot = Robot()\n\n\n'
           '#the commands begin now\n'
         )
     # this try-catch block is pointless right now, but should be useful in the distant future, the year 2000
