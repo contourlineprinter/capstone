@@ -13,8 +13,9 @@ $(document).ready(function(){
 		function(data, status){
 				console.log("post sent");
 				console.log("Data: " + data + "\nStatus: " + status);
-				//history.pushState({},"Your Title",url);
-				$( "html" ).replaceWith( data );
+				history.pushState({},"Your Title",url);
+				
+				$( "html" ).html( data );
 			}
 		);
 	});

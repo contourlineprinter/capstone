@@ -2,7 +2,7 @@
 // movesvg will move the most recent svg to a designated move folder
 function printq(){
 	//String input = filename;
-	console.log("test");
+	console.log("print clicked");
 	$.ajax({
 	type: "POST",
 	url: "/cgi-bin/movesvg.py",

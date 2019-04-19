@@ -27,16 +27,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="gallery.html">Gallery</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="demo1.html">Demo1</a>
-                </li>
             </ul>
         </div>
     </nav>
 
     <!-- Content -->
     <div class="container-fluid">
-             <div class="alert alert-info alert-dismissible" id="alert" style="display:none">
+             <!-- Alert box that shows error messages -->
+			<div class="alert alert-info alert-dismissible" id="alert" style="display:none">
 		  		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 		  		<strong><span id="alertText"><%=  request.getAttribute("message") %></span></strong>
 			</div>
@@ -56,13 +54,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <!-- Line Density Slider -->
-                        <label  class="col-sm-3 col-form-label">Line Density</label>
-                        <div class="col-sm-9">
-                            <input type="range" class="form-control-range" id="formControlRange">
-                        </div>
-                    </div>
+
                     <!-- Upload Button -->
                     <div class="form-group row">
                         <div class="col-12">

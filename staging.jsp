@@ -27,26 +27,44 @@
                 <li class="nav-item">
                     <a class="nav-link" href="gallery.html">Gallery</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="demo1.html">Demo1</a>
-                </li>
             </ul>
         </div>
     </nav>
 	
-	<%=request.getParameter("data1")%>
+	<%!
+	String fileName = "test";
+	%>
+	<%
+	
+	if (request.getParameter("data1")!= null) { // passback
+		fileName = 	request.getParameter("data1");
+	}
+	else { // via upload
+		fileName = request.getAttribute("file") + "";
+	}
+
+	%>
 
     <!-- Content -->
     <div class="container-fluid">
-             <div class="alert alert-info alert-dismissible" id="alert" style="display:none">
+            <!-- Alert box that shows error messages -->
+			<div class="alert alert-info alert-dismissible" id="alert" style="display:none">
 		  		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 		  		<strong><span id="alertText"><%=  request.getAttribute("message") %></span></strong>
 			</div> 
 		<div class="row justify-content-center">
 			<div class="col-12 col-md-6 pt-3">
+			
+				<!-- Line Density Slider -->
+				<div class="form-group row">
+					<label  class="col-sm-3 col-form-label">Line Density</label>
+					<div class="col-sm-9">
+						<input type="range" class="form-control-range" id="formControlRange">
+					</div>
+				</div>
 			    
 				<!-- This is where we will show the contour image for user approval -->
-				<img src=  "<%= "svg/"+ request.getAttribute("file") + ".svg" %>" class="img-fluid img-thumbnail mt-3">
+				<img src=  "<%= "svg/"+ fileName + ".svg" %>" class="img-fluid mx-auto d-block img-thumbnail mt-3">
 				
 				<!-- Button to approve the image and begin printing -->
 				<button onclick="printq()" class="btn btn-primary w-100 mt-3">Print</button>

@@ -33,9 +33,6 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="gallery.html">Gallery</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="demo1.html">Demo1</a>
-                </li>
             </ul>
         </div>
     </nav>
