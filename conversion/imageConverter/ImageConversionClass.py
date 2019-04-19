@@ -677,7 +677,7 @@ class ImageConversion:
                     child = i[parent][2]            # get the child of the parent
                     print("Child of parent: ", child)   
                     level+=1                        # increment the level                    
-                    sortParentFirstChildByLevel(child, level, hierarchy, lvlList)    # sort the first child for that child
+                    self.sortParentFirstChildByLevel(child, level, hierarchy, lvlList, finishList)    # sort the first child for that child
 
                 return
 
@@ -759,7 +759,7 @@ class ImageConversion:
 
 
             # create a level list to put elements in -> [ [], [],..., [] ]
-            for i in h:
+            for i in hierarchy:
                       
                 # create a list with the number of contour elements
                 # level
@@ -782,13 +782,13 @@ class ImageConversion:
 
                             # if the child hasn't been processed
                             if k not in finishList:
-                                parent = getParent(k, parentChildList)  # get parent of the child
-                                level = getLevel(parent, lvlList)       # get level of parent
+                                parent = self.getParent(k, parentChildList)  # get parent of the child
+                                level = self.getLevel(parent, lvlList)       # get level of parent
                                 print("Level of k's parent: ", level)   
                                 print("Level of k: ", level+1)
-                                sortParentFirstChildByLevel(k, level+1, hierarchy, lvlList)     # sort the child and
-                                                                                                # first child/descendants
-                                                                                                # at the next level
+                                self.sortParentFirstChildByLevel(k, level+1, hierarchy, lvlList, finishList)    # sort the child and
+                                                                                                    # first child/descendants
+                                                                                                    # at the next level
                     #for k in range(len(j)): # children numbers
 
             return lvlList
