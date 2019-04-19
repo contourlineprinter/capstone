@@ -433,7 +433,8 @@ class ImageConversion:
             height, width = image.shape[:2]     # get image size
             pointC = []                         # new set of points
 
-            self.filterPoints(contours, pointC, hierarchy, xyRange, xyRange, minArea, skipPoints) # filter points   
+            # filter points
+            self.filterPoints(contours, pointC, hierarchy, xyRange, xyRange, skipPoints, minArea) 
             
             # filter points by size of image
 ##            if (height <= 800):                     # if height is less than or equal to 800
@@ -453,8 +454,7 @@ class ImageConversion:
                             
             newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
 
-            print("newContours: ", newContours)
-                
+            #print("newContours: ", newContours)
 
             # make svg of contour - for gallery
             nameSVG = str(ntpath.basename(self.origImg))                    # set filename for svg file
