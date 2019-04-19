@@ -65,7 +65,7 @@ public class ImageUploadServler extends HttpServlet {
 					}
 				}
 				//Upload Worked
-				request.setAttribute("message", "Image uploaded successfully");
+				request.setAttribute("message", "Image uploaded");
 				request.setAttribute("file", name);
 				System.out.println("Image success message");
 				System.out.println(name);
@@ -101,11 +101,11 @@ public class ImageUploadServler extends HttpServlet {
 	        if (exitValue == 0)
 	            System.out.println("Successfully executed the command: " + command);
 	        else {
-	            System.out.println("Failed to execute the following command: " + command + " due to the following error(s):");
-				//request.setAttribute("message", "Failed to generate svg for file " + name);
+	            System.out.println("Failed to complete/execute the following command: " + command);
+				request.setAttribute("message", "May have failed to generate svg for file " + name);
 				// return to Index.jsp page with the response text
-				getServletContext().getRequestDispatcher("/index.jsp").include(request, response);
-				return; 
+				//getServletContext().getRequestDispatcher("/index.jsp").include(request, response);
+				//return; 
 	                            
 	        }
 	    } catch (InterruptedException e) {

@@ -34,7 +34,7 @@
         </div>
     </nav>
 	
-	<%= request.getParameter("data")%>
+	<%=request.getParameter("data1")%>
 
     <!-- Content -->
     <div class="container-fluid">
