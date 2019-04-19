@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 import svgwrite
 import os, sys, ntpath, traceback
+import math
 
 class ImageConversion:    
     "Class to perform image conversion to contour, svg, and robot instructions\n"
@@ -1164,7 +1165,9 @@ class ImageConversion:
     def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./", mode = 1):
         try:
 
+            
             path = str(path)
+            print("::", path)  
 
             # make sure the path is ready
             if "/" in path:
@@ -1200,21 +1203,33 @@ class ImageConversion:
             #print("SVG to: ", str(path+name+number+extension))
             dwg = svgwrite.Drawing(location, size=(width, height))
             shapes = dwg.add(dwg.g(id="shapes", fill="none"))
-
-            #add a starting point
-            shapes.add(dwg.line(start = ('0',str(height)), 
-                             end = (str(contourPoints[0][0][0]),str(contourPoints[0][0][1])), 
-                             stroke=svgwrite.rgb(10, 10, 16, "%")
-            ))
+            
+            #percentage of resizing
+            if (self.origHeight != -1 or self.origWidth != -1):
+                percentx = self.origWidth*100/width
+                percenty = self.origHeight*100/height           
+            else:
+                percentx = 100
+                percenty = 100
+            
+            print("percentx and percenty: ", percentx, percenty)
             
             #interatively write points into the svg file
             lengthOfTheList = len(contourPoints[0]) - 1
             for x in range(lengthOfTheList):
                 #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
-                shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
-                                 end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
-                                 stroke=svgwrite.rgb(10, 10, 16, "%")
-                ))
+                #shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
+                #                 end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
+                #                 stroke=svgwrite.rgb(10, 10, 16, "%")
+                #))
+                x1 = math.floor(contourPoints[0][x][0] * percentx/100)           #resize x1
+                x2 = math.floor(contourPoints[0][x+1][0] * percentx/100)         #resize x2
+                y1 = math.floor(contourPoints[0][x][1] * percenty/100)           #resize y1
+                y2 = math.floor(contourPoints[0][x+1][1] * percenty/100)         #resize y2
+                shapes.add(dwg.line(start = (str(x1), str(y1)), 
+                    end = (str(x2),str(y2)), 
+                    stroke=svgwrite.rgb(10, 10, 16, "%")
+                ))                
             
             #save the file
             dwg.save()       
