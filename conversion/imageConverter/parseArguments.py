@@ -9,9 +9,16 @@ def parseArguments(args):
     combineFile = ""
     combineImage = ""
     combineSVG = ""
+    xyRange = -1
+    skipPoints = -1
+    minArea = -1
+    
     startIndex = 0
     imageFound = 0
     svgFound = 0
+    xyRangeFound = 0
+    skipPointsFound = 0
+    minAreaFound = 0
 
     # check for single or double slash
     if "//" in args: slash = "//"
@@ -53,7 +60,7 @@ def parseArguments(args):
                                             combineImage = test
                                             combineFile = ""
 ##                                                print("sub - is a file")
-                            else:
+                            elif svgFound == 0:
 ##                                        print("Directory?: ", os.path.isdir(test)) # test to see if it's a directory
                                     if not os.path.isdir(test):
                                             combineFile = test + " "
@@ -64,6 +71,24 @@ def parseArguments(args):
                                     else:
                                             combineFile = test + slash
 ##                                                print("sub - is a dir")
+
+                            elif xyRangeFound == 0:
+                                if j:
+                                    xyRange = j
+                                    xyRangeFound = 1
+                                else: continue
+                            
+                            elif skipPointsFound == 0:
+                                if j: 
+                                    skipPoints = j
+                                    skipPointsFound = 1
+                                else: continue
+                                
+                            elif minAreaFound == 0:
+                                if j:
+                                    minArea = j
+                                    minAreaFound = 1
+                                else: continue
 
 ##                print("\nAfter spaces: ", combineFile)
                             
@@ -78,7 +103,8 @@ def parseArguments(args):
                             combineImage = combineFile
                             combineFile = ""
                             #print("is a file")
-            elif svgFound == 0 and i is splitPath[len(splitPath)-1]:
+            elif svgFound == 0:
+            #and i is splitPath[len(splitPath)-1]:
     ##                print("Out")
     ##                print("Directory?: ", os.path.isdir(combineFile)) # test to see if it's a directory
                     if os.path.isdir(combineFile):
@@ -88,9 +114,18 @@ def parseArguments(args):
                     else:
                             print("A directory for svg cannot be found. Please try again.")
                             sys.exit(0)
+                            
             else: continue
 
+    if xyRange is None: xyRange = -1
+    if skipPoints is None: skipPoints = -1
+    if minArea is None: minArea = -1
+    
     print("\nImage: ", combineImage)
     print("SVG: ", combineSVG)
+    print("XY Range: ", xyRange)
+    print("Skip Points: ", skipPoints)
+    print("Min Area: ", minArea)
 
-    return str(combineImage), str(combineSVG)
+    return str(combineImage), str(combineSVG), int(xyRange), int(skipPoints), int(minArea)
+

@@ -37,7 +37,7 @@ eroImg = imgConvert.getImageReady(imgResize)     # regular
 
 
 # find contour lines
-conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroImg)
+conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroImg, 2)
 
 # compare three images - original, edges found, final contour image 
 #imgConvert1.showThreeImages(img, conImgNoEdgeOld, conImgNoEdge, "Original", "Edges Found", "Final Contour")

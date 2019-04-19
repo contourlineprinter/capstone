@@ -1,4 +1,5 @@
 # Version of demo.py that takes file input as command line arguments
+# slider = xy range, points to skip, min area
 
 import numpy as np
 import cv2
@@ -10,7 +11,7 @@ from ImageConversionClass import ImageConversion
 #----------------------------------------- 
 if len(sys.argv) < 2:
         print ("Please give a image name or image path as an argument")
-        print ("usage: python3 convertFileInput.py [image name] ./ [svg path (optional)]")
+        print ("usage: python3 convertFileInput.py [image name] ./ [svg path (optional)] [xy range (optional)] [pts to skip (optional)] [min area (optional)]")
         exit()
 if len(sys.argv) == 2:
         image = str(sys.argv[1])
@@ -18,11 +19,14 @@ if len(sys.argv) == 2:
 elif len(sys.argv) == 3:
         image = str(sys.argv[1])
         svg = str(sys.argv[2])
+        xyRange = -1
+        skipPoints = -1
+        minArea = -1
 elif len(sys.argv) > 3:
         args = str(sys.argv[1])
         for i in sys.argv[2:]:
                 args = args + " " + str(i)
-        image, svg = parseArguments.parseArguments(args)
+        image, svg, xyRange, skipPoints, minArea = parseArguments.parseArguments(args)
         
 for i in range(len(sys.argv)):
         print(i, " - ", str(sys.argv[i]))
@@ -49,7 +53,7 @@ imgGray = imgConvert.readImageGrayscale(image)
 eroImg = imgConvert.getImageReady(imgGray)
 
 # find contour lines not using Canny edges
-conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroImg)
+conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroImg, 2, xyRange, skipPoints, minArea)
 
 # close all windows
 #imgConvert.closeAllWindows()

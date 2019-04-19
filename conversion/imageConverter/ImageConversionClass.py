@@ -420,9 +420,9 @@ class ImageConversion:
     # range is used to filter out some points in contour image:
     #   smaller range - more points, more lines in the image 
     #   larger range - less points, less lines in the image
-    # parameters: image, range for x, range for y, line thickness in pixel
+    # parameters: image, line thickness, x and y range, skip points, min area
     # return: old contour image, new contour image, points for new contours
-    def createContours(self, image, lineThickness = 2):
+    def createContours(self, image, lineThickness = 2, xyRange = -1, skipPoints = -1, minArea = -1):
         try:
 
             contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)   # find countour
@@ -431,11 +431,10 @@ class ImageConversion:
             print("Found %d objects in intial contour list." % len(contours))                       # length of the contour list
 
             height, width = image.shape[:2]     # get image size
-            
             pointC = []                         # new set of points
 
-            self.filterPoints(contours, pointC, hierarchy, 0, 0) # filter points - no range
-
+            self.filterPoints(contours, pointC, hierarchy, xyRange, xyRange, minArea, skipPoints) # filter points   
+            
             # filter points by size of image
 ##            if (height <= 800):                     # if height is less than or equal to 800
 ##                self.filterPoints(contours, pointC) # filter points
@@ -443,10 +442,19 @@ class ImageConversion:
 ##                self.filterPoints(contours, pointC, 10, 10, 600) # filter points
 ##            else:                                   # for images greater than or equal to 1600
 ##                self.filterPoints(contours, pointC, 15, 15, 1200) # filter points
-##                
+##
+            attempt = 0
+
+            # try again if pointC is empty
+            if len(pointC) == 0 and attempt == 0 :
+                pointC = []
+                self.filterPoints(contours, pointC, hierarchy) # filter points
+                attempt = 1
+                            
             newContours = np.array([pointC])                    # make a numpy array with the new points for contour image
 
             print("newContours: ", newContours)
+                
 
             # make svg of contour - for gallery
             nameSVG = str(ntpath.basename(self.origImg))                    # set filename for svg file
@@ -460,10 +468,10 @@ class ImageConversion:
             path2 = "/var/lib/tomcat8/webapps/ROOT/next"         # set directory path for svg file
 
             # if folder for svg doesn't exist
-##            if not os.path.exists(path2):
-##                print("Folder doesn't exist for: ", path2)
-##                print("A new folder will be created")
-##                os.makedirs(path2)
+            if not os.path.exists(path2):
+                print("Folder doesn't exist for: ", path2)
+                print("A new folder will be created")
+                os.makedirs(path2)
 
             self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg            
 
@@ -582,7 +590,7 @@ class ImageConversion:
 
             minY = setOfPoints[0][0][1]
             xAtMinY = setOfPoints[0][0][0]
-            print("\nStarting min Y: ", minY)
+            #print("\nStarting min Y: ", minY)
            
             # process points in contour - get the last two points
             for j in range(len(setOfPoints)):
@@ -592,7 +600,7 @@ class ImageConversion:
 
                 #print("J - ", setOfPoints[j][0][1])
                 if foundY < minY:
-                    print("New Min Y")
+                    #print("New Min Y")
                     minY = foundY
                     xAtMinY = setOfPoints[j][0][0]
                         
@@ -614,7 +622,7 @@ class ImageConversion:
             for i in range(len(contourPoints)):
 
                 minY, xAtMinY = self.getMinY(contourPoints[i])
-                print("Minimum Found in ", i, ": ", minY)
+                #print("Minimum Found in ", i, ": ", minY)
                 listOfMinYs.append([i, minY, xAtMinY])
 
             print(listOfMinYs)
@@ -626,8 +634,8 @@ class ImageConversion:
             for i in np.argsort(listOfMinYs[:,1]):
                 orderElement.append(i)
                 #print("Sort", i)
-            print("\nOrdered Elements: ", orderElement)
-            print("")
+            #print("\nOrdered Elements: ", orderElement)
+            #print("")
 
             # check for null
             if contourPoints is None:
@@ -667,7 +675,7 @@ class ImageConversion:
                 return
 
             else:
-                print("")
+                #print("")
                 
                 # go through each element in the hierarchy list
                 for i in hierarchy:
@@ -675,7 +683,7 @@ class ImageConversion:
                     lvlList[level].append(parent)   # add the parent to the list at index = level
                     finishList.append(parent)       # add the parent to the finish list - indicate it's been processed
                     child = i[parent][2]            # get the child of the parent
-                    print("Child of parent: ", child)   
+                    #print("Child of parent: ", child)   
                     level+=1                        # increment the level                    
                     self.sortParentFirstChildByLevel(child, level, hierarchy, lvlList, finishList)    # sort the first child for that child
 
@@ -697,11 +705,11 @@ class ImageConversion:
                    
             # go through each level
             for i in range(len(searchList)): 
-                print("\n I", i)
+                #print("\n I", i)
 
                 # for the elements at that level
                 for j in searchList[i]:
-                    print("\n j target: ", j) 
+                    #print("\n j target: ", j) 
 
                     # if the the target is found
                     if target is j:
@@ -729,7 +737,7 @@ class ImageConversion:
 
                 # for each parent in the list
                 for j in range(len(i)):
-                    print("\n parent target: ", j)
+                    #print("\n parent target: ", j)
 
                     # for all the children of that parent
                     for k in i[j]:
@@ -772,7 +780,7 @@ class ImageConversion:
                 # for each parent
                 for j in range(len(i)):
 
-                    print("\n X: ", i[j], " at ", j)
+                    #print("\n X: ", i[j], " at ", j)
 
                     # if the list is not empty
                     if i[j]:
@@ -784,8 +792,8 @@ class ImageConversion:
                             if k not in finishList:
                                 parent = self.getParent(k, parentChildList)  # get parent of the child
                                 level = self.getLevel(parent, lvlList)       # get level of parent
-                                print("Level of k's parent: ", level)   
-                                print("Level of k: ", level+1)
+                                #print("Level of k's parent: ", level)   
+                                #print("Level of k: ", level+1)
                                 self.sortParentFirstChildByLevel(k, level+1, hierarchy, lvlList, finishList)    # sort the child and
                                                                                                     # first child/descendants
                                                                                                     # at the next level
@@ -820,90 +828,131 @@ class ImageConversion:
     # range is used to filter out some points in contour image:
     #   smaller range - more points, more lines in the image 
     #   larger range - less points, less lines in the image
-    # parameters: set of points that make up contour, range for x, range for y, minimum contour area accepted
-    def filterPoints(self, contourPoints, newContourPoints, hierarchy, rangeForX = 5, rangeForY = 5, minContourArea = 200):
+    # parameters:   set of points that make up contour, range for x, range for y,
+    #               skip points (negative value = default),  minimum contour area accepted
+    def filterPoints(self, contourPoints, newContourPoints, hierarchy, rangeForX = 5, rangeForY = 5, skipPoints = -1, minContourArea = 200):
         try:
 
+            if minContourArea < 0: minContourArea = 200
+            if rangeForX < 0: rangeForX = 5
+            if rangeForY < 0: rangeForY = 5
 
-##            # hierarchy
-##            # - info about the image topology
-##            # - has as many elements as the number of contours.
-##            # - For each i-th contour contours[i] ,
-##            #   hierarchy[i][0] - next
-##            #   hiearchy[i][1]  - previous
-##            #   hiearchy[i][2]  - first child
-##            #   hiearchy[i][3]  - parent 
-##            # - [Next, Previous, First_Child, Parent]
-##            # - 0 -> same hierarchical level
-##            # - negative number -> does not exist
-##            
-##            #print(hierarchy[[0,1,2,3]])
-##            #print("Contours: ", contours)
-##            print("Hierarchy: ", hierarchy)
-##
-##            
-##            parentChild = [] # parent-child list
-##
-##            # organize hierarchy info - get the parents and all children
-##            for i in hierarchy:
-##
+            # hierarchy
+            # - info about the image topology
+            # - has as many elements as the number of contours.
+            # - For each i-th contour contours[i] ,
+            #   hierarchy[i][0] - next
+            #   hiearchy[i][1]  - previous
+            #   hiearchy[i][2]  - first child
+            #   hiearchy[i][3]  - parent 
+            # - [Next, Previous, First_Child, Parent]
+            # - 0 -> same hierarchical level
+            # - negative number -> does not exist
+            
+            #print(hierarchy[[0,1,2,3]])
+            #print("Contours: ", contours)
+            print("Hierarchy: ", hierarchy)
+
+            
+            parentChild = [] # parent-child list
+
+            # organize hierarchy info - get the parents and all children
+            for i in hierarchy:
+
 ##                print("I length: ", len(i))
-##
-##                l = [[] for j in range(len(i))] # create a list with the number of contour elements
-##
-##                # for each contour element
-##                for j in range(len(i)):
-##                    #print("J: ", j) 
-##                    
-##                    #for k in j:
-##                        #print("K: ", k)
-##
-##                    # if the contour element has a parent
-##                    if i[j][3] >= 0:
-##                        
-##                        child = j               # get the child
-##                        parent = i[j][3]        # get the parent
-##                        print("Parent found: ", parent, " at child : ", child)   
-##                        l[parent].append(child) # add to list -> index = parent, value = child
-##                        
-##                parentChild.append(l) # add the results to parent-child list
-##
-##            if parentChild:
-##                print("\nParent-Child List: ", parentChild, "\n")
-##
-##            # get hierarchy level
-##            lvlList = self.getHierarchyLevelList(parentChild, hierarchy)
-##            print("Level List: ", lvlList)
-##
-##                deleteChildren = []
-##                #startChildIndex = 3
-##
-##                # get the children to be deleted
-##                for i in parentChild:
-##                    for j in i:
-##                        for k in range(len(j)):
-##                            if len(j) <= 3:
-##                                startChildIndex = 2
-##                            elif len(j) <= 10:
-##                                startChildIndex = 5
-##                            elif len(j) <= 50: 
-##                                startChildIndex = 6
-##                            elif len(j) <= 100: 
-##                                startChildIndex = 8
-##                            else: 
-##                                startChildIndex = 10
-##                                
-##                            
-##                            if k >= startChildIndex and j[k] not in deleteChildren:
-##                                deleteChildren.append(j[k])
-##                
-##                if deleteChildren:
-##                    print("\nChildren to delete: ", deleteChildren)
-##                    print("")
-##
-##                    # delete the children conours
-##                    contourPoints = np.delete(contourPoints, deleteChildren)
 
+                l = [[] for j in range(len(i))] # create a list with the number of contour elements
+
+                # for each contour element
+                for j in range(len(i)):
+                    #print("J: ", j) 
+                    
+                    #for k in j:
+                        #print("K: ", k)
+
+                    # if the contour element has a parent
+                    if i[j][3] >= 0:
+                        
+                        child = j               # get the child
+                        parent = i[j][3]        # get the parent
+##                        print("Parent found: ", parent, " at child : ", child)   
+                        l[parent].append(child) # add to list -> index = parent, value = child
+                        
+                parentChild.append(l) # add the results to parent-child list
+
+            if parentChild:
+                print("\nParent-Child List: ", parentChild, "\n")
+
+
+            # get hierarchy level
+            lvlList = self.getHierarchyLevelList(parentChild, hierarchy)
+            print("Level List: ", lvlList)
+
+
+            deleteChildren = []
+            #startChildIndex = 3
+
+            # for each level
+            for i in range(len(lvlList)): # [, , ]
+
+                if lvlList[i]:
+
+                    # if the level contains values and if level > 1
+                    if i == 1 and len(lvlList[i]) > 5 :
+
+                        for j in range(len(lvlList[i])):
+                            if j > 5 and lvlList[i][j]:
+                                get = lvlList[i][j]
+                                deleteChildren.append(get) # add the children to be deleted
+                
+                    elif i > 1:
+
+                        #print("To be deleted I: ", i)
+                    
+                        for j in range(len(lvlList[i])):
+                            if lvlList[i][j]:
+                                get = lvlList[i][j]
+                                deleteChildren.append(get) # add the children to be deleted
+                        
+
+##            # get the children to be deleted
+##            for i in parentChild:
+##                for j in i:
+##                    
+##                    #startChildIndex = int(len(j)/2)
+##                    #print("Length: ", startChildIndex)
+##
+##                    for k in range(len(j)):
+##                        if len(j) <= 3:
+##                            #startChildIndex = 2
+##                            continue
+##                        elif len(j) > 10:
+##                            startChildIndex = 5
+##                        elif len(j) > 50: 
+##                            startChildIndex = 6
+##                        elif len(j) > 100: 
+##                            startChildIndex = 8
+##                        elif len(j) > 500: 
+##                            startChildIndex = 10
+##                        
+##                        
+##                        if k >= startChildIndex and j[k] not in deleteChildren:
+##                            deleteChildren.append(j[k])
+
+##            
+##            if deleteChildren:
+##                print("\nChildren to delete: ", deleteChildren)
+##                print("")
+
+##                # delete the children conours
+##                contourPoints = np.delete(contourPoints, deleteChildren)
+
+            if deleteChildren:
+                contourPoints = np.delete(contourPoints, deleteChildren)
+                deleteChildren = np.array(deleteChildren)
+                print("\nChildren to delete: ", deleteChildren)
+                print("")
+#----------------------------------------------------------------------------
 ##            contoursToDelete = []
 ##            
 ##            for i in range(len(hierarchy)):
@@ -929,6 +978,12 @@ class ImageConversion:
             contoursToDelete = [] # list of indexes of contours to delete
             print("Inital Number of Objects: ", len(contourPoints))
             origObjCount = self.countPoints(contourPoints)
+
+            # testing min contourArea
+##            minContourArea = max(contourPoints, key = cv2.contourArea)/10
+##            print(minContourArea)
+
+            
             
             # look for the contours that don't fit the minimum area requirement
             for i in range(len(contourPoints)):
@@ -949,10 +1004,14 @@ class ImageConversion:
                     contoursToDelete.append(i)  # save the index of that contour
 
             # if the first contour element isn't in the deleted index, add it
-            if 0 not in contoursToDelete: contoursToDelete.append(0)
+            #if 0 not in contoursToDelete: contoursToDelete.append(0)
+
+##            for i in deleteChildren:
+##                if i not in contoursToDelete:
+##                    contoursToDelete.append(i)
 
             if contoursToDelete:
-                print("Contours to delete reached")
+                print("Contours to delete reached: " , contoursToDelete)
                 # delete all the contours that don't meet the requirements
                 contourPoints = np.delete(contourPoints, contoursToDelete)
                 #contourPoints = np.delete(contourPoints, 0) # delete the first contour element - polygon takes care of this
@@ -1003,27 +1062,32 @@ class ImageConversion:
                 
 #---------------------------------------
                     
-                # testing skipping points
-                if len(contourPoints[i] > 500):
-                    pointsToSkip = int(len(contourPoints[i])/10)
-
-                elif len(contourPoints[i] <= 500) and len(contourPoints[i] > 250):
-                    
-                    pointsToSkip = int(len(contourPoints[i])/10)
-
-                elif len(contourPoints[i] <= 250) and len(contourPoints[i] > 125):
-                    
-                    pointsToSkip = int(len(contourPoints[i])/10)
-
-                elif len(contourPoints[i] <= 125) and len(contourPoints[i] > 62):
-                    
-                    pointsToSkip = int(len(contourPoints[i])/10)
+                # if points to skip is -1, use default mode
+                if skipPoints < 0:
                 
-                elif len(contourPoints[i] <= 62) and len(contourPoints[i] > 31):
-                    
-                    pointsToSkip = int(len(contourPoints[i])/10)
-                    
-                else: pointsToSkip = int(len(contourPoints[i])/20)
+                        # testing skipping points
+                        if len(contourPoints[i] > 500):
+                            pointsToSkip = int(len(contourPoints[i])/10)
+
+                        elif len(contourPoints[i] <= 500) and len(contourPoints[i] > 250):
+                            
+                            pointsToSkip = int(len(contourPoints[i])/10)
+
+                        elif len(contourPoints[i] <= 250) and len(contourPoints[i] > 125):
+                            
+                            pointsToSkip = int(len(contourPoints[i])/10)
+
+                        elif len(contourPoints[i] <= 125) and len(contourPoints[i] > 62):
+                            
+                            pointsToSkip = int(len(contourPoints[i])/10)
+                        
+                        elif len(contourPoints[i] <= 62) and len(contourPoints[i] > 31):
+                            
+                            pointsToSkip = int(len(contourPoints[i])/10)
+                            
+                        else: pointsToSkip = int(len(contourPoints[i])/20)
+
+                else: pointsToSkip = skipPoints
 
                 #pointsToSkip = int(len(contourPoints[i])/5)
 ##                print("\nLength of Contour Points[i]: ", len(contourPoints[i]))
