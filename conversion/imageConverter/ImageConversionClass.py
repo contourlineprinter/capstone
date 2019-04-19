@@ -650,6 +650,155 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
+    # sort the parent, the parent's first child, the first child's first child, etc indices by level in the hierarchy
+    # parameters:   parent, parent level,
+    #               hierarchy [[ [], [], ... , [] ]] ,
+    #               list where sorted results will be located [ [], [], ... , [] ] ,
+    #               list where indices involved will be added to [ , ... , ] .
+    def sortParentFirstChildByLevel(self, parent, level, hierarchy, lvlList, finishList):
+        try:
+
+            # if the level or parent has no value, set to 0
+            if level is None: level = 0
+            if parent is None: parent = 0
+
+            # base case
+            if parent == -1:
+                return
+
+            else:
+                print("")
+                
+                # go through each element in the hierarchy list
+                for i in hierarchy:
+                    
+                    lvlList[level].append(parent)   # add the parent to the list at index = level
+                    finishList.append(parent)       # add the parent to the finish list - indicate it's been processed
+                    child = i[parent][2]            # get the child of the parent
+                    print("Child of parent: ", child)   
+                    level+=1                        # increment the level                    
+                    sortParentFirstChildByLevel(child, level, hierarchy, lvlList)    # sort the first child for that child
+
+                return
+
+        except Exception as e:
+            print("Error: There is a problem with soring parent-child by level - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
+    # get the level of the element in the hierarchy
+    # parameters: target element, list to be searched [ [], [], ... , [] ] 
+    # return: level of target element
+    def getLevel(self, target, searchList):
+        try:
+
+            if target is None: target = 0 
+                   
+            # go through each level
+            for i in range(len(searchList)): 
+                print("\n I", i)
+
+                # for the elements at that level
+                for j in searchList[i]:
+                    print("\n j target: ", j) 
+
+                    # if the the target is found
+                    if target is j:
+                      
+                        return i # return the level
+                      
+                return 0 # if the target is not found, return level = 0
+
+        except Exception as e:
+            print("Error: There is a problem getting the level of the element - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
+    # get the parent of the element in a list where index = parent and values = children
+    # parameters: target element, list to be searched [[ [], [],..., [] ]] 
+    # return: parent of target element
+    def getParent(self, target, searchList):
+        try:
+
+            if target is None: target = 0
+               
+            # go through list
+            for i in searchList:
+
+                # for each parent in the list
+                for j in range(len(i)):
+                    print("\n parent target: ", j)
+
+                    # for all the children of that parent
+                    for k in i[j]:
+
+                        # if target element is a child of the parent
+                        if target is k:
+                            return j    # return the value of the parent
+                      
+            return -1   # if the parent is not found, return -1
+
+
+        except Exception as e:
+            print("Error: There is a problem getting the parent of the element - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
+    # get the list of elements sorted by the level in the hiearchy they are in
+    # parameters:   parent-children list where index = parents, values = children -> [[ [], [],..., [] ]] 
+    #               hierarchy from findContours -> [[ [], [],..., [] ]]
+    # return: level list based on hierarchy, index = level, values = elements -> [ [], [],..., [] ]
+    def getHierarchyLevelList(self, parentChildList, hierarchy):
+        try:
+
+            finishList = []
+            lvlList = []
+
+
+            # create a level list to put elements in -> [ [], [],..., [] ]
+            for i in h:
+                      
+                # create a list with the number of contour elements
+                # level
+                lvlList = [[] for j in range(len(i))] 
+
+
+            # go through hierarchy list
+            for i in parentChildList:
+
+                # for each parent
+                for j in range(len(i)):
+
+                    print("\n X: ", i[j], " at ", j)
+
+                    # if the list is not empty
+                    if i[j]:
+
+                        # for each child of that parent
+                        for k in i[j]:
+
+                            # if the child hasn't been processed
+                            if k not in finishList:
+                                parent = getParent(k, parentChildList)  # get parent of the child
+                                level = getLevel(parent, lvlList)       # get level of parent
+                                print("Level of k's parent: ", level)   
+                                print("Level of k: ", level+1)
+                                sortParentFirstChildByLevel(k, level+1, hierarchy, lvlList)     # sort the child and
+                                                                                                # first child/descendants
+                                                                                                # at the next level
+                    #for k in range(len(j)): # children numbers
+
+            return lvlList
+
+        except Exception as e:
+            print("Error: There is a problem getting the hierarchy level list - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
     # filter contour points based on minimum areas and specific range of x and y coordinates
     # range is used to filter out some points in contour image:
     #   smaller range - more points, more lines in the image 
@@ -658,7 +807,7 @@ class ImageConversion:
     def filterPoints(self, contourPoints, newContourPoints, hierarchy, rangeForX = 5, rangeForY = 5, minContourArea = 200):
         try:
 
-##
+
 ##            # hierarchy
 ##            # - info about the image topology
 ##            # - has as many elements as the number of contours.
@@ -705,6 +854,9 @@ class ImageConversion:
 ##            if parentChild:
 ##                print("\nParent-Child List: ", parentChild, "\n")
 ##
+##            # get hierarchy level
+##            lvlList = self.getHierarchyLevelList(parentChild, hierarchy)
+##            print("Level List: ", lvlList)
 ##
 ##                deleteChildren = []
 ##                #startChildIndex = 3

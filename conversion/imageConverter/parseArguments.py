@@ -93,4 +93,4 @@ def parseArguments(args):
     print("\nImage: ", combineImage)
     print("SVG: ", combineSVG)
 
-    return combineImage, combineSVG
+    return str(combineImage), str(combineSVG)
