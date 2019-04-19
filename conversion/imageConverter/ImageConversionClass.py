@@ -766,7 +766,7 @@ class ImageConversion:
                 lvlList = [[] for j in range(len(i))] 
 
 
-            # go through hierarchy list
+            # go through parent-child list
             for i in parentChildList:
 
                 # for each parent
@@ -790,6 +790,23 @@ class ImageConversion:
                                                                                                     # first child/descendants
                                                                                                     # at the next level
                     #for k in range(len(j)): # children numbers
+
+            # go through hierarchy list
+            for i in hierarchy:
+
+                # for each element
+                for j in range(len(i)):
+
+                    # if j has not been processed
+                    if j not in finishList:
+
+                        finishList.append(j)
+                        parent = self.getParent(k, parentChildList)
+                        level  = self.getLevel(parent, lvlList)
+                        
+                        if j not in lvlList[level]:
+                            lvlList[level].append(j)
+
 
             return lvlList
 
