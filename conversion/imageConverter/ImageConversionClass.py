@@ -1239,16 +1239,19 @@ class ImageConversion:
             
             #create a svg file
             #print("SVG to: ", str(path+name+number+extension))
-            dwg = svgwrite.Drawing(location, size=(width, height))
-            shapes = dwg.add(dwg.g(id="shapes", fill="none"))
             
             #percentage of resizing
             if (self.origHeight != -1 or self.origWidth != -1):
-                percentx = self.origWidth*100/width
-                percenty = self.origHeight*100/height           
+                percentx = self.origWidth * 100/width
+                percenty = self.origHeight * 100/height
+                height = self.origHeight
+                width = self.origWidth
             else:
                 percentx = 100
                 percenty = 100
+
+            dwg = svgwrite.Drawing(location, size=(width, height))
+            shapes = dwg.add(dwg.g(id="shapes", fill="none"))
             
             print("percentx and percenty: ", percentx, percenty)
             
