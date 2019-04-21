@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
@@ -53,9 +54,9 @@ class ImageConversion:
     def readImageOriginal(self, image):
         try:
             imgOriginal = cv2.imread(image, 1)          # read in image original colors
-            #height, width = imgOriginal.shape[:2]       # get height and width
-            #self.origHeight = height                    # set height
-            #self.origWidth = width                      # set width
+            height, width = imgOriginal.shape[:2]       # get height and width
+            if height: self.origHeight = height         # set height
+            if width: self.origWidth = width            # set width
             return imgOriginal
         
         except Exception as e:
@@ -69,10 +70,10 @@ class ImageConversion:
     # return: image in grayscale
     def readImageGrayscale(self, image):
         try:
-            imgGray = cv2.imread(image, 0)          # read in image grayscale
-            #height, width = imgGray.shape[:2]       # get height and width
-            #self.origHeight = height                # set height
-            #self.origWidth = width                  # set width
+            imgGray = cv2.imread(image, 0)              # read in image grayscale
+            height, width = imgGray.shape[:2]           # get height and width
+            if height: self.origHeight = height         # set height
+            if width: self.origWidth = width            # set width
             return imgGray
         
         except Exception as e:
@@ -189,61 +190,53 @@ class ImageConversion:
     def removeBackground(self, image):
 
         try:
-            # properties
-            BLUR = 15               # blur size
+            
+            BLUR = 15
             DILATE = 8
             ERODE = 8
             THRESH1 = 15
             THRESH2 = 180
-            COLOR = (1.0, 1.0, 1.0) # mask color
+            COLOR = (1.0, 1.0, 1.0)
 
-            # using canny, dilate and erode together to detect edges
-            if (len(image.shape) == 3):
-                gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            else: gray = image
-            
-            edges = cv2.Canny(gray, THRESH1, THRESH2)
-            edges = cv2.dilate(edges, None)
-            edges = cv2.erode(edges, None)
+            type = 4
 
-            c_info = []
+            img_file = 'bg4.jpg'
+            x1 = 0.1
+            x2 = 0.9
+            y1 = 0.1
+            y2 = 0.9
 
-            # finding contours
-            contours, hierarchy = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+            # Reading image
+            img = cv2.imread(img_file)
 
-            for c in contours:
-                c_info.append((c, cv2.isContourConvex(c), cv2.contourArea(c),))
+            # Converting image to rgb
+            image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-            # sorting contours based on area
-            c_info = sorted(c_info, key=lambda c: c[2], reverse=True)
+            # Finding it's width and height
+            height, width = image_rgb.shape[:2]
 
-            # idea is to draw an empty mask
-            # and drawing a filled polygon of largest contour
-            # on it
-            max_contour = c_info[0]
-            image_mask = np.zeros(edges.shape)
-            cv2.fillConvexPoly(image_mask, max_contour[0], (255))
+            # Marking rectangle considering main object to be within this rectangle.
+            rectangle = (int(width*x1), int(height*y1), int(width*x2), int(height*y2))
 
-            # smoothing the mask
-            image_mask = cv2.dilate(image_mask, None, iterations=DILATE)
-            image_mask = cv2.erode(image_mask, None, iterations=ERODE)
-            
-            # applying gaussian blur to the mask
-            image_mask = cv2.GaussianBlur(image_mask, (BLUR, BLUR), 0)
-            mask_stack = np.dstack([image_mask] * 3)
-            mask_stack = mask_stack.astype('float32') / 255.0
-            image = image.astype('float32') / 255.0
+            # Creating a mask
+            mask = np.zeros(image_rgb.shape[:2], np.uint8)
 
-            # blending original image with the mask
-            masked = (mask_stack * image) + ((1 - mask_stack) * COLOR)
-            masked = (masked * 255).astype('uint8')
+            # Background mask
+            bgdModel = np.zeros((1, 65), np.float64)
 
-            # rewriting image back
-            #cv2.imwrite(formatted_path, masked)
+            # Foreground mask
+            fgdModel = np.zeros((1, 65), np.float64)
 
-            print("Mask: ", len(masked.shape)) 
+            # Applying grab cut on the image using rectangle and mask
+            cv2.grabCut(image_rgb, mask, rectangle,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
 
-            return masked
+            # Creating another mask where mask=2
+            mask_2 = np.where((mask==2) | (mask==0), 0, 1).astype('uint8')
+
+            # Applying mask on the original image
+            image_rgb_nobg = image_rgb * mask_2[:, :, np.newaxis]
+
+            return image_rgb_nobg        
 
         except Exception as e:
             print("Error: There is a problem with removing the image background - \n" + e.args[0] ) 
@@ -327,6 +320,19 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
+    # get original image height and width
+    # return: height and width
+    def getImageOrigHeightAndWidth(self):
+        try:
+
+            return self.origHeight, self.origWidth
+        
+        except Exception as e:
+            print("Error: There is a problem with getting the image height and width - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
     # preprocess the image to find better edges
     # parameter: grayscale image to preprocess (note: image has be this type to work)
     # return: preprocessed image
@@ -406,9 +412,9 @@ class ImageConversion:
             gray = self.turnImageGray(noBackgroundImage)
 
             # get preprocess image
-            edgeImage = self.getImageReady(gray)
+            #edgeImage = self.getImageReady(gray)
     
-            return edgeImage
+            return gray
         
         except Exception as e:
             print("Error: There is a problem with removing the background and preprocessing the image - \n" + e.args[0] ) 
@@ -824,16 +830,58 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
+    # check if the element meets the min area and approx polynomial requirements
+    # parameters:   element to be checked, contour points list, minimum contour area
+    # return: true = 1  or false = 0 depending if element meets requirement
+    def meetMinAreaPolynomialReq(self, target, contourPoints, minContourArea):
+        try:
+            contourArea = cv2.contourArea(contourPoints[target]) # find contour area
+                
+            # we can use this epsilon instead of fixed 2 in approxPolyDP
+            epsilon = 0.001 * cv2.arcLength(contourPoints[target], False)
+            # approx = cv2.approxPolyDP(c, epsilon, True)
+
+            # applying polygon approximation on the current contour.
+            approx2 = cv2.approxPolyDP(contourPoints[target], 2, False)
+
+            # if there are extact four points in the contour, most likely it a sqaure
+            # so ignoring such contour
+            # if the contour area is less than the minimum contour area
+            if (contourArea < minContourArea) or len(approx2) == 4: return 0
+            else: return 1
+
+        except Exception as e:
+            print("Error: There is a problem with the min area - approx polynomial requirements - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
     # filter contour points based on minimum areas and specific range of x and y coordinates
     # range is used to filter out some points in contour image:
     #   smaller range - more points, more lines in the image 
     #   larger range - less points, less lines in the image
     # parameters:   set of points that make up contour, range for x, range for y,
     #               skip points (negative value = default),  minimum contour area accepted
-    def filterPoints(self, contourPoints, newContourPoints, hierarchy, rangeForX = 5, rangeForY = 5, skipPoints = -1, minContourArea = 200):
+    def filterPoints(self, contourPoints, newContourPoints, hierarchy, rangeForX = 5, rangeForY = 5, skipPoints = -1, minContourArea = -1):
         try:
 
-            if minContourArea < 0: minContourArea = 200
+            # find the largest area
+            areaList = max(contourPoints, key = cv2.contourArea)
+            #print("Largest Area", largestArea)
+
+            areaLarge = -1
+            
+            if len(areaList) != 0:
+                for i in areaList:
+                    for j in i:
+                        if areaLarge < j[0] :
+                            areaLarge = j[0]
+
+            print("Largest Area", areaLarge)
+
+            if minContourArea < 0:
+                minContourArea = int(areaLarge/3)
+                print("Min Area", minContourArea)
             if rangeForX < 0: rangeForX = 5
             if rangeForY < 0: rangeForY = 5
 
@@ -851,7 +899,7 @@ class ImageConversion:
             
             #print(hierarchy[[0,1,2,3]])
             #print("Contours: ", contours)
-            print("Hierarchy: ", hierarchy)
+            #print("Hierarchy: ", hierarchy)
 
             
             parentChild = [] # parent-child list
@@ -898,12 +946,16 @@ class ImageConversion:
                 if lvlList[i]:
 
                     # if the level contains values and if level > 1
-                    if i == 1 and len(lvlList[i]) > 5 :
-
+                    if i == 1 :
                         for j in range(len(lvlList[i])):
-                            if j > 5 and lvlList[i][j]:
+                            #if j > 5 and lvlList[i][j]:
+                            if lvlList[i][j]:
+                                 
                                 get = lvlList[i][j]
-                                deleteChildren.append(get) # add the children to be deleted
+
+                                # if the contour element doesn't meet the min area and contour Points requirement
+                                if self.meetMinAreaPolynomialReq(get, contourPoints, minContourArea) == 0:
+                                    deleteChildren.append(get) # add the children to be deleted
                 
                     elif i > 1:
 
@@ -988,20 +1040,9 @@ class ImageConversion:
             # look for the contours that don't fit the minimum area requirement
             for i in range(len(contourPoints)):
                 
-                contourArea = cv2.contourArea(contourPoints[i]) # find contour area
-                
-                # we can use this epsilon instead of fixed 2 in approxPolyDP
-                epsilon = 0.001 * cv2.arcLength(contourPoints[i], False)
-                # approx = cv2.approxPolyDP(c, epsilon, True)
-                
-                # applying polygon approximation on the current contour.
-                approx2 = cv2.approxPolyDP(contourPoints[i], 2, False)
-                
-                # if there are extact four points in the contour, most likely it a sqaure
-                # so ignoring such contour
-                # if the contour area is less than the minimum contour area
-                if(contourArea < minContourArea) or len(approx2) == 4:
-                    contoursToDelete.append(i)  # save the index of that contour
+                    # if the contour element doesn't meet the min area and contour Points requirement
+                    if self.meetMinAreaPolynomialReq(i, contourPoints, minContourArea) == 0:
+                        contoursToDelete.append(i)  # save the index of that contour
 
             # if the first contour element isn't in the deleted index, add it
             #if 0 not in contoursToDelete: contoursToDelete.append(0)
@@ -1163,6 +1204,7 @@ class ImageConversion:
         try:
 
             path = str(path)
+            print("::", path)  
 
             # make sure the path is ready
             if "/" in path:
@@ -1198,24 +1240,36 @@ class ImageConversion:
             #print("SVG to: ", str(path+name+number+extension))
             dwg = svgwrite.Drawing(location, size=(width, height))
             shapes = dwg.add(dwg.g(id="shapes", fill="none"))
-
-            #add a starting point
-            shapes.add(dwg.line(start = ('0',str(height)), 
-                             end = (str(contourPoints[0][0][0]),str(contourPoints[0][0][1])), 
-                             stroke=svgwrite.rgb(10, 10, 16, "%")
-            ))
+            
+            #percentage of resizing
+            if (self.origHeight != -1 or self.origWidth != -1):
+                percentx = self.origWidth*100/width
+                percenty = self.origHeight*100/height           
+            else:
+                percentx = 100
+                percenty = 100
+            
+            print("percentx and percenty: ", percentx, percenty)
             
             #interatively write points into the svg file
             lengthOfTheList = len(contourPoints[0]) - 1
             for x in range(lengthOfTheList):
                 #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
-                shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
-                                 end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
-                                 stroke=svgwrite.rgb(10, 10, 16, "%")
-                ))
+                #shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
+                #                 end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
+                #                 stroke=svgwrite.rgb(10, 10, 16, "%")
+                #))
+                x1 = math.floor(contourPoints[0][x][0] * percentx/100)           #resize x1
+                x2 = math.floor(contourPoints[0][x+1][0] * percentx/100)         #resize x2
+                y1 = math.floor(contourPoints[0][x][1] * percenty/100)           #resize y1
+                y2 = math.floor(contourPoints[0][x+1][1] * percenty/100)         #resize y2
+                shapes.add(dwg.line(start = (str(x1), str(y1)), 
+                    end = (str(x2),str(y2)), 
+                    stroke=svgwrite.rgb(10, 10, 16, "%")
+                ))                
             
             #save the file
-            dwg.save()       
+            dwg.save()
             
         except Exception as e:
             print("Error: There is a problem with writing a svg file - \n" + e.args[0] )
