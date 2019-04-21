@@ -18,8 +18,7 @@ minArea = -1
 imgConvert = ImageConversion(image, svg)
 
 # load in image
-imgGray = imgConvert.readImageGrayscale(image) # turn on for regular
-#img = imgConvert1.readImageOriginal(image) # turn on for background removal
+img = imgConvert.readImageOriginal(image) # turn on for background removal
 
 # get height and width of image
 height, width = imgConvert.getImageOrigHeightAndWidth()
@@ -31,7 +30,9 @@ imgConvert.printImgInfo()
 if height >= 300 or width >= 300:
 
     # resize image    
-    imgGray = imgConvert.resizeImageByHeightAndWidth(imgGray, None, None, desiredImgHeight = 200, desiredImgWidth = None)
+    img = imgConvert.resizeImageByHeightAndWidth(img, None, None, desiredImgHeight = 200, desiredImgWidth = None)
+
+imgGray = imgConvert.getImageReadyNoBackground(img) # background removal - need orig image
 
 # get image ready
 eroImg = imgConvert.getImageReady(imgGray)

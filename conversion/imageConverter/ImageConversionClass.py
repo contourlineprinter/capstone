@@ -201,17 +201,13 @@ class ImageConversion:
 
             type = 4
 
-            img_file = 'bg4.jpg'
             x1 = 0.1
             x2 = 0.9
             y1 = 0.1
             y2 = 0.9
 
-            # Reading image
-            img = cv2.imread(img_file)
-
             # Converting image to rgb
-            image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
             # Finding it's width and height
             height, width = image_rgb.shape[:2]
