@@ -35,45 +35,16 @@ print ("\n", str(image))
 print (str(svg))
 
 #--------------------------------------------------------------------
-# with background
-
-# create an ImageConversion object
-imgConvert = ImageConversion(image, svg)
-
-# load in image
-img = imgConvert.readImageOriginal(image) # turn on for background removal
-
-# get image ready
-imgGray = imgConvert.getImageReadyNoBackground(img) # background removal - need
-
-# get height and width of image
-height, width = imgConvert.getImageOrigHeightAndWidth()
-
-# print info
-imgConvert.printImgInfo()
-
-# if the image is a certain size
-if height >= 300 or width >= 300:
-
-    # resize image    
-    imgGray = imgConvert.resizeImageByHeightAndWidth(imgGray, None, None, desiredImgHeight = 200, desiredImgWidth = None)
-
-# get image ready
-eroImg = imgConvert.getImageReady(imgGray)
-
-# find contour lines
-conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroImg, 2, xyRange, skipPoints, minArea)
-
-
-#--------------------------------------------------------------------
-# without background
-
+### with background
+##
 ### create an ImageConversion object
 ##imgConvert = ImageConversion(image, svg)
 ##
 ### load in image
-##imgGray = imgConvert.readImageGrayscale(image) # turn on for regular
-###img = imgConvert1.readImageOriginal(image) # turn on for background removal
+##img = imgConvert.readImageOriginal(image) # turn on for background removal
+##
+### get image ready
+##imgGray = imgConvert.getImageReadyNoBackground(img) # background removal - need
 ##
 ### get height and width of image
 ##height, width = imgConvert.getImageOrigHeightAndWidth()
@@ -92,4 +63,33 @@ conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroIm
 ##
 ### find contour lines
 ##conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroImg, 2, xyRange, skipPoints, minArea)
+
+
+#--------------------------------------------------------------------
+# without background
+
+# create an ImageConversion object
+imgConvert = ImageConversion(image, svg)
+
+# load in image
+imgGray = imgConvert.readImageGrayscale(image) # turn on for regular
+#img = imgConvert1.readImageOriginal(image) # turn on for background removal
+
+# get height and width of image
+height, width = imgConvert.getImageOrigHeightAndWidth()
+
+# print info
+imgConvert.printImgInfo()
+
+# if the image is a certain size
+if height >= 300 or width >= 300:
+
+    # resize image    
+    imgGray = imgConvert.resizeImageByHeightAndWidth(imgGray, None, None, desiredImgHeight = 200, desiredImgWidth = None)
+
+# get image ready
+eroImg = imgConvert.getImageReady(imgGray)
+
+# find contour lines
+conImgNoEdgeOld, conImgNoEdge, conNoEdgePoints = imgConvert.createContours(eroImg, 2, xyRange, skipPoints, minArea)
 
