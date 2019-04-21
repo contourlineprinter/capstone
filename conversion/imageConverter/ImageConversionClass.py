@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 import svgwrite
 import os, sys, ntpath, traceback
+import math
 
 class ImageConversion:    
     "Class to perform image conversion to contour, svg, and robot instructions\n"
