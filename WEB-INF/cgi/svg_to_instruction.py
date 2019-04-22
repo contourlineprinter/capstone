@@ -4,9 +4,9 @@ import math
 import time
 import sys
 
-#FULL_REV = 4.85
-DEF_SPEED = 65
-SCALE = 3/500
+DEF_SPEED = 30
+SCALE = 0.003
+
 
 def svg_to_lines(file_name):
     '''
@@ -85,15 +85,15 @@ def cart_to_polar(x1, y1, x2, y2,state):
     '''
     return({'theta': get_theta(x1, y1, x2, y2,state.angle), 'dist': get_distance(x1, y1, x2, y2)})
 
-def go(distance):
+def go(steps):
     ''' 
         Given an integer, distance, this returns a string of the backward command of the given distance
     '''
-    speed = DEF_SPEED
-    dur = distance * SCALE
+    #speed = DEF_SPEED
+    #dur = distance * SCALE
     # UNCOMMENT ONE OF THESE LINES ON ROBOT
     #robot.forward(speed, dur)
-    return "robot.backward({s}, {d})\n".format(s = speed, d = dur)
+    return "robot.forward({s})\n".format(s = steps)
   
 def rotate(theta):
     ''' 
@@ -109,12 +109,9 @@ def init_file():
     Taking no parameters. This returns a string with the necessary imports and setup
     '''
     s = ('import time\n'
-          'import Robot\n\n'
-          'LEFT_TRIM = 0\n'
-          'RIGHT_TRIM = 0\n\n'
+          'from Robot import Robot\n\n'
           '#initialize the robot\n'
-          'robot = Robot.Robot(left_trim=LEFT_TRIM, right_trim=RIGHT_TRIM)\n'
-          'DEF_SPEED = 65\n\n\n'
+          'robot = Robot()\n\n\n'
           '#the commands begin now\n'
         )
     # this try-catch block is pointless right now, but should be useful in the distant future, the year 2000
@@ -151,7 +148,7 @@ def go_to(state, points):
     
     # append the two lines of commands to the string
     s += rotate(polar['theta']) 
-    s += go(polar['dist'])
+    s += go(int(polar['dist']))
     
     # update and return? state, now at new point and angled in direction just travelled 
     state.x = x2 
@@ -170,7 +167,7 @@ def robot_convert(file_name,scale=3):
     SCALE = scale
     
     #open the file we're writing to
-    file = open('../../network/send/script.py','w')
+    file = open('script.py','w')
     file.write(init_file())
     
     try:
