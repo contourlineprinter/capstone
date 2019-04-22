@@ -932,11 +932,14 @@ class ImageConversion:
 
                     # if the contour element has a parent
                     if i[j][3] >= 0:
-                        
-                        child = j               # get the child
                         parent = i[j][3]        # get the parent
+
+                    elif i[j][3] < 0:
+                        parent = j
+                        
+                    child = j               # get the child
 ##                        print("Parent found: ", parent, " at child : ", child)   
-                        l[parent].append(child) # add to list -> index = parent, value = child
+                    l[parent].append(child) # add to list -> index = parent, value = child
                         
                 parentChild.append(l) # add the results to parent-child list
 
