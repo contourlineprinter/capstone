@@ -93,7 +93,7 @@ def go(steps):
     #dur = distance * SCALE
     # UNCOMMENT ONE OF THESE LINES ON ROBOT
     #robot.forward(speed, dur)
-    return "robot.backward({s})\n".format(s = steps)
+    return "robot.forward({s})\n".format(s = steps)
   
 def rotate(theta):
     ''' 
