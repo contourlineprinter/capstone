@@ -762,7 +762,7 @@ class ImageConversion:
     # parameters:   parent-children list where index = parents, values = children -> [[ [], [],..., [] ]] 
     #               hierarchy from findContours -> [[ [], [],..., [] ]]
     # return: level list based on hierarchy, index = level, values = elements -> [ [], [],..., [] ]
-    def getHierarchyLevelList(self, parentChildList, hierarchy):
+   def getHierarchyLevelList(self, parentChildList, hierarchy):
         try:
 
             finishList = []
@@ -777,29 +777,41 @@ class ImageConversion:
                 lvlList = [[] for j in range(len(i))] 
 
 
-            # go through parent-child list
+            # go through hierarchy list
             for i in parentChildList:
-
+                   
                 # for each parent
                 for j in range(len(i)):
 
-                    #print("\n X: ", i[j], " at ", j)
-
+##                    print("\n X: ", i[j], " at ", j)
+                    
                     # if the list is not empty
-                    if i[j]:
-
+                    if i[j] is not None:
+                        
                         # for each child of that parent
                         for k in i[j]:
 
-                            # if the child hasn't been processed
-                            if k not in finishList:
-                                parent = self.getParent(k, parentChildList)  # get parent of the child
-                                level = self.getLevel(parent, lvlList)       # get level of parent
-                                #print("Level of k's parent: ", level)   
-                                #print("Level of k: ", level+1)
-                                self.sortParentFirstChildByLevel(k, level+1, hierarchy, lvlList, finishList)    # sort the child and
-                                                                                                    # first child/descendants
-                                                                                                    # at the next level
+                            if k is not None:
+                                print("Here")
+                                # if the child hasn't been processed
+                                if k not in finishList:
+                                    parent = self.getParent(k, parentChildList)  # get parent of the child
+                                    level = self.getLevel(parent, lvlList)       # get level of parent
+                                    print("Level ", level)
+    ##                                print("Level of k's parent: ", level)   
+    ##                                print("Level of k: ", level+1)
+                                    if parent == k:
+                                        self.sortParentFirstChildByLevel(k, level, hierarchy, lvlList, finishList)    # sort the child and
+                                                                                                        # first child/descendants
+                                                                                                        # at the next level
+                                    elif parent >= 0:
+                                        self.sortParentFirstChildByLevel(k, level+1, hierarchy, lvlList, finishList)    # sort the child and
+                                                                                                        # first child/descendants
+                                                                                                        # at the next level
+                                     
+                            else: continue
+
+                    else: continue
                     #for k in range(len(j)): # children numbers
 
             # go through hierarchy list
@@ -813,11 +825,13 @@ class ImageConversion:
 
                         finishList.append(j)
                         parent = self.getParent(k, parentChildList)
+                        print("Parent ", parent)
                         level  = self.getLevel(parent, lvlList)
+                        print("Level ", level)
                         
                         if j not in lvlList[level]:
                             lvlList[level].append(j)
-
+                    
 
             return lvlList
 
