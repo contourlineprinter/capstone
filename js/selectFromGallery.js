@@ -12,7 +12,7 @@ $(document).ready(function(){
 		{ data1: fname},
 		function(data, status){
 				console.log("post sent");
-				console.log("Data: " + data + "\nStatus: " + status);
+				//console.log("Data: " + data + "\nStatus: " + status);
 				history.pushState({},"Your Title",url);
 				
 				$( "html" ).html( data );

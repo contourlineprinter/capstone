@@ -32,7 +32,7 @@
     </nav>
 	
 	<%!
-	String fileName = "test";
+	String fileName;
 	%>
 	<%
 	
@@ -56,12 +56,12 @@
 			<div class="col-12 col-md-6 pt-3">
 			
 				<!-- Line Density Slider -->
-				<div class="form-group row">
-					<label  class="col-sm-3 col-form-label">Line Density</label>
-					<div class="col-sm-9">
-						<input type="range" class="form-control-range" id="formControlRange">
-					</div>
-				</div>
+				<!-- <div class="form-group row">  -->
+					<!-- <label  class="col-sm-3 col-form-label">Line Density</label> -->
+					<!-- <div class="col-sm-9"> -->
+						<!-- <input type="range" class="form-control-range" id="formControlRange"> -->
+					<!-- </div> -->
+				<!-- </div> -->
 			    
 				<!-- This is where we will show the contour image for user approval -->
 				<img src=  "<%= "svg/"+ fileName + ".svg" %>" class="img-fluid mx-auto d-block img-thumbnail mt-3">
