@@ -762,7 +762,8 @@ class ImageConversion:
     # parameters:   parent-children list where index = parents, values = children -> [[ [], [],..., [] ]] 
     #               hierarchy from findContours -> [[ [], [],..., [] ]]
     # return: level list based on hierarchy, index = level, values = elements -> [ [], [],..., [] ]
-   def getHierarchyLevelList(self, parentChildList, hierarchy):
+    def getHierarchyLevelList(self, parentChildList, hierarchy):
+        
         try:
 
             finishList = []
