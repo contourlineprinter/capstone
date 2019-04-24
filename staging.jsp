@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -30,20 +31,6 @@
             </ul>
         </div>
     </nav>
-	
-	<%!
-	String fileName;
-	%>
-	<%
-	
-	if (request.getParameter("data1")!= null) { // passback
-		fileName = 	request.getParameter("data1");
-	}
-	else { // via upload
-		fileName = request.getAttribute("file") + "";
-	}
-
-	%>
 
     <!-- Content -->
     <div class="container-fluid">
@@ -64,7 +51,7 @@
 				<!-- </div> -->
 			    
 				<!-- This is where we will show the contour image for user approval -->
-				<img src=  "<%= "svg/"+ fileName + ".svg" %>" class="img-fluid mx-auto d-block img-thumbnail mt-3">
+				<img id="preview" src="#" class="img-fluid mx-auto d-block img-thumbnail mt-3">
 				
 				<!-- Button to approve the image and begin printing -->
 				<button onclick="printq()" class="btn btn-primary w-100 mt-3">Print</button>
@@ -72,10 +59,26 @@
 
 		</div>
     </div>
-
+	
+	<script>
+		
+		var id = window.location.href;
+		if (id.includes("?")){ // via gallery
+			id = id.split('?').pop();
+			console.log(id);
+			id = "svg/" +id + ".svg";
+		} else {  // via upload
+			id = "svg/" + "<%= request.getAttribute("file")%>" + ".svg";
+		}
+		console.log(id);
+		
+		document.getElementById("preview").src= id;
+	</script>
+	
+	
 	
     <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="js/bootstrap.bundle.min.js"></script> -->
 	<script src="js/movesvg.js"></script>
 
 	

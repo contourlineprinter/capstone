@@ -7,19 +7,34 @@ $(document).ready(function(){
 		var fname = $(this).find("img").attr("src");   // gets the src attribute of the image tag of the clicked on row
 		var fname = fname.replace("images/", "");      // removes the file directory name
 		console.log(fname);
-		var url = "staging.jsp"
+		//var url = "staging.jsp"
+		
+		window.location.href = "staging.jsp?"+fname;
+		/*
+		$.ajax({
+		  type: 'POST',
+		  url: "staging.jsp",
+		  dataType: "html",
+		  data: {data1: fname},
+		  success: function(data) {
+					console.log("Data: " + data);
+					$( "html" ).html( data );
+				  },
+			async:   true
+		});
+		*/
+		/*
 		$.post(url,
 		{ data1: fname},
 		function(data, status){
 				console.log("post sent");
-				//console.log("Data: " + data + "\nStatus: " + status);
+				console.log("Data: " + data + "\nStatus: " + status);
 				history.pushState({},"Your Title",url);
-				
+				//window.location.replace(url);
 				$( "html" ).html( data );
 			}
-		);
+		); */
+		
+		//$.ajaxSetup({async: true}); //reset
 	});
 });
-
-
-//console.log($(' img:nth-child(1)').attr('src'));
