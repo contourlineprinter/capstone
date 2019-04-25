@@ -462,13 +462,12 @@ class ImageConversion:
             # make svg of contour - for gallery
             nameSVG = str(ntpath.basename(self.origImg))                    # set filename for svg file
             path = str(self.svgPath)                                        # set directory path for svg file
-            self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg
-
+            
             print("got to ROOT/next")
     
             # make svg of contour - ROOT/next
             nameSVG2 = "imageSVG"                                           # set filename for svg file
-            path2 = "/var/lib/tomcat8/webapps/ROOT/next"         # set directory path for svg file
+            path2 = "/var/lib/tomcat8/webapps/ROOT/next"                    # set directory path for svg file
 
             # if folder for svg doesn't exist
             if not os.path.exists(path2):
@@ -476,8 +475,15 @@ class ImageConversion:
                 print("A new folder will be created")
                 os.makedirs(path2)
 
-            self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg            
-
+            # if pointC is still empty after attempt
+            if len(pointC) == 0 and attempt == 1:
+                self.drawSVG(newContours, height, width, nameSVG, path, 0)      # draw a blank svg in gallery
+                self.drawSVG(newContours, height, width, nameSVG, path2, 0)     # draw a blank svg in next
+                
+            else:
+                self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg in gallery
+                self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg in next
+            
             #don't sort - doesn't work?
             #vec = np.sort(np.array([pointC]))
 
@@ -1214,7 +1220,9 @@ class ImageConversion:
     # write a svg file with all the contour points found in the original image
     # parameters: the list of sequence of contour points, height of image, width of image,
     #               image name, directory of svg file,
-    #               mode -> 1 = do not overwrite files with same name, other number = overwrite files with same name
+    #               mode -> 0 = write a blank svg
+    #                       1 = do not overwrite files with same name,
+    #                       other number = overwrite files with same name
     def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./", mode = 1):
         try:
 
@@ -1268,23 +1276,24 @@ class ImageConversion:
             shapes = dwg.add(dwg.g(id="shapes", fill="none"))
             
             print("percentx and percenty: ", percentx, percenty)
-            
-            #interatively write points into the svg file
-            lengthOfTheList = len(contourPoints[0]) - 1
-            for x in range(lengthOfTheList):
-                #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
-                #shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
-                #                 end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
-                #                 stroke=svgwrite.rgb(10, 10, 16, "%")
-                #))
-                x1 = math.floor(contourPoints[0][x][0] * percentx/100)           #resize x1
-                x2 = math.floor(contourPoints[0][x+1][0] * percentx/100)         #resize x2
-                y1 = math.floor(contourPoints[0][x][1] * percenty/100)           #resize y1
-                y2 = math.floor(contourPoints[0][x+1][1] * percenty/100)         #resize y2
-                shapes.add(dwg.line(start = (str(x1), str(y1)), 
-                    end = (str(x2),str(y2)), 
-                    stroke=svgwrite.rgb(10, 10, 16, "%")
-                ))                
+
+            if mode is not 0:
+                #interatively write points into the svg file
+                lengthOfTheList = len(contourPoints[0]) - 1
+                for x in range(lengthOfTheList):
+                    #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
+                    #shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
+                    #                 end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
+                    #                 stroke=svgwrite.rgb(10, 10, 16, "%")
+                    #))
+                    x1 = math.floor(contourPoints[0][x][0] * percentx/100)           #resize x1
+                    x2 = math.floor(contourPoints[0][x+1][0] * percentx/100)         #resize x2
+                    y1 = math.floor(contourPoints[0][x][1] * percenty/100)           #resize y1
+                    y2 = math.floor(contourPoints[0][x+1][1] * percenty/100)         #resize y2
+                    shapes.add(dwg.line(start = (str(x1), str(y1)), 
+                        end = (str(x2),str(y2)), 
+                        stroke=svgwrite.rgb(10, 10, 16, "%")
+                    ))                
             
             #save the file
             dwg.save()
