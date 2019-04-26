@@ -874,6 +874,40 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
+    # find the maximum area in contour points - does not include the first element
+    # parameters: set of points that make up contour
+    # return: max area
+    def findMaxArea(self, contourPoints):
+        try:
+
+            maxArea = 0
+
+            for i in range(len(contourPoints)):
+                #print("I ",  i)            
+                foundArea = cv2.contourArea(contourPoints[i]) # find contour area
+                #print("Found Area ",  foundArea)
+
+                # skip the first element
+                if i == 0:
+
+                    epsilon = 0.001 * cv2.arcLength(contourPoints[i], False)
+                    approx = cv2.approxPolyDP(contourPoints[i], epsilon, True)
+
+                    if len(approx) == 4: continue
+                    
+                
+                if (foundArea > maxArea):
+
+                    maxArea = foundArea
+                    
+            return maxArea
+
+        except Exception as e:
+            print("Error: There is a problem with finding the max area - \n" + e.args[0] ) 
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.extract_tb(exc_tb)[-1]
+            print(exc_type, tb[2], tb[1])
+#-----------------------------------------
     # filter contour points based on minimum areas and specific range of x and y coordinates
     # range is used to filter out some points in contour image:
     #   smaller range - more points, more lines in the image 
@@ -884,21 +918,21 @@ class ImageConversion:
         try:
 
             # find the largest area
-            areaList = max(contourPoints, key = cv2.contourArea)
+            #areaList = max(contourPoints, key = cv2.contourArea)
             #print("Largest Area", largestArea)
 
-            areaLarge = -1
+            areaLarge = self.findMaxArea(contourPoints)
             
-            if len(areaList) != 0:
-                for i in areaList:
-                    for j in i:
-                        if areaLarge < j[0] :
-                            areaLarge = j[0]
+##            if len(areaList) != 0:
+##                for i in areaList:
+##                    for j in i:
+##                        if areaLarge < j[0] :
+##                            areaLarge = j[0]
 
             print("Largest Area", areaLarge)
 
             if minContourArea < 0:
-                minContourArea = int(areaLarge/3)
+                minContourArea = int(areaLarge/4)
                 print("Min Area", minContourArea)
             if rangeForX < 0: rangeForX = 5
             if rangeForY < 0: rangeForY = 5
