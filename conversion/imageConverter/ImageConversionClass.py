@@ -1259,10 +1259,10 @@ class ImageConversion:
                                     continue
 
                                 #print("got here - yes")
-                                xsave = xget
-                                ysave = yget
-                                newContourPoints.append([xget,yget])
-                                count+=1
+##                                xsave = xget
+##                                ysave = yget
+##                                newContourPoints.append([xget,yget])
+##                                count+=1
 
 #----------------------------------------------------------------------------------------------------------------------------------------
                                 
