@@ -860,7 +860,7 @@ class ImageConversion:
             # approx = cv2.approxPolyDP(c, epsilon, True)
 
             # applying polygon approximation on the current contour.
-            approx2 = cv2.approxPolyDP(contourPoints[target], 2, False)
+            approx2 = cv2.approxPolyDP(contourPoints[target], epsilon, False)
 
             # if there are extact four points in the contour, most likely it a sqaure
             # so ignoring such contour
@@ -1001,7 +1001,7 @@ class ImageConversion:
                 if lvlList[i]:
 
                     # if the level contains values and if level > 1
-                    if i == 1 :
+                    if i <= 2 :
                         for j in range(len(lvlList[i])):
                             #if j > 5 and lvlList[i][j]:
                             if lvlList[i][j]:
@@ -1012,7 +1012,7 @@ class ImageConversion:
                                 if self.meetMinAreaPolynomialReq(get, contourPoints, minContourArea) == 0:
                                     deleteChildren.append(get) # add the children to be deleted
                 
-                    elif i > 1:
+                    elif i > 2:
 
                         #print("To be deleted I: ", i)
                     
@@ -1053,6 +1053,8 @@ class ImageConversion:
 
 ##                # delete the children conours
 ##                contourPoints = np.delete(contourPoints, deleteChildren)
+
+            if 0 not in deleteChildren: deleteChildren.append(0) # delete the first contour element - frame
 
             if deleteChildren:
                 contourPoints = np.delete(contourPoints, deleteChildren)
@@ -1163,23 +1165,23 @@ class ImageConversion:
                 
                         # testing skipping points
                         if len(contourPoints[i] > 500):
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
 
                         elif len(contourPoints[i] <= 500) and len(contourPoints[i] > 250):
                             
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
 
                         elif len(contourPoints[i] <= 250) and len(contourPoints[i] > 125):
                             
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
 
                         elif len(contourPoints[i] <= 125) and len(contourPoints[i] > 62):
                             
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
                         
                         elif len(contourPoints[i] <= 62) and len(contourPoints[i] > 31):
                             
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
                             
                         else: pointsToSkip = int(len(contourPoints[i])/20)
 
