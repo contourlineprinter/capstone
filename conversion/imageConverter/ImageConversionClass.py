@@ -384,7 +384,7 @@ class ImageConversion:
 
             #get edges
             edgeImage = self.getEdges(erosionImage)
-            #self.showImage("Erosion Image", erosionImage)
+            #self.showImage("Erosion Image", edgeImage)
             #cv2.moveWindow("Erosion Image",900,0)
 
             return erosionImage
@@ -1001,7 +1001,7 @@ class ImageConversion:
                 if lvlList[i]:
 
                     # if the level contains values and if level > 1
-                    if i <= 2 :
+                    if i <= 2 and i > 0:
                         for j in range(len(lvlList[i])):
                             #if j > 5 and lvlList[i][j]:
                             if lvlList[i][j]:

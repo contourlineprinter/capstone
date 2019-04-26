@@ -11,11 +11,14 @@ from ImageConversionClass import ImageConversion
 #----------------------------------------- 
 if len(sys.argv) < 2:
         print ("Please give a image name or image path as an argument")
-        print ("usage: python3 convertFileInput.py [image name] ./ [svg path (optional)] [xy range (optional)] [pts to skip (optional)] [min area (optional)]")
+        print ("usage: python3 convertFileInput.py [image name] ./ [svg path (optional)] [xy range (optional)] [point density (optional)] [min area (optional)]")
         exit()
 if len(sys.argv) == 2:
         image = str(sys.argv[1])
         svg = "./"
+        xyRange = -1
+        skipPoints = -1
+        minArea = -1
 elif len(sys.argv) == 3:
         image = str(sys.argv[1])
         svg = str(sys.argv[2])
