@@ -478,7 +478,7 @@ class ImageConversion:
             # if pointC is still empty after attempt
             if len(pointC) == 0 and attempt == 1:
                 self.drawSVG(newContours, height, width, nameSVG, path, 0)      # draw a blank svg in gallery
-                self.drawSVG(newContours, height, width, nameSVG, path2, 0)     # draw a blank svg in next
+                self.drawSVG(newContours, height, width, nameSVG2, path2, 0)     # draw a blank svg in next
                 
             else:
                 self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg in gallery
