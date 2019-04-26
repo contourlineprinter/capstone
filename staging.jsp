@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/staging.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
@@ -40,28 +41,54 @@
 		  		<strong><span id="alertText"><%=  request.getAttribute("message") %></span></strong>
 			</div> 
 		<div class="row justify-content-center">
-			<div class="col-12 col-md-6 pt-3">
+			<div class="col-lg p-5">
 			
-				<!-- Line Density Slider -->
-				<!-- <div class="form-group row">  -->
-					<!-- <label  class="col-sm-3 col-form-label">Line Density</label> -->
-					<!-- <div class="col-sm-9"> -->
-						<!-- <input type="range" class="form-control-range" id="formControlRange"> -->
-					<!-- </div> -->
-				<!-- </div> -->
+				
 			    
 				<!-- This is where we will show the contour image for user approval -->
-				<img id="preview" src="#" class="img-fluid mx-auto d-block img-thumbnail mt-3">
+				<img id="preview" src="#" class="float-left col-lg-8 img-fluid mx-auto d-block img-thumbnail">
+				
+				
+				<div class="form-group row ml-2 col-sm-4">
+					<label  class="col-form-label">Size</label>	
+					<h6 class="pt-2 ml-4" id="size"></h6>
+				</div> 
+				
+				<!-- XY Range Slider -->
+				<div class="form-group row ml-2 col-sm-4">
+					<label  class="col-form-label">x y range</label>
+					<div class="w-100">
+						<input type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1">
+					</div>					
+				</div>
+				
+				<!-- XY Range Slider -->
+				<div class="form-group row ml-2 col-sm-4">
+					<label  class="col-form-label">Points to skip</label>
+					<div class="w-100">
+						<input type="range" class="form-control-range slider" id="formControlRange">
+					</div>					
+				</div> 
+			
+				
+				<div class="form-group row ml-2 col-sm-4">
+					<label  class="col-form-label">Min area</label>
+					<div class="w-100">
+						<input type="range" class="form-control-range slider" id="formControlRange">
+					</div>					
+				</div> 
+			
+			
 				
 				<!-- Button to approve the image and begin printing -->
-				<button onclick="printq()" class="btn btn-primary w-100 mt-3">Print</button>
+				<button onclick="printq()" class="btn col-sm-4 btn-primary w-100 mt-3">Print</button>
 			</div>
 
 		</div>
     </div>
 	
 	<script>
-		
+		// This is how our preview image is recieved by staging.jsp
 		var id = window.location.href;
 		if (id.includes("?")){ // via gallery
 			id = id.split('?').pop();
@@ -71,7 +98,7 @@
 			id = "svg/" + "<%= request.getAttribute("file")%>" + ".svg";
 		}
 		console.log(id);
-		
+
 		document.getElementById("preview").src= id;
 	</script>
 	
@@ -79,7 +106,9 @@
 	
     <script src="js/jquery-3.3.1.min.js"></script>
     <!-- <script src="js/bootstrap.bundle.min.js"></script> -->
+		<script src="js/staging.js"></script>
 	<script src="js/movesvg.js"></script>
+
 
 	
 </body>
