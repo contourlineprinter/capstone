@@ -917,22 +917,23 @@ class ImageConversion:
     def filterPoints(self, contourPoints, newContourPoints, hierarchy, rangeForX = 5, rangeForY = 5, skipPoints = -1, minContourArea = -1):
         try:
 
-            # find the largest area
-            #areaList = max(contourPoints, key = cv2.contourArea)
+                # find the largest area
+            areaList = max(contourPoints, key = cv2.contourArea)
+
+            maxAreaFound = self.findMaxArea(contourPoints)
+            print("maxAreaFound", maxAreaFound)
             #print("Largest Area", largestArea)
 
-            areaLarge = self.findMaxArea(contourPoints)
+            areaLarge = -1
             
-##            if len(areaList) != 0:
-##                for i in areaList:
-##                    for j in i:
-##                        if areaLarge < j[0] :
-##                            areaLarge = j[0]
-
-            print("Largest Area", areaLarge)
+            if len(areaList) != 0:
+                for i in areaList:
+                    for j in i:
+                        if areaLarge < j[0] :
+                            areaLarge = j[0]
 
             if minContourArea < 0:
-                minContourArea = int(areaLarge/10)
+                minContourArea = int(maxAreaFound/10)
                 print("Min Area", minContourArea)
             if rangeForX < 0: rangeForX = 5
             if rangeForY < 0: rangeForY = 5
@@ -951,7 +952,7 @@ class ImageConversion:
             
             #print(hierarchy[[0,1,2,3]])
             #print("Contours: ", contours)
-            #print("Hierarchy: ", hierarchy)
+            print("Hierarchy: ", hierarchy)
 
             
             parentChild = [] # parent-child list
@@ -983,13 +984,15 @@ class ImageConversion:
                         
                 parentChild.append(l) # add the results to parent-child list
 
+            
             if parentChild:
                 print("\nParent-Child List: ", parentChild, "\n")
 
-
             # get hierarchy level
-            lvlList = self.getHierarchyLevelList(parentChild, hierarchy)
-            print("Level List: ", lvlList)
+            lvlList = self.getHierarchyLevelList(parentChild, hierarchy)    
+
+            if lvlList:
+                print("Level List: ", lvlList)
 
 
             deleteChildren = []
@@ -1001,12 +1004,14 @@ class ImageConversion:
                 if lvlList[i]:
 
                     # if the level contains values and if level > 1
+                    #if i == 1 and len(lvlList[i]) > 5 :
                     if i <= 2 and i > 0:
                         for j in range(len(lvlList[i])):
                             #if j > 5 and lvlList[i][j]:
                             if lvlList[i][j]:
                                  
                                 get = lvlList[i][j]
+                                print("Get ", get)
 
                                 # if the contour element doesn't meet the min area and contour Points requirement
                                 if self.meetMinAreaPolynomialReq(get, contourPoints, minContourArea) == 0:
@@ -1023,8 +1028,19 @@ class ImageConversion:
                         
 
 ##            # get the children to be deleted
-##            for i in parentChild:
-##                for j in i:
+##            for i in range(len(parentChild)):
+##                for j in parentChild[i]:
+##                    for k in range(len(j)):
+##                        print("K ",  k)
+##                        
+##                        if self.meetMinAreaPolynomialReq(k, contourPoints, minContourArea) is 0 and k not in deleteChildren:
+##                                    deleteChildren.append(k) # add the children to be deleted
+##
+##                        if k > 0 and j[k]:
+##                            blankCanvas = 255*np.ones((self.origHeight, self.origWidth, 3), np.uint8)              # make blank canvas
+##                            imageSubContour = cv2.drawContours(blankCanvas, contourPoints[k], -1, (0,255,0), 2)     # draw the contour image with new point
+##                            self.showImage("Contour Sub I" + str(i) + " K " + str(k), imageSubContour)
+
 ##                    
 ##                    #startChildIndex = int(len(j)/2)
 ##                    #print("Length: ", startChildIndex)
@@ -1054,13 +1070,20 @@ class ImageConversion:
 ##                # delete the children conours
 ##                contourPoints = np.delete(contourPoints, deleteChildren)
 
-            if 0 not in deleteChildren: deleteChildren.append(0) # delete the first contour element - frame
+            if 0 not in deleteChildren: deleteChildren.append(0)
 
             if deleteChildren:
                 contourPoints = np.delete(contourPoints, deleteChildren)
                 deleteChildren = np.array(deleteChildren)
                 print("\nChildren to delete: ", deleteChildren)
                 print("")
+
+            # testing
+
+            for i in contourPoints:
+                for j in i:
+                    for k in j:
+                        newContourPoints.append([k[0], k[1]])
 #----------------------------------------------------------------------------
 ##            contoursToDelete = []
 ##            
@@ -1088,17 +1111,19 @@ class ImageConversion:
             print("Inital Number of Objects: ", len(contourPoints))
             origObjCount = self.countPoints(contourPoints)
 
+
             # testing min contourArea
 ##            minContourArea = max(contourPoints, key = cv2.contourArea)/10
 ##            print(minContourArea)
+#----------------------------------------------------------------------------------------------------------------------------------------
 
-            
+            # renable
             
             # look for the contours that don't fit the minimum area requirement
             for i in range(len(contourPoints)):
                 
                     # if the contour element doesn't meet the min area and contour Points requirement
-                    if self.meetMinAreaPolynomialReq(i, contourPoints, minContourArea) == 0:
+                    if self.meetMinAreaPolynomialReq(i, contourPoints, minContourArea) == 0 and i not in contoursToDelete:
                         contoursToDelete.append(i)  # save the index of that contour
 
             # if the first contour element isn't in the deleted index, add it
@@ -1107,6 +1132,7 @@ class ImageConversion:
 ##            for i in deleteChildren:
 ##                if i not in contoursToDelete:
 ##                    contoursToDelete.append(i)
+
 
             if contoursToDelete:
                 print("Contours to delete reached: " , contoursToDelete)
@@ -1231,12 +1257,12 @@ class ImageConversion:
                                 else:
                                     alternate+=1
                                     continue
-##
-##                                #print("got here - yes")
-##                                xsave = xget
-##                                ysave = yget
-##                                newContourPoints.append([xget,yget])
-##                                count+=1
+
+                                #print("got here - yes")
+                                xsave = xget
+                                ysave = yget
+                                newContourPoints.append([xget,yget])
+                                count+=1
 
 #----------------------------------------------------------------------------------------------------------------------------------------
                                 
