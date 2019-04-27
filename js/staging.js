@@ -17,7 +17,7 @@ $("#preview").one("load", function() {
 //	document.getElementById('size').innerHTML += width.toFixed(2) + " in x " + height.toFixed(2) + " in";
 	document.getElementById('size').innerHTML += " in x " + height.toFixed(2) + " in";
 	$('#width').change(() => {
-		document.getElementById('width').value=compute_height($('#width').val());
+		document.getElementById('height').value=compute_height($('#width').val());
 	});
 }).each(function() {
   if(this.complete) {
