@@ -45,3 +45,9 @@ function show_value3(x)
 		document.getElementById("slider_value3").innerHTML=x;
 	}
 }
+
+function compute_height(width_before, height_before, width_now) {
+	// takes in previous dimensions and new width,
+	// returns new height that maintains aspect ratio
+	return (height_before) * (width_now / width_before);
+}
