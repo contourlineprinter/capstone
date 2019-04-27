@@ -55,6 +55,7 @@
 					
 					<div class="form-group row ml-2 col-sm-4">
 						<div class="w-10">
+
 							<p>
 								<span class="col-6">Width (in.):</span>
 								<input id="width" type="number" step="0.01" class="col-6 float-right">
@@ -67,6 +68,19 @@
 								<span class="col-6">Scale Factor:</span>
 								<input id="scale" type="number" step="0.01" readonly="readonly" class="col-6 float-right">
 							</p>
+  <div class="form-group row">
+    <label for="height" class="col-sm-2 col-form-label">Height</label>
+    <div class="col-sm-10">
+      <input id="height" type="number" step="0.01" class="form-control">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+    </div>
+  </div>
+
 						</div>
 					</div> 
 					
