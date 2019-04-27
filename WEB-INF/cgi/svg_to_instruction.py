@@ -159,7 +159,7 @@ def go_to(state, points, scale, draw=True):
     s += rotate(polar['theta']) 
     distance = polar['dist']*scale
     
-    if !draw:
+    if not draw:
         s += move(int(distance))
     else:
         s += go(int(distance))

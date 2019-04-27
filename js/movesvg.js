@@ -12,5 +12,4 @@ function printq(){
 		console.log('svg sent');
 			console.log(o);
 	});
-	alert("test");
 }
