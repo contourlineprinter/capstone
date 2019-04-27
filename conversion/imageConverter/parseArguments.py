@@ -72,13 +72,6 @@ def parseArguments(args):
                                             combineFile = test + slash
 ##                                                print("sub - is a dir")
 
-                                                        elif xyRangeFound == 0:
-                                if j:
-                                    print("XY Range Found ", xyRangeFound)
-                                    xyRange = j
-                                    xyRangeFound = 1
-                                else: continue
-
                             elif xyRangeFound == 0 and svgFound == 1:
                                 if j:
                                     print("XY Range Found ", xyRangeFound)
