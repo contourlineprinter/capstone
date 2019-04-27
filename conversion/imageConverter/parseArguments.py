@@ -141,6 +141,8 @@ def parseArguments(args):
                 elif os.path.isdir(combineFile) and svgDirFoundSub == 1:
                     savedPreviousSVG = combineFile
                 #print("A directory for svg cannot be found. Please try again.")
+                elif not os.path.isdir(combineFile) and svgDirFoundSub == 0:
+                    combineFile = combineFile + slash
                 else: continue
                
         else:
