@@ -48,7 +48,7 @@
 				<!-- This is where we will show the contour image for user approval -->
 				<img id="preview" src="#" class="float-left col-lg-8 img-fluid mx-auto d-block img-thumbnail">
 				
-				<form>
+				<form action="reupload" metho="post">
 				
 					<!-- Hidden Input Tag with filename -->
 					<input name="fname" id="fname" class="d-none" value="">
@@ -70,7 +70,7 @@
 							<div class="form-group row">
 								<label for="scale" class="col-sm-4 col-form-label">Scale Factor</label>
 								<div class="col-sm-8">
-								<input id="scale" type="number" step="0.01" class="form-control" readonly>
+								<input name="scale" id="scale" type="number" step="0.01" class="form-control" readonly>
 								</div>
 							</div>
 						</div>
@@ -81,7 +81,7 @@
 						<label  class="col-form-label">x y range</label>
 						<span id="slider_value1" ></span>
 						<div class="w-100">
-							<input type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1" 
+							<input name="xyslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1" 
 							onchange="show_value1(this.value);">
 						</div>					
 					</div>
@@ -91,7 +91,7 @@
 						<label  class="col-form-label">Points to skip</label>
 						<span id="slider_value2"></span>
 						<div class="w-100">
-							<input type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1"
+							<input name="skipslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1"
 							onchange="show_value2(this.value);">
 						</div>					
 					</div> 
@@ -101,7 +101,7 @@
 						<label  class="col-form-label">Min area</label>
 						<span id="slider_value3"></span>
 						<div class="w-100">
-							<input type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="10"
+							<input name="minslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="10"
 							onchange="show_value3(this.value);">
 						</div>					
 
@@ -124,7 +124,14 @@
 	<script>
 		// This is how our preview image is recieved by staging.jsp
 		var id = window.location.href;
-		if (id.includes("?")){ // via gallery
+		if (id.includes("&")){
+			id = id.split('%2F').pop();
+			console.log(id);
+			id = id.substring(0, id.indexOf('&'));
+			id = "svg/" + id;
+			
+		}
+		else if (id.includes("?")){ // via gallery
 			id = id.split('?').pop();
 			console.log(id);
 			id = "svg/" +id + ".svg";

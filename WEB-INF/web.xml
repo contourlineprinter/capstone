@@ -20,6 +20,12 @@
   	<servlet-class>app.ImageUploadServler</servlet-class>
   </servlet>
   <servlet>
+  	<servlet-name>ReUploadServler</servlet-name>
+  	<display-name>ReUploadServler</display-name>
+  	<description></description>
+  	<servlet-class>app.ReUploadServler</servlet-class>
+  </servlet>
+  <servlet>
   	<servlet-name>ImageGallery</servlet-name>
   	<display-name>ImageGallery</display-name>
   	<description></description>
@@ -28,6 +34,10 @@
   <servlet-mapping>
   	<servlet-name>ImageUploadServler</servlet-name>
   	<url-pattern>/image_upload</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+  	<servlet-name>ReUploadServler</servlet-name>
+  	<url-pattern>/reupload</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>ImageGallery</servlet-name>
