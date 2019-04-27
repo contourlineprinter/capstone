@@ -5,7 +5,6 @@ import time
 import sys
 
 DEF_SPEED = 30
-SCALE = 0.003
 
 
 def svg_to_lines(file_name):
@@ -87,13 +86,23 @@ def cart_to_polar(x1, y1, x2, y2,state):
 
 def go(steps):
     ''' 
-        Given an integer, distance, this returns a string of the backward command of the given distance
+        Given an integer, distance, this returns a string of the forward command of the given distance, which draws the line
     '''
     #speed = DEF_SPEED
     #dur = distance * SCALE
     # UNCOMMENT ONE OF THESE LINES ON ROBOT
     #robot.forward(speed, dur)
     return "robot.forward({s})\n".format(s = steps)
+  
+def move(steps):
+    ''' 
+        Given an integer, distance, this returns a string of the move command of the given distance, which moves without drawing
+    '''
+    #speed = DEF_SPEED
+    #dur = distance * SCALE
+    # UNCOMMENT ONE OF THESE LINES ON ROBOT
+    #robot.forward(speed, dur)
+    return "robot.move({s})\n".format(s = steps)
   
 def rotate(theta):
     ''' 
@@ -118,7 +127,7 @@ def init_file():
     return s
 
     
-def go_to(state, points):
+def go_to(state, points, scale, draw=True):
     '''
         Takes three arguments, state, points, and absolute=True
         point should be a list of 4-tuples representing x1,y1,x2,y2 respectively
@@ -148,7 +157,12 @@ def go_to(state, points):
     
     # append the two lines of commands to the string
     s += rotate(polar['theta']) 
-    s += go(int(polar['dist']))
+    distance = polar['dist']*scale
+    
+    if !draw:
+        s += move(int(distance))
+    else:
+        s += go(int(distance))
     
     # update and return? state, now at new point and angled in direction just travelled 
     state.x = x2 
@@ -157,14 +171,12 @@ def go_to(state, points):
     
     return state, s
 
-def robot_convert(file_name,scale=3):
+def robot_convert(file_name,scale=1):
     '''
         convert takes an .svg file name, file_name, and an integer, scale
         it creates or over writes a file named 'script.py', which contains robot commands in python,
         from the given svg file, and scales the drawing according to scale
     '''
-    scale = scale/1000
-    SCALE = scale
     
     #open the file we're writing to
     file = open('../../network/send/script.py','w')
@@ -183,7 +195,7 @@ def robot_convert(file_name,scale=3):
 
         if lines[0][0] != 0 and lines[0][1] != 0:
             #print('Moving to starting point (',lines[0][0],',',lines[0][1],') from origin')
-            state,s = go_to(state, (0,0,lines[0][0],lines[0][1]))
+            state,s = go_to(state, (0,0,lines[0][0],lines[0][1]),scale, False)
             file.write(s)
 
         for line in lines:
@@ -192,7 +204,7 @@ def robot_convert(file_name,scale=3):
                 pass
             else:
                 #print('moving from (',line[0],',',line[1],') to (',line[2],',',line[3],')')
-                state,s = go_to(state, line)
+                state,s = go_to(state, line, scale, True)
                 file.write(s)
     except Exception as e:
         print('File not written due to following exception')
