@@ -57,15 +57,15 @@
 						<div class="w-10">
 							<p>
 								<span class="col-6">Width (in.):</span>
-								<input id="width" type="number" step="0.01" class="col-6">
+								<input id="width" type="number" step="0.01" class="col-6 float-right">
 							</p>
 							<p>
 								<span class="col-6">Height (in.) (readonly):</span>
-								<input id="height" type="number" step="0.01" readonly="readonly" class="col-6">
+								<input id="height" type="number" step="0.01" readonly="readonly" class="col-6 float-right">
 							</p>
 							<p>
 								<span class="col-6">Scale Factor:</span>
-								<input id="scale" type="number" step="0.01" readonly="readonly" class="col-6">
+								<input id="scale" type="number" step="0.01" readonly="readonly" class="col-6 float-right">
 							</p>
 						</div>
 					</div> 
