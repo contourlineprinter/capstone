@@ -413,8 +413,8 @@ class ImageConversion:
             #self.showImage("Erosion Image", edgeImage)
             #cv2.moveWindow("Erosion Image",900,0)
 
-            #return erosionImage
-            return edgeImage
+            return erosionImage
+            #return edgeImage
         
         except Exception as e:
             print("Error: There is a problem with preprocessing the image - \n" + e.args[0] ) 
