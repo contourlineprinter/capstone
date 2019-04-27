@@ -55,17 +55,19 @@
 					
 					<div class="form-group row ml-2 col-sm-4">
 						<div class="w-10">
-							<p>Width (in.):
-								<input id="width" type="number" step="0.01">
+							<p>
+								<span class="col-6">Width (in.):</span>
+								<input id="width" type="number" step="0.01" class="col-6">
 							</p>
-							<p>Height (in.) (readonly):
-								<input id="height" type="number" step="0.01" readonly="readonly">
+							<p>
+								<span class="col-6">Height (in.) (readonly):</span>
+								<input id="height" type="number" step="0.01" readonly="readonly" class="col-6">
 							</p>
-							<p>Scale Factor:
-								<input id="scale" type="number" step="0.01" readonly="readonly">
+							<p>
+								<span class="col-6">Scale Factor:</span>
+								<input id="scale" type="number" step="0.01" readonly="readonly" class="col-6">
 							</p>
-						</div>	
-						<h6 class="pt-2 ml-4" id="size"></h6>
+						</div>
 					</div> 
 					
 					<!-- XY Range Slider -->
