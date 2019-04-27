@@ -14,8 +14,7 @@ $("#preview").one("load", function() {
 	width = width * 0.01296875;
 	height = height * 0.01296875;
 	document.getElementById('width').value=width.toFixed(2)
-//	document.getElementById('size').innerHTML += width.toFixed(2) + " in x " + height.toFixed(2) + " in";
-	document.getElementById('size').innerHTML += " in x " + height.toFixed(2) + " in";
+  document.getElementById('height').value=height.toFixed(2)
 	$('#width').change(() => {
 		document.getElementById('height').value=compute_height($('#width').val());
 	});
