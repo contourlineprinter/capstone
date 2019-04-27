@@ -874,7 +874,7 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
-    # check if the element meets the min area and approx polynomial requirements
+    # check if the element meets the min area and approx polygon requirements
     # parameters:   element to be checked, contour points list, minimum contour area
     # return: true = 1  or false = 0 depending if element meets requirement
     def meetMinAreaPolynomialReq(self, target, contourPoints, minContourArea):

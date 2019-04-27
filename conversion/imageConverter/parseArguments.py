@@ -45,7 +45,7 @@ def parseArguments(args):
                             if j is not "":
                                     test = combineFile + j
 
-##                                print("Test: ", test)
+                                    print("Test: ", test)
                             
                             # check to see if the image is found
                             if imageFound == 0:
@@ -74,18 +74,21 @@ def parseArguments(args):
 
                             elif xyRangeFound == 0:
                                 if j:
+                                    print("XY Range Found ", xyRangeFound)
                                     xyRange = j
                                     xyRangeFound = 1
                                 else: continue
                             
                             elif skipPointsFound == 0:
-                                if j: 
+                                if j:
+                                    print("Skip Points Found ", skipPointsFound)
                                     skipPoints = j
                                     skipPointsFound = 1
                                 else: continue
                                 
                             elif minAreaFound == 0:
                                 if j:
+                                    print("Min Area Found ", minAreaFound)
                                     minArea = j
                                     minAreaFound = 1
                                 else: continue
