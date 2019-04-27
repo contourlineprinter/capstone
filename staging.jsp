@@ -69,15 +69,21 @@
 								<input id="scale" type="number" step="0.01" readonly="readonly" class="col-6 float-right">
 							</p>
   <div class="form-group row">
-    <label for="height" class="col-sm-2 col-form-label">Height</label>
+    <label for="height" class="col-sm-2 col-form-label">Height (in.)</label>
     <div class="col-sm-10">
       <input id="height" type="number" step="0.01" class="form-control">
     </div>
   </div>
   <div class="form-group row">
-    <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+    <label for="width" class="col-sm-2 col-form-label">Width (in.)</label>
     <div class="col-sm-10">
-      <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+      <input id="width" type="number" step="0.01" class="form-control" readonly>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="scale" class="col-sm-2 col-form-label">Scale Factor</label>
+    <div class="col-sm-10">
+      <input id="scale" type="number" step="0.01" class="form-control">
     </div>
   </div>
 
