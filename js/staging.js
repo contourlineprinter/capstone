@@ -19,7 +19,29 @@ $("#preview").one("load", function() {
   }
 });
 
-function show_value(x)
+function show_value1(x)
 {	
-	document.getElementById("slider_value").innerHTML=x;
+	if(x == -1){
+		document.getElementById("slider_value1").innerHTML="Default";
+	}else{
+		document.getElementById("slider_value1").innerHTML=x;
+	}
+}
+
+function show_value2(x)
+{
+	if(x == -1){
+		document.getElementById("slider_value2").innerHTML="Default";
+	}else{
+		document.getElementById("slider_value2").innerHTML=x;
+	}
+}
+
+function show_value3(x)
+{
+	if(x == -1){
+		document.getElementById("slider_value3").innerHTML="Default";
+	}else{
+		document.getElementById("slider_value3").innerHTML=x;
+	}
 }
