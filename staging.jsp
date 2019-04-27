@@ -54,9 +54,10 @@
 					<input name="fname" id="fname" class="d-none" value="">
 					
 					<div class="form-group row ml-2 col-sm-4">
-						<label  class="col-form-label">Size</label>
 						<div class="w-10">
+							Width:
 							<input id="width" type="number" step="0.01">
+							Height
 							<input id="height" type="number" step="0.01" readonly="readonly">
 						</div>	
 						<h6 class="pt-2 ml-4" id="size"></h6>
