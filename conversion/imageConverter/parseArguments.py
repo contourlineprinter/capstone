@@ -63,7 +63,8 @@ def parseArguments(args):
                     if not os.path.isfile(test):
                         if j is not splitSpace[len(splitSpace)-1]:
                             combineFile = test + " "
-                        else: combineFile = test
+                        else:
+                            combineFile = test
                             print("sub - not a file")
                     else:
                         imageFound = 1
