@@ -56,15 +56,15 @@
 					<div class="form-group row ml-2 col-sm-4">
 						<div class="w-10">
 							<div class="form-group row">
-								<label for="height" class="col-sm-4 col-form-label">Height (in.)</label>
+								<label for="width" class="col-sm-4 col-form-label">Width (in.)</label>
 								<div class="col-sm-8">
-								<input id="height" type="number" step="0.01" class="form-control">
+								<input id="width" type="number" step="0.01" class="form-control">
 								</div>
 							</div>
 							<div class="form-group row">
-								<label for="width" class="col-sm-4 col-form-label">Width (in.)</label>
+								<label for="height" class="col-sm-4 col-form-label">Height (in.)</label>
 								<div class="col-sm-8">
-								<input id="width" type="number" step="0.01" class="form-control" readonly>
+								<input id="height" type="number" step="0.01" class="form-control" readonly>
 								</div>
 							</div>
 							<div class="form-group row">
