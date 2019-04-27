@@ -19,7 +19,8 @@ scale = 1
 try:
     #open the file we're writing to
     with open('/var/lib/tomcat8/webapps/ROOT/next/scale.txt','r') as file:
-        num = float(file.read().trim())
+        scale = float(file.read().trim())
+    os.remove('/var/lib/tomcat8/webapps/ROOT/next/scale.txt')
 except:
     pass # suppressing errors is not cool, but if there is an error, then use default scale = 1
 
