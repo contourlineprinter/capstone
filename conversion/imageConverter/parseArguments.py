@@ -26,80 +26,90 @@ def parseArguments(args):
 
     splitPath = args.split(slash) # delimit arguments by slash
 
-    for i in splitPath:
+    for i in range(len(splitPath)):
             
-            print("Splits: ", i)
-            
-            #combineFile = combineFile + i
-            print("\nCurrent: ", combineFile)
+        print("Splits: ", splitPath[i])
+        
+        #combineFile = combineFile + i
+        print("\nCurrent: ", combineFile)
 
-            splitSpace = i.split(" ") #split by space
-            print("Split: ", splitSpace)
+        splitSpace = splitPath[i].split(" ") #split by space
+        print("Split: ", splitSpace)
 
-            if splitSpace is not None:
-                    
-                    for j in splitSpace:
+        if splitSpace is not None:
+                
+            for j in splitSpace:
+
+                print("J " , j)
 
 ##                                print("\nSub Current: ", j)
 
-                            if j is not "":
-                                    test = combineFile + str(j)
+                if j is not "" and imageFound == 0 or svgFound == 0:
+                    test = combineFile + str(j)
 
-                                    print("Test: ", test)
-                            
-                            # check to see if the image is found
-                            if imageFound == 0:
-##                                        print("File?: ", os.path.isfile(test)) # test to see if it's a file
-                                    if not os.path.isfile(test):
-                                            if j is not splitSpace[len(splitSpace)-1]:
-                                                    combineFile = test + " "
-                                            else: combineFile = test
+                    print("Test: ", test)
+
+                else:
+                    test = str(j)
+                    print("Test: ", test)
+                    
+                    # check to see if the image is found
+                if imageFound == 0:
+                    print("Image Found")
+##                          print("File?: ", os.path.isfile(test)) # test to see if it's a file
+
+                    if not os.path.isfile(test):
+
+                        if j is not splitSpace[len(splitSpace)-1]:
+                            combineFile = test + " "
+                        else: combineFile = test
 ##                                                print("sub - not a file")
-                                    else:
-                                            imageFound = 1
-                                            combineImage = test
-                                            combineFile = ""
+                    else:
+                        imageFound = 1
+                        combineImage = test
+                        combineFile = ""
 ##                                                print("sub - is a file")
-                            elif svgFound == 0 and imageFound == 1:
+                elif svgFound == 0 and imageFound == 1:
+                    print("SVG Found")
 ##                                        print("Directory?: ", os.path.isdir(test)) # test to see if it's a directory
-                                    if not os.path.isdir(test):
-                                            combineFile = test + " "
-                                            if j is not splitSpace[len(splitSpace)-1]:
-                                                    combineFile = test + " "
-                                            else: combineFile = test
+                    if not os.path.isdir(test):
+                        combineFile = test + " "
+                        if j is not splitSpace[len(splitSpace)-1]:
+                            combineFile = test + " "
+                        else: combineFile = test
 ##                                                print("sub - not a dir")
-                                    else:
-                                            combineFile = test + slash
+                    else:
+                        combineFile = test + slash
 ##                                                print("sub - is a dir")
 
-                            elif xyRangeFound == 0 and svgFound == 1:
-                                if j:
-                                    print("XY Range Found ", xyRangeFound)
-                                    print("xy ", j)
-                                    xyRange = j
-                                    xyRangeFound = 1
-                                    combineFile = ""
-                                else: continue
-                                
-                            elif skipPointsFound == 0 and svgFound == 1:
-                                if j:
-                                    print("Skip Points Found ", skipPointsFound)
-                                    print("sk ", j)
-                                    skipPoints = j
-                                    skipPointsFound = 1
-                                    combineFile = ""
-                                else: continue
-                                
-                            elif minAreaFound == 0 and svgFound == 1:
-                                if j:
-                                    print("Min Area Found ", minAreaFound)
-                                    print("ma ", j) 
-                                    minArea = j
-                                    minAreaFound = 1
-                                    combineFile = ""
-                                else: continue
+                elif xyRangeFound == 0 and svgFound == 1:
+                    if j:
+                        print("XY Range Found ", xyRangeFound)
+                        print("xy ", j)
+                        xyRange = j
+                        xyRangeFound = 1
+                        combineFile = ""
+                    else: continue
+                    
+                elif skipPointsFound == 0 and svgFound == 1:
+                    if j:
+                        print("Skip Points Found ", skipPointsFound)
+                        print("sk ", j)
+                        skipPoints = j
+                        skipPointsFound = 1
+                        combineFile = ""
+                    else: continue
+                    
+                elif minAreaFound == 0 and svgFound == 1:
+                    if j:
+                        print("Min Area Found ", minAreaFound)
+                        print("ma ", j) 
+                        minArea = j
+                        minAreaFound = 1
+                        combineFile = ""
+                    else: continue
 
-                            else: continue
+                else: continue
                             
 
 
@@ -108,25 +118,25 @@ def parseArguments(args):
             # check to see if the image is found
             if imageFound == 0:
     ##                print("File?: ", os.path.isfile(combineFile)) # test to see if it's a file
-                    if not os.path.isfile(combineFile):
-                            #print("not a file")
-                            combineFile = combineFile + slash
-                    else:
-                            imageFound = 1
-                            combineImage = combineFile
-                            combineFile = ""
-                            #print("is a file")
+                if not os.path.isfile(combineFile):
+                         #print("not a file")
+                    combineFile = combineFile + slash
+                else:
+                    imageFound = 1
+                    combineImage = combineFile
+                    combineFile = ""
+                        #print("is a file")
             elif svgFound == 0:
             #and i is splitPath[len(splitPath)-1]:
     ##                print("Out")
     ##                print("Directory?: ", os.path.isdir(combineFile)) # test to see if it's a directory
-                    if os.path.isdir(combineFile):
-                            svgFound = 1
-                            combineSVG = combineFile
-                            combineFile = ""
-                    else:
-                            print("A directory for svg cannot be found. Please try again.")
-                            sys.exit(0)
+                if os.path.isdir(combineFile):
+                    svgFound = 1
+                    combineSVG = combineFile
+                    combineFile = ""
+                else:
+                    print("A directory for svg cannot be found. Please try again.")
+                    sys.exit(0)
                             
             else: continue
 
