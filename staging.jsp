@@ -50,7 +50,10 @@
 				
 				<form>
 					<div class="form-group row ml-2 col-sm-4">
-						<label  class="col-form-label">Size</label>	
+						<label  class="col-form-label">Size</label>
+						<div class="w-10">
+							<input id="width" type="number">
+						</div>	
 						<h6 class="pt-2 ml-4" id="size"></h6>
 					</div> 
 					
