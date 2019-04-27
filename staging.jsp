@@ -70,7 +70,7 @@
 							<div class="form-group row">
 								<label for="scale" class="col-sm-4 col-form-label">Scale Factor</label>
 								<div class="col-sm-8">
-								<input id="scale" type="number" step="0.01" class="form-control">
+								<input id="scale" type="number" step="0.01" class="form-control" readonly>
 								</div>
 							</div>
 						</div>
