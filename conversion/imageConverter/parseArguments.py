@@ -51,7 +51,7 @@ def parseArguments(args):
                                 
                 print("Sub Current: ", j)
 
-                if combineFile is None and imageFound == 1:
+                if combineFile is None and imageFound == 1 and svgFound == 0:
                     combineFile = slash
                     
                 test = combineFile + j                                       
@@ -61,27 +61,27 @@ def parseArguments(args):
                 if imageFound == 0:
                     print("File?: ", os.path.isfile(test)) # test to see if it's a file
                     if not os.path.isfile(test):
-                            if j is not splitSpace[len(splitSpace)-1]:
-                                    combineFile = test + " "
-                            else: combineFile = test
+                        if j is not splitSpace[len(splitSpace)-1]:
+                            combineFile = test + " "
+                        else: combineFile = test
                             print("sub - not a file")
                     else:
-                            imageFound = 1
-                            combineImage = test
-                            combineFile = ""
-                            print("sub - is a file")
+                        imageFound = 1
+                        combineImage = test
+                        combineFile = ""
+                        print("sub - is a file")
                 elif svgFound == 0 and imageFound == 1:
                     print("Directory?: ", os.path.isdir(test)) # test to see if it's a directory
                     if not os.path.isdir(test):
+                        combineFile = test + " "
+                        if j is not splitSpace[len(splitSpace)-1]:
                             combineFile = test + " "
-                            if j is not splitSpace[len(splitSpace)-1]:
-                                    combineFile = test + " "
-                            else: combineFile = test
+                        else: combineFile = test
                             print("sub - not a dir")
-                    elif os.path.isdir(test + slash):
-                            combineFile = test + slash
-                            print("sub - is a dir")
-                            svgDirFoundSub = 1
+                    elif os.path.isdir(test):
+                        combineFile = test + slash
+                        print("sub - is a dir")
+                        svgDirFoundSub = 1
                     else: continue
 
             print("\nAfter spaces: ", combineFile)
