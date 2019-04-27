@@ -21,8 +21,8 @@ try:
     with open('/var/lib/tomcat8/webapps/ROOT/next/scale.txt','r') as file:
         scale = float(file.read().trim())
         print(scale)
-except:
-    pass # suppressing errors is not cool, but if there is an error, then use default scale = 1
+except Exception as e:
+    print(e) # suppressing errors is not cool, but if there is an error, then use default scale = 1
 try:
     os.remove('/var/lib/tomcat8/webapps/ROOT/next/scale.txt')
 except:
