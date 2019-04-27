@@ -77,7 +77,7 @@ def parseArguments(args):
                                                     combineFile = test + " "
                                             else: combineFile = test
                                             print("sub - not a dir")
-                                    else:
+                                    elif os.path.isdir(test + slash):
                                             combineFile = test + slash
                                             print("sub - is a dir")
                                             svgDirFoundSub = 1
