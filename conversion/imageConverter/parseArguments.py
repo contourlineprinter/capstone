@@ -43,7 +43,7 @@ def parseArguments(args):
 ##                                print("\nSub Current: ", j)
 
                             if j is not "":
-                                    test = combineFile + j
+                                    test = combineFile + str(j)
 
                                     print("Test: ", test)
                             
