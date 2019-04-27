@@ -7,7 +7,7 @@ import os, sys
 from ImageConversionClass import ImageConversion
 
 args = "/var/lib/tomcat8/webapps/ROOT/conversion/imageConverter/convertFileInput-reg.py" + \
-       + " /var/lib/tomcat8/webapps/ROOT/images/banana.jpg /var/lib/tomcat8/webapps/ROOT/svg/ 95 95 9"
+       " /var/lib/tomcat8/webapps/ROOT/images/banana.jpg /var/lib/tomcat8/webapps/ROOT/svg/ 95 95 9"
 #path = "./"
 
 # print the letters
