@@ -49,10 +49,15 @@
 				<img id="preview" src="#" class="float-left col-lg-8 img-fluid mx-auto d-block img-thumbnail">
 				
 				<form>
+				
+					<!-- Hidden Input Tag with filename -->
+					<input name="fname" id="fname" class="d-none" value="">
+					
 					<div class="form-group row ml-2 col-sm-4">
 						<label  class="col-form-label">Size</label>
 						<div class="w-10">
-							<input id="width" type="number">
+							<input id="width" type="number" step="0.01">
+							<input id="height" type="number" step="0.01" readonly="readonly">
 						</div>	
 						<h6 class="pt-2 ml-4" id="size"></h6>
 					</div> 
@@ -115,6 +120,7 @@
 		console.log(id);
 
 		document.getElementById("preview").src= id;
+		document.getElementById("fname").value = id;
 	</script>
 	
 	
