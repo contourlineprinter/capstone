@@ -77,11 +77,12 @@
 					<!-- Min area -->
 					<div class="form-group row ml-2 col-sm-4">
 						<label  class="col-form-label">Min area</label>
-						<span id="slider_value3></span>
+						<span id="slider_value3"></span>
 						<div class="w-100">
 							<input type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="10"
 							onchange="show_value3(this.value);">
 						</div>					
+
 					</div> 
 					
 					
