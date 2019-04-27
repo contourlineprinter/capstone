@@ -14,9 +14,11 @@ $("#preview").one("load", function() {
 	width = width * 0.01296875;
 	height = height * 0.01296875;
 	document.getElementById('width').value=width.toFixed(2)
-  document.getElementById('height').value=height.toFixed(2)
+	document.getElementById('height').value=height.toFixed(2)
+	document.getElementById('scale').value=1
 	$('#width').change(() => {
 		document.getElementById('height').value=compute_height($('#width').val());
+		document.getElementById('scale').value=($('#width').val()/width);
 	});
 }).each(function() {
   if(this.complete) {
