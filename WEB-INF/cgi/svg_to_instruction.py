@@ -206,6 +206,8 @@ def robot_convert(file_name,scale=1):
                 #print('moving from (',line[0],',',line[1],') to (',line[2],',',line[3],')')
                 state,s = go_to(state, line, scale, True)
                 file.write(s)
+        closing = "robot.marker.standby()\n"
+        file.write(closing)
     except Exception as e:
         print('File not written due to following exception')
         print(e)
