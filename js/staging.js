@@ -16,18 +16,15 @@ $("#preview").one("load", function() {
 	document.getElementById('width').value=width.toFixed(2)
 //	document.getElementById('size').innerHTML += width.toFixed(2) + " in x " + height.toFixed(2) + " in";
 	document.getElementById('size').innerHTML += " in x " + height.toFixed(2) + " in";
+	$('#width').change(() => {
+		alert("ahhhhhhhhhhhh!");
+	});
 }).each(function() {
   if(this.complete) {
       //$(this).load(); // For jQuery < 3.0 
       $(this).trigger('load'); // For jQuery >= 3.0 
   }
 });
-
-$(() => {
-	$('#width'.change(() => {
-		alert("ahhhhhhhhhhhh!");
-	}))
-})
 
 function show_value1(x)
 {	
