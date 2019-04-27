@@ -1,5 +1,6 @@
 // Contains event driven js functions called on the staging.jsp page
 
+var ratio;
 
 // Updates the size once the image is loaded in
 $("#preview").one("load", function() {
@@ -7,6 +8,7 @@ $("#preview").one("load", function() {
 	var img = document.getElementById('preview');
 	var width  = img.naturalWidth;
 	var height = img.naturalHeight;
+	ratio = width/height;
 	
 	// convert px -> in  (we got this number by doing trials with our bot,  not by standard conversion at 72dpi
 	width = width * 0.01296875;
@@ -20,6 +22,12 @@ $("#preview").one("load", function() {
       $(this).trigger('load'); // For jQuery >= 3.0 
   }
 });
+
+$(() => {
+	$('#width'.change(() => {
+		alert("ahhhhhhhhhhhh!");
+	}))
+})
 
 function show_value1(x)
 {	
@@ -48,8 +56,8 @@ function show_value3(x)
 	}
 }
 
-function compute_height(width_before, height_before, width_now) {
-	// takes in previous dimensions and new width,
+function compute_height(new_width) {
+	// takes in new width
 	// returns new height that maintains aspect ratio
-	return (height_before) * (width_now / width_before);
+	return (new_width) / ratio;
 }
