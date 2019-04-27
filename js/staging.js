@@ -18,3 +18,8 @@ $("#preview").one("load", function() {
       $(this).trigger('load'); // For jQuery >= 3.0 
   }
 });
+
+function show_value(x)
+{	
+	document.getElementById("slider_value").innerHTML=x;
+}

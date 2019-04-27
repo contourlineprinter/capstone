@@ -48,35 +48,41 @@
 				<!-- This is where we will show the contour image for user approval -->
 				<img id="preview" src="#" class="float-left col-lg-8 img-fluid mx-auto d-block img-thumbnail">
 				
+				<form>
+					<div class="form-group row ml-2 col-sm-4">
+						<label  class="col-form-label">Size</label>	
+						<h6 class="pt-2 ml-4" id="size"></h6>
+					</div> 
+					
+					<!-- XY Range Slider -->
+					<div class="form-group row ml-2 col-sm-4">
+						<label  class="col-form-label">x y range</label>
+						<span id="slider_value" ></span>
+						<div class="w-100">
+							<input type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1" onchange="show_value(this.value);">
+						</div>					
+					</div>
+					
+					<!-- Point to skip Slider -->
+					<div class="form-group row ml-2 col-sm-4">
+						<label  class="col-form-label">Points to skip</label>
+						<div class="w-100">
+							<input type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1">
+						</div>					
+					</div> 
 				
-				<div class="form-group row ml-2 col-sm-4">
-					<label  class="col-form-label">Size</label>	
-					<h6 class="pt-2 ml-4" id="size"></h6>
-				</div> 
-				
-				<!-- XY Range Slider -->
-				<div class="form-group row ml-2 col-sm-4">
-					<label  class="col-form-label">x y range</label>
-					<div class="w-100">
-						<input type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1">
-					</div>					
-				</div>
-				
-				<!-- XY Range Slider -->
-				<div class="form-group row ml-2 col-sm-4">
-					<label  class="col-form-label">Points to skip</label>
-					<div class="w-100">
-						<input type="range" class="form-control-range slider" id="formControlRange">
-					</div>					
-				</div> 
-			
-				
-				<div class="form-group row ml-2 col-sm-4">
-					<label  class="col-form-label">Min area</label>
-					<div class="w-100">
-						<input type="range" class="form-control-range slider" id="formControlRange">
-					</div>					
-				</div> 
+					<!-- Min area -->
+					<div class="form-group row ml-2 col-sm-4">
+						<label  class="col-form-label">Min area</label>
+						<div class="w-100">
+							<input type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="10">
+						</div>					
+					</div> 
+					
+					
+					<!-- Button to approve the image and begin printing -->
+					<button class="btn col-sm-4 btn-primary w-100 mt-3">Reupload</button>
+				</form>
 			
 			
 				
