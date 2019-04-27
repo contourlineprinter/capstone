@@ -167,7 +167,7 @@ def robot_convert(file_name,scale=3):
     SCALE = scale
     
     #open the file we're writing to
-    file = open('script.py','w')
+    file = open('../../network/send/script.py','w')
     file.write(init_file())
     
     try:
