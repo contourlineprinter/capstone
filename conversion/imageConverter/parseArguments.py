@@ -160,5 +160,5 @@ def parseArguments(args):
     print("Points to Skip: ", ptsToSkip)
     print("Minimum Area: ", minArea)
 
-    return str(combineImage), str(combineSVG), int(xyRange), int(skipPoints), int(minArea)
+    return str(combineImage), str(combineSVG), int(xyRange), int(ptsToSkip), int(minArea)
 
