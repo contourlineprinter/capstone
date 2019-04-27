@@ -77,7 +77,8 @@ def parseArguments(args):
                         combineFile = test + " "
                         if j is not splitSpace[len(splitSpace)-1]:
                             combineFile = test + " "
-                        else: combineFile = test
+                        else:
+                            combineFile = test
                             print("sub - not a dir")
                     elif os.path.isdir(test):
                         combineFile = test + slash
