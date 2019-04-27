@@ -51,7 +51,10 @@ def parseArguments(args):
                                 
                 print("Sub Current: ", j)
 
-                test = combineFile + j                                        
+                if combineFile is None and imageFound == 1:
+                    combineFile = slash
+                    
+                test = combineFile + j                                       
                 print("Test: ", test)
         
                 # check to see if the image is found
@@ -79,7 +82,7 @@ def parseArguments(args):
                             combineFile = test + slash
                             print("sub - is a dir")
                             svgDirFoundSub = 1
-                else: continue
+                    else: continue
 
             print("\nAfter spaces: ", combineFile)
                                     
