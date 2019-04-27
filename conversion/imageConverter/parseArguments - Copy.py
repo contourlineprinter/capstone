@@ -60,7 +60,7 @@ def parseArguments(args):
                                             combineImage = test
                                             combineFile = ""
 ##                                                print("sub - is a file")
-                            elif svgFound == 0 and imageFound == 1:
+                            elif svgFound == 0:
 ##                                        print("Directory?: ", os.path.isdir(test)) # test to see if it's a directory
                                     if not os.path.isdir(test):
                                             combineFile = test + " "
@@ -72,43 +72,26 @@ def parseArguments(args):
                                             combineFile = test + slash
 ##                                                print("sub - is a dir")
 
-                                                        elif xyRangeFound == 0:
+                            elif xyRangeFound == 0:
                                 if j:
                                     print("XY Range Found ", xyRangeFound)
                                     xyRange = j
                                     xyRangeFound = 1
                                 else: continue
-
-                            elif xyRangeFound == 0 and svgFound == 1:
-                                if j:
-                                    print("XY Range Found ", xyRangeFound)
-                                    print("xy ", j)
-                                    xyRange = j
-                                    xyRangeFound = 1
-                                    combineFile = ""
-                                else: continue
-                                
-                            elif skipPointsFound == 0 and svgFound == 1:
+                            
+                            elif skipPointsFound == 0:
                                 if j:
                                     print("Skip Points Found ", skipPointsFound)
-                                    print("sk ", j)
                                     skipPoints = j
                                     skipPointsFound = 1
-                                    combineFile = ""
                                 else: continue
                                 
-                            elif minAreaFound == 0 and svgFound == 1:
+                            elif minAreaFound == 0:
                                 if j:
                                     print("Min Area Found ", minAreaFound)
-                                    print("ma ", j) 
                                     minArea = j
                                     minAreaFound = 1
-                                    combineFile = ""
                                 else: continue
-
-                            else: continue
-                            
-
 
 ##                print("\nAfter spaces: ", combineFile)
                             
