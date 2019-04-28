@@ -972,7 +972,7 @@ class ImageConversion:
                             areaLarge = j[0]
 
             if minContourArea < 0:
-                minContourArea = int(maxAreaFound/10)
+                minContourArea = int(maxAreaFound/5)
                 print("Min Area", minContourArea)
             if rangeForX < 0: rangeForX = 5
             if rangeForY < 0: rangeForY = 5
