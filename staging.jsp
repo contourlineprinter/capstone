@@ -87,7 +87,7 @@
 					</div>
 					
 					<!-- Point to skip Slider -->
-					<div class="form-group row ml-2 col-sm-4" style="display:none">
+					<div class="form-group row ml-2 col-sm-4">
 						<label  class="col-form-label">Points to skip</label>
 						<span id="slider_value2"></span>
 						<div class="w-100">
@@ -97,7 +97,7 @@
 					</div> 
 				
 					<!-- Min area -->
-					<div class="form-group row ml-2 col-sm-4" style="display:none">
+					<div class="form-group row ml-2 col-sm-4">
 						<label  class="col-form-label">Min area</label>
 						<span id="slider_value3"></span>
 						<div class="w-100">
