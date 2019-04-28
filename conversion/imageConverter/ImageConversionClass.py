@@ -501,12 +501,14 @@ class ImageConversion:
                 print("A new folder will be created")
                 os.makedirs(path2)
 
+            
             # if pointC is still empty after attempt
             if len(pointC) == 0 and attempt == 1:
                 self.drawSVG(newContours, height, width, nameSVG, path, 0)      # draw a blank svg in gallery
                 self.drawSVG(newContours, height, width, nameSVG2, path2, 0)     # draw a blank svg in next
                 
             else:
+                print("Got here to svg...")
                 self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg in gallery
                 self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg in next
             
@@ -942,6 +944,13 @@ class ImageConversion:
     #               skip points (negative value = default),  minimum contour area accepted
     def filterPoints(self, contourPoints, newContourPoints, hierarchy, rangeForX = 5, rangeForY = 5, skipPoints = -1, minContourArea = -1):
         try:
+
+            print("")
+            print("Parameters passed into filterPoints")
+            print("Range XY: ", rangeForX)
+            print("Skip Points: ", skipPoints)
+            print("Min Contour Area: ", minContourArea)
+            print("")
 
                 # find the largest area
             areaList = max(contourPoints, key = cv2.contourArea)
