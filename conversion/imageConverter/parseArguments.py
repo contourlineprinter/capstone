@@ -117,21 +117,21 @@ def parseArguments(args):
                             if xyRangeFound == 0:
                                 print("XY Range Found")
                                 print("xy ", j)
-                                xyRange = j
+                                xyRange = str(j)
                                 xyRangeFound = 1
                                 combineFile = ""
                                 
                             elif ptsToSkipFound == 0:
                                 print("Skip Points Found")
                                 print("sk ", j)
-                                ptsToSkip = j
+                                ptsToSkip = str(j)
                                 ptsToSkipFound = 1
                                 combineFile = ""
                                 
                             elif minAreaFound == 0:
                                 print("Min Area Found")
                                 print("ma ", j) 
-                                minArea = j
+                                minArea = str(j)
                                 minAreaFound = 1
                                 combineFile = ""
                             else: continue
@@ -148,9 +148,9 @@ def parseArguments(args):
             continue
 ##            print("-----------------------------------------------------------")
 
-    if xyRange is None or xyRange < 0: xyRange = -1
-    if ptsToSkip is None or ptsToSkip < 0: ptsToSkip = -1
-    if minArea is None or minArea < 0: minArea = -1
+    if xyRange is None or int(xyRange) < 0 : xyRange = -1
+    if ptsToSkip is None or int(ptsToSkip) < 0: ptsToSkip = -1
+    if minArea is None or int(minArea) < 0: minArea = -1
     
     print("\nImage: ", combineImage)
     print("SVG: ", combineSVG)
@@ -159,5 +159,5 @@ def parseArguments(args):
     print("Minimum Area: ", minArea)
     print("")
 
-    return str(combineImage), str(combineSVG), xyRange, ptsToSkip, minArea
+    return str(combineImage), str(combineSVG), int(xyRange), int(ptsToSkip), int(minArea)
 
