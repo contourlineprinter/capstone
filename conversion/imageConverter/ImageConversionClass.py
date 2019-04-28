@@ -972,7 +972,7 @@ class ImageConversion:
                             areaLarge = j[0]
 
             if minContourArea < 0:
-                minContourArea = int(maxAreaFound/5)
+                minContourArea = int(maxAreaFound/3)
                 print("Min Area", minContourArea)
             if rangeForX < 0: rangeForX = 5
             if rangeForY < 0: rangeForY = 5
@@ -1230,25 +1230,25 @@ class ImageConversion:
                 
                         # testing skipping points
                         if len(contourPoints[i] > 500):
-                            pointsToSkip = int(len(contourPoints[i])/20)
+                            pointsToSkip = int(len(contourPoints[i])/10)
 
                         elif len(contourPoints[i] <= 500) and len(contourPoints[i] > 250):
                             
-                            pointsToSkip = int(len(contourPoints[i])/20)
+                            pointsToSkip = int(len(contourPoints[i])/10)
 
                         elif len(contourPoints[i] <= 250) and len(contourPoints[i] > 125):
                             
-                            pointsToSkip = int(len(contourPoints[i])/20)
+                            pointsToSkip = int(len(contourPoints[i])/10)
 
                         elif len(contourPoints[i] <= 125) and len(contourPoints[i] > 62):
                             
-                            pointsToSkip = int(len(contourPoints[i])/20)
+                            pointsToSkip = int(len(contourPoints[i])/10)
                         
                         elif len(contourPoints[i] <= 62) and len(contourPoints[i] > 31):
                             
-                            pointsToSkip = int(len(contourPoints[i])/20)
+                            pointsToSkip = int(len(contourPoints[i])/10)
                             
-                        else: pointsToSkip = int(len(contourPoints[i])/20)
+                        else: pointsToSkip = int(len(contourPoints[i])/10)
 
                 else: pointsToSkip = skipPoints
 
