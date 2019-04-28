@@ -52,7 +52,8 @@ def newConnection():
                     print("transfer complete, deleting input file")
                     f.close()
                     os.remove("send/script.py")
-                except:
+                except Exception as e:
+                    print(e)
                     print("error transferring file. will reattempt in 3 seconds")
                     time.sleep(3)
 
