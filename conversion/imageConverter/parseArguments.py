@@ -117,21 +117,21 @@ def parseArguments(args):
                             if xyRangeFound == 0:
                                 print("XY Range Found")
                                 print("xy ", j)
-                                xyRange = str(j)
+                                xyRange = j
                                 xyRangeFound = 1
                                 combineFile = ""
                                 
                             elif ptsToSkipFound == 0:
                                 print("Skip Points Found")
                                 print("sk ", j)
-                                ptsToSkip = str(j)
+                                ptsToSkip = j
                                 ptsToSkipFound = 1
                                 combineFile = ""
                                 
                             elif minAreaFound == 0:
                                 print("Min Area Found")
                                 print("ma ", j) 
-                                minArea = str(j)
+                                minArea = j
                                 minAreaFound = 1
                                 combineFile = ""
                             else: continue
