@@ -81,7 +81,7 @@
 						<label  class="col-form-label">x y range</label>
 						<span id="slider_value1" ></span>
 						<div class="w-100">
-							<input name="xyslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1" 
+							<input name="xyslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="100" 
 							onchange="show_value1(this.value);">
 						</div>					
 					</div>
