@@ -48,7 +48,7 @@
 				<!-- This is where we will show the contour image for user approval -->
 				<img id="preview" src="#" class="float-left col-lg-8 img-fluid mx-auto d-block img-thumbnail">
 				
-				<form action="reupload" metho="post">
+				<form action="reupload" method="post">
 				
 					<!-- Hidden Input Tag with filename -->
 					<input name="fname" id="fname" class="d-none" value="">
@@ -125,17 +125,19 @@
 		// This is how our preview image is recieved by staging.jsp
 		var id = window.location.href;
 		if (id.includes("&")){
+			console.log("option 1");
 			id = id.split('%2F').pop();
 			console.log(id);
 			id = id.substring(0, id.indexOf('&'));
 			id = "svg/" + id;
-			
 		}
 		else if (id.includes("?")){ // via gallery
+			console.log("option 2");
 			id = id.split('?').pop();
 			console.log(id);
 			id = "svg/" +id + ".svg";
 		} else {  // via upload
+			console.log("option 3");
 			id = "svg/" + "<%= request.getAttribute("file")%>" + ".svg";
 		}
 		console.log(id);
