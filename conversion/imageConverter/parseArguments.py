@@ -112,7 +112,7 @@ def parseArguments(args):
 
                         print("J ",  j)
 
-                        if j is not None and str.isdigit(j):
+                        if j is not None:
                                 
                             if xyRangeFound == 0:
                                 print("XY Range Found")
