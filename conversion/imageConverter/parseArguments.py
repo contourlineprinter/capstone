@@ -115,22 +115,22 @@ def parseArguments(args):
                         if j is not None and str.isdigit(j):
                                 
                             if xyRangeFound == 0:
-##                                print("XY Range Found")
-##                                print("xy ", j)
+                                print("XY Range Found")
+                                print("xy ", j)
                                 xyRange = j
                                 xyRangeFound = 1
                                 combineFile = ""
                                 
                             elif ptsToSkipFound == 0:
-##                                print("Skip Points Found")
-##                                print("sk ", j)
+                                print("Skip Points Found")
+                                print("sk ", j)
                                 ptsToSkip = j
                                 ptsToSkipFound = 1
                                 combineFile = ""
                                 
                             elif minAreaFound == 0:
-##                                print("Min Area Found")
-##                                print("ma ", j) 
+                                print("Min Area Found")
+                                print("ma ", j) 
                                 minArea = j
                                 minAreaFound = 1
                                 combineFile = ""
