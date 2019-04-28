@@ -112,7 +112,7 @@ def parseArguments(args):
 
                         print("J ",  j)
 
-                        if j is not None:
+                        if len(j) != 0:
                                 
                             if xyRangeFound == 0:
                                 print("\nXY Range Found")
