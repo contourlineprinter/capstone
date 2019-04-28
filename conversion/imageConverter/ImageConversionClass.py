@@ -501,6 +501,13 @@ class ImageConversion:
                 print("A new folder will be created")
                 os.makedirs(path2)
 
+            countPC = 0
+
+            for i in pointC:
+                countPC = countPC + 1
+
+
+            print("CountPC ", countPC)
             
             # if pointC is still empty after attempt
             if len(pointC) == 0 and attempt == 1:
@@ -1298,7 +1305,7 @@ class ImageConversion:
 ##                                ysave = yget
 ##                                newContourPoints.append([xget,yget])
 ##                                count+=1
-
+                                
 #----------------------------------------------------------------------------------------------------------------------------------------
                                 
             #print("Inital Number of Objects after processing: ", len(contourPoints))
