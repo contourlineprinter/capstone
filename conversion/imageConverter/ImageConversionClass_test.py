@@ -1104,12 +1104,6 @@ class ImageConversion:
                 print("\nChildren to delete: ", deleteChildren)
                 print("")
 
-            # testing
-
-            for i in contourPoints:
-                for j in i:
-                    for k in j:
-                        newContourPoints.append([k[0], k[1]])
 #----------------------------------------------------------------------------
 ##            contoursToDelete = []
 ##            
