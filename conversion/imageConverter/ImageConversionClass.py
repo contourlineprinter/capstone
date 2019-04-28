@@ -958,22 +958,16 @@ class ImageConversion:
             print("")
 
                 # find the largest area
-            areaList = max(contourPoints, key = cv2.contourArea)
+            #areaList = max(contourPoints, key = cv2.contourArea)
 
-            #maxAreaFound = self.findMaxArea(contourPoints)
+            maxAreaFound = self.findMaxArea(contourPoints)
             #print("maxAreaFound", maxAreaFound)
             #print("Largest Area", largestArea)
 
             areaLarge = -1
             
-            if len(areaList) != 0:
-                for i in areaList:
-                    for j in i:
-                        if areaLarge < j[0] :
-                            areaLarge = j[0]
-
             if minContourArea < 0:
-                minContourArea = int(areaList/3)
+                minContourArea = int(maxAreaFound/4)
                 print("Min Area", minContourArea)
             if rangeForX < 0: rangeForX = 5
             if rangeForY < 0: rangeForY = 5
