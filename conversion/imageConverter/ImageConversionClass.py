@@ -827,12 +827,12 @@ class ImageConversion:
                         for k in i[j]:
 
                             if k is not None:
-                                print("Here")
+                                #print("Here")
                                 # if the child hasn't been processed
                                 if k not in finishList:
                                     parent = self.getParent(k, parentChildList)  # get parent of the child
                                     level = self.getLevel(parent, lvlList)       # get level of parent
-                                    print("Level ", level)
+                                    #print("Level ", level)
     ##                                print("Level of k's parent: ", level)   
     ##                                print("Level of k: ", level+1)
                                     if parent == k:
