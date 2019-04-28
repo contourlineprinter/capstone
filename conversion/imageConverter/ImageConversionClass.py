@@ -505,9 +505,6 @@ class ImageConversion:
 
             for i in pointC:
                 countPC = countPC + 1
-
-
-            print("CountPC ", countPC)
             
             # if pointC is still empty after attempt
             if len(pointC) == 0 and attempt == 1:
