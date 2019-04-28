@@ -145,9 +145,9 @@ def parseArguments(args):
             continue
 ##            print("-----------------------------------------------------------")
 
-    if xyRange is None: xyRange = "-1"
-    if ptsToSkip is None: ptsToSkip = "-1"
-    if minArea is None: minArea = "-1"
+    if xyRange is None or xyRange < 0: xyRange = "-1"
+    if ptsToSkip is None or ptsToSkip < 0: ptsToSkip = "-1"
+    if minArea is None or minArea < 0: minArea = "-1"
     
     print("\nImage: ", combineImage)
     print("SVG: ", combineSVG)
