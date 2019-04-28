@@ -30,7 +30,12 @@ elif len(sys.argv) > 3:
         for i in sys.argv[2:]:
                 args = args + " " + str(i)
         image, svg, xyRange, skipPoints, minArea = parseArguments.parseArguments(args)
-        
+        print("\nInfo")
+        print("Image : ", image)
+        print("SVG : ",  svg)
+        print("XY Range: ", xyRange)
+        print("Skip: ", skipPoints)
+        print("Min Area: ", minArea)
 for i in range(len(sys.argv)):
         print(i, " - ", str(sys.argv[i]))
 
