@@ -81,7 +81,7 @@
 						<label  class="col-form-label">x y range</label>
 						<span id="slider_value1" ></span>
 						<div class="w-100">
-							<input name="xyslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="100" 
+							<input name="xyslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="1" 
 							onchange="show_value1(this.value);">
 						</div>					
 					</div>
@@ -91,7 +91,7 @@
 						<label  class="col-form-label">Points to skip</label>
 						<span id="slider_value2"></span>
 						<div class="w-100">
-							<input name="skipslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="100" value="-1" step="1"
+							<input name="skipslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="1"
 							onchange="show_value2(this.value);">
 						</div>					
 					</div> 
@@ -101,7 +101,7 @@
 						<label  class="col-form-label">Min area</label>
 						<span id="slider_value3"></span>
 						<div class="w-100">
-							<input name="minslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="10"
+							<input name="minslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="10000" value="-1" step="10"
 							onchange="show_value3(this.value);">
 						</div>					
 
