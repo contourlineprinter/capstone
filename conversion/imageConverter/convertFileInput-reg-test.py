@@ -6,7 +6,7 @@ import cv2
 import matplotlib.pyplot as plt
 import os, sys
 import parseArguments
-from ImageConversionClass-test import ImageConversion
+from ImageConversionClass_test import ImageConversion
 
 #----------------------------------------- 
 if len(sys.argv) < 2:
