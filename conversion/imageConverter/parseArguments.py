@@ -159,5 +159,10 @@ def parseArguments(args):
     print("Minimum Area: ", minArea)
     print("")
 
+    if isinstance(xyRange, str):
+        print("string")
+    elif isinstance(xyRange, int):
+        print("integer")
+
     return str(combineImage), str(combineSVG), int(xyRange), int(ptsToSkip), int(minArea)
 
