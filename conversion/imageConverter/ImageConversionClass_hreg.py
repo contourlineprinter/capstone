@@ -958,16 +958,21 @@ class ImageConversion:
             print("")
 
             # find the largest area
-            #areaList = max(contourPoints, key = cv2.contourArea)
+            areaList = max(contourPoints, key = cv2.contourArea)
 
-            maxAreaFound = self.findMaxArea(contourPoints)
+            #maxAreaFound = self.findMaxArea(contourPoints)
             #print("maxAreaFound", maxAreaFound)
             #print("Largest Area", largestArea)
 
             areaLarge = -1
+            if len(areaList) != 0:
+                for i in areaList:
+                    for j in i:
+                        if areaLarge < j[0] :
+                            areaLarge = j[0]
             
             if minContourArea < 0:
-                minContourArea = int(maxAreaFound/6)
+                minContourArea = int(areaLarge/3)
                 print("Min Area", minContourArea)
             if rangeForX < 0: rangeForX = 5
             if rangeForY < 0: rangeForY = 5
@@ -1039,7 +1044,7 @@ class ImageConversion:
 
                     # if the level contains values and if level > 1
                     #if i == 1 and len(lvlList[i]) > 5 :
-                    if i == 1:
+                    if i <= 2 and i > 0:
                         for j in range(len(lvlList[i])):
                             #if j > 5 and lvlList[i][j]:
                             if lvlList[i][j]:
@@ -1051,7 +1056,7 @@ class ImageConversion:
                                 if self.meetMinAreaPolynomialReq(get, contourPoints, minContourArea) == 0:
                                     deleteChildren.append(get) # add the children to be deleted
                 
-                    elif i > 1:
+                    elif i > 2:
 
                         #print("To be deleted I: ", i)
                     
@@ -1219,25 +1224,25 @@ class ImageConversion:
                 
                         # testing skipping points
                         if len(contourPoints[i] > 500):
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
 
                         elif len(contourPoints[i] <= 500) and len(contourPoints[i] > 250):
                             
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
 
                         elif len(contourPoints[i] <= 250) and len(contourPoints[i] > 125):
                             
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
 
                         elif len(contourPoints[i] <= 125) and len(contourPoints[i] > 62):
                             
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
                         
                         elif len(contourPoints[i] <= 62) and len(contourPoints[i] > 31):
                             
-                            pointsToSkip = int(len(contourPoints[i])/10)
+                            pointsToSkip = int(len(contourPoints[i])/20)
                             
-                        else: pointsToSkip = int(len(contourPoints[i])/10)
+                        else: pointsToSkip = int(len(contourPoints[i])/20)
 
                 else: pointsToSkip = skipPoints
 
