@@ -972,7 +972,7 @@ class ImageConversion:
                             areaLarge = j[0]
 
             if minContourArea < 0:
-                minContourArea = int(areaLarge/3)
+                minContourArea = int(areaList/3)
                 print("Min Area", minContourArea)
             if rangeForX < 0: rangeForX = 5
             if rangeForY < 0: rangeForY = 5
@@ -1044,7 +1044,7 @@ class ImageConversion:
 
                     # if the level contains values and if level > 1
                     #if i == 1 and len(lvlList[i]) > 5 :
-                    if i <= 1 and i > 0:
+                    if i == 1:
                         for j in range(len(lvlList[i])):
                             #if j > 5 and lvlList[i][j]:
                             if lvlList[i][j]:
