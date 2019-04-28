@@ -957,7 +957,7 @@ class ImageConversion:
             print("Min Contour Area: ", minContourArea)
             print("")
 
-                # find the largest area
+            # find the largest area
             #areaList = max(contourPoints, key = cv2.contourArea)
 
             maxAreaFound = self.findMaxArea(contourPoints)
@@ -1112,12 +1112,6 @@ class ImageConversion:
                 print("\nChildren to delete: ", deleteChildren)
                 print("")
 
-            # testing
-
-            for i in contourPoints:
-                for j in i:
-                    for k in j:
-                        newContourPoints.append([k[0], k[1]])
 #----------------------------------------------------------------------------
 ##            contoursToDelete = []
 ##            
