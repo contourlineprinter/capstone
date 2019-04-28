@@ -9,9 +9,9 @@ def parseArguments(args):
     combineFile = ""
     combineImage = ""
     combineSVG = ""
-    xyRange = ""
-    ptsToSkip = ""
-    minArea = ""
+    xyRange = "-1"
+    ptsToSkip = "-1"
+    minArea = "-1"
 
     startIndex = 0
     imageFound = 0
@@ -150,9 +150,9 @@ def parseArguments(args):
             continue
             print("-----------------------------------------------------------")
 
-    if xyRange is None: xyRange = -1
-    if ptsToSkip is None: ptsToSkip = -1
-    if minArea is None: minArea = -1
+    if xyRange is None: xyRange = "-1"
+    if ptsToSkip is None: ptsToSkip = "-1"
+    if minArea is None: minArea = "-1"
     
     print("\nImage: ", combineImage)
     print("SVG: ", combineSVG)
