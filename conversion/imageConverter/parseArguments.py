@@ -106,7 +106,7 @@ def parseArguments(args):
                     combineFile = ""
                     savedParameters = i
                     splitSpace = i.split(" ") #split by space
-                    print("Saved Parameters", saved)
+                    print("Saved Parameters", savedParameters)
 
                     for j in splitSpace:
 
