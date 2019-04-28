@@ -413,8 +413,8 @@ class ImageConversion:
             #self.showImage("Erosion Image", edgeImage)
             #cv2.moveWindow("Erosion Image",900,0)
 
-            #return erosionImage
-            return edgeImage
+            return erosionImage
+            #return edgeImage
         
         except Exception as e:
             print("Error: There is a problem with preprocessing the image - \n" + e.args[0] ) 
@@ -874,7 +874,7 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
-    # check if the element meets the min area and approx polygon requirements
+    # check if the element meets the min area and approx polynomial requirements
     # parameters:   element to be checked, contour points list, minimum contour area
     # return: true = 1  or false = 0 depending if element meets requirement
     def meetMinAreaPolynomialReq(self, target, contourPoints, minContourArea):
