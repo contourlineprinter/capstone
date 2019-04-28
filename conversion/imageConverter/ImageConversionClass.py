@@ -192,49 +192,62 @@ class ImageConversion:
 
         try:
             
-            BLUR = 15
+# properties
+            BLUR = 15               # blur size
             DILATE = 8
             ERODE = 8
             THRESH1 = 15
             THRESH2 = 180
-            COLOR = (1.0, 1.0, 1.0)
+            COLOR = (1.0, 1.0, 1.0) # mask color
 
-            type = 4
+            # using canny, dilate and erode together to detect edges
+            if (len(image.shape) == 3):
+                gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            else: gray = image
+            
+            edges = cv2.Canny(gray, THRESH1, THRESH2)
+            edges = cv2.dilate(edges, None)
+            edges = cv2.erode(edges, None)
 
-            x1 = 0.1
-            x2 = 0.9
-            y1 = 0.1
-            y2 = 0.9
+            c_info = []
 
-            # Converting image to rgb
-            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            # finding contours
+            contours, hierarchy = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
-            # Finding it's width and height
-            height, width = image_rgb.shape[:2]
+            for c in contours:
+                c_info.append((c, cv2.isContourConvex(c), cv2.contourArea(c),))
 
-            # Marking rectangle considering main object to be within this rectangle.
-            rectangle = (int(width*x1), int(height*y1), int(width*x2), int(height*y2))
+            # sorting contours based on area
+            c_info = sorted(c_info, key=lambda c: c[2], reverse=True)
 
-            # Creating a mask
-            mask = np.zeros(image_rgb.shape[:2], np.uint8)
+            # idea is to draw an empty mask
+            # and drawing a filled polygon of largest contour
+            # on it
+            max_contour = c_info[0]
+            image_mask = np.zeros(edges.shape)
+            cv2.fillConvexPoly(image_mask, max_contour[0], (255))
 
-            # Background mask
-            bgdModel = np.zeros((1, 65), np.float64)
+            # smoothing the mask
+            image_mask = cv2.dilate(image_mask, None, iterations=DILATE)
+            image_mask = cv2.erode(image_mask, None, iterations=ERODE)
+            
+            # applying gaussian blur to the mask
+            image_mask = cv2.GaussianBlur(image_mask, (BLUR, BLUR), 0)
+            mask_stack = np.dstack([image_mask] * 3)
+            mask_stack = mask_stack.astype('float32') / 255.0
+            image = image.astype('float32') / 255.0
 
-            # Foreground mask
-            fgdModel = np.zeros((1, 65), np.float64)
+            # blending original image with the mask
+            masked = (mask_stack * image) + ((1 - mask_stack) * COLOR)
+            masked = (masked * 255).astype('uint8')
 
-            # Applying grab cut on the image using rectangle and mask
-            cv2.grabCut(image_rgb, mask, rectangle,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
+            # rewriting image back
+            #cv2.imwrite(formatted_path, masked)
 
-            # Creating another mask where mask=2
-            mask_2 = np.where((mask==2) | (mask==0), 0, 1).astype('uint8')
+            print("Mask: ", len(masked.shape)) 
 
-            # Applying mask on the original image
-            image_rgb_nobg = image_rgb * mask_2[:, :, np.newaxis]
-
-            return image_rgb_nobg        
-
+            return masked
+        
         except Exception as e:
             print("Error: There is a problem with removing the image background - \n" + e.args[0] ) 
             exc_type, exc_obj, exc_tb = sys.exc_info()
