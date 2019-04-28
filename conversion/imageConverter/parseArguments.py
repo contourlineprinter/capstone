@@ -54,7 +54,7 @@ def parseArguments(args):
         
                 # check to see if the image is found
                 if imageFound == 0:
-                    print("File?: ", os.path.isfile(test)) # test to see if it's a file
+                    #print("File?: ", os.path.isfile(test)) # test to see if it's a file
                     if not os.path.isfile(test):
                         if j is not splitSpace[len(splitSpace)-1]:
                             combineFile = test + " "
@@ -67,7 +67,7 @@ def parseArguments(args):
                         combineFile = ""
 ##                        print("sub - is a file")
                 elif svgFound == 0 and imageFound == 1:
-                    print("Directory?: ", os.path.isdir(test)) # test to see if it's a directory
+                    #print("Directory?: ", os.path.isdir(test)) # test to see if it's a directory
                     if not os.path.isdir(test):
                         combineFile = test + " "
                         if j is not splitSpace[len(splitSpace)-1]:
@@ -106,8 +106,11 @@ def parseArguments(args):
                     combineFile = ""
                     savedParameters = i
                     splitSpace = i.split(" ") #split by space
+                    print("Saved Parameters", saved)
 
                     for j in splitSpace:
+
+                        print("J ",  j)
 
                         if j is not None and str.isdigit(j):
                                 
