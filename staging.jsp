@@ -87,7 +87,7 @@
 					</div>
 					
 					<!-- Point to skip Slider -->
-					<div class="form-group row ml-2 col-sm-4">
+					<div class="form-group row ml-2 col-sm-4" style="display:none">
 						<label  class="col-form-label">Points to skip</label>
 						<span id="slider_value2"></span>
 						<div class="w-100">
@@ -97,7 +97,7 @@
 					</div> 
 				
 					<!-- Min area -->
-					<div class="form-group row ml-2 col-sm-4">
+					<div class="form-group row ml-2 col-sm-4" style="display:none">
 						<label  class="col-form-label">Min area</label>
 						<span id="slider_value3"></span>
 						<div class="w-100">
@@ -120,25 +120,20 @@
 
 		</div>
     </div>
-	
+	<script src="js/random.js"></script>
 	<script>
 		// This is how our preview image is recieved by staging.jsp
 		var id = window.location.href;
-		if (id.includes("&")){
-			console.log("option 1");
-			id = id.split('%2F').pop();
-			console.log(id);
-			id = id.substring(0, id.indexOf('&'));
-			id = "svg/" + id;
-		}
-		else if (id.includes("?")){ // via gallery
+		
+		if (id.includes("?name")){ // via gallery
 			console.log("option 2");
-			id = id.split('?').pop();
+			id = id.split('=').pop();
 			console.log(id);
-			id = "svg/" +id + ".svg";
-		} else {  // via upload
+			id = "svg/" +id + ".svg" + "?" + rnd();
+		} else {  // via upload or reupload
 			console.log("option 3");
-			id = "svg/" + "<%= request.getAttribute("file")%>" + ".svg";
+			window.history.pushState("", "Contour Line Printer", "/staging.jsp");
+			id = "svg/" + "<%= request.getAttribute("file")%>" + ".svg" + "?" + rnd();
 		}
 		console.log(id);
 
@@ -152,6 +147,7 @@
     <!-- <script src="js/bootstrap.bundle.min.js"></script> -->
 		<script src="js/staging.js"></script>
 	<script src="js/movesvg.js"></script>
+	
 
 
 	

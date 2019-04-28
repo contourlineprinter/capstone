@@ -39,6 +39,7 @@ public class ImageUploadServler extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("=== Upload ===");
 		
 		if (ServletFileUpload.isMultipartContent(request)) {
 			try {
@@ -59,16 +60,16 @@ public class ImageUploadServler extends HttpServlet {
 							return; 	
 						}
 						
-						System.out.println(item.getName());
-						System.out.println("filename: " + name);
+						System.out.println("== " + item.getName());
+						System.out.println("== filename: " + name);
 						item.write(new File(file_directory + File.separator + name));
 					}
 				}
 				//Upload Worked
 				request.setAttribute("message", "Image uploaded");
 				request.setAttribute("file", name);
-				System.out.println("Image success message");
-				System.out.println(name);
+				System.out.println("== Image success message");
+				System.out.println("== " + name);
 
 				
 			} catch (Exception ex) {
@@ -83,7 +84,7 @@ public class ImageUploadServler extends HttpServlet {
 			request.setAttribute("message", "Unable to upload the file");
 		}
 
-		System.out.println("before try/catch");
+		System.out.println("== before try/catch");
 		//Call python script on file
 
 	    String command = "python3 /var/lib/tomcat8/webapps/ROOT/conversion/imageConverter/convertFileInput-reg.py /var/lib/tomcat8/webapps/ROOT/images/" + name +" /var/lib/tomcat8/webapps/ROOT/svg/";
@@ -99,9 +100,9 @@ public class ImageUploadServler extends HttpServlet {
 	    try {
 	        final int exitValue = p.waitFor();
 	        if (exitValue == 0)
-	            System.out.println("Successfully executed the command: " + command);
+	            System.out.println("== Successfully executed the command: " + command);
 	        else {
-	            System.out.println("Failed to complete/execute the following command: " + command);
+	            System.out.println("== Failed to complete/execute the following command: " + command);
 				request.setAttribute("message", "May have failed to generate svg for file " + name);
 				// return to Index.jsp page with the response text
 				//getServletContext().getRequestDispatcher("/index.jsp").include(request, response);

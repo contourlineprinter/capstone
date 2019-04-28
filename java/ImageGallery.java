@@ -64,13 +64,12 @@ public class ImageGallery extends HttpServlet {
            else {
         	   System.out.println("directory does not exist");
            }
-           System.out.println("Fetched svg successfully");
+           System.out.println("** Fetched svg successfully");
         } catch (Exception ex) {
            request.setAttribute("message", "Images not found: " + ex);
            ex.printStackTrace();
         }  
-        System.out.println("size of svg" + svg.size());
-        System.out.println("size of images" + images.size());
+        System.out.println("** number of svgs " + svg.size() + "number of images " + images.size());
         request.setAttribute("svg", svg);
         request.setAttribute("images", images);
         getServletContext().getRequestDispatcher("/gallery.jsp").include(request, response);

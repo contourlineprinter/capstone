@@ -59,3 +59,15 @@ function compute_height(new_width) {
 	// returns new height that maintains aspect ratio
 	return (new_width) / ratio;
 }
+
+// Makes the alert box visibile if there is an error message
+$(document).ready(function(){
+	
+	// Hides the alert on index if there is no jsp response 
+	if (document.getElementById('alertText').innerHTML ==  "null"){
+		document.getElementById('alert').style.display= 'none';
+	}
+	else {
+		document.getElementById('alert').style.display= 'block';
+	}
+});

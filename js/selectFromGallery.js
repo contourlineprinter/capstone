@@ -8,7 +8,7 @@ $(document).ready(function(){
 		var fname = fname.replace("images/", "");      // removes the file directory name
 		console.log(fname);
 		
-		window.location.href = "staging.jsp?"+fname;  // putting the filename into the url since there are no secrets here
+		window.location.href = "staging.jsp?name="+fname;  // putting the filename into the url since there are no secrets here
 
 	});
 });
