@@ -506,16 +506,16 @@ class ImageConversion:
             for i in pointC:
                 countPC = countPC + 1
 
-##            # if pointC is still empty after attempt
-##            if len(pointC) == 0 and attempt == 1:
-##                self.drawSVG(newContours, height, width, nameSVG, path, 0)      # draw a blank svg in gallery
-##                self.drawSVG(newContours, height, width, nameSVG2, path2, 0)     # draw a blank svg in next
-##                  
-##          
-##            else:
-##                print("Got here to svg...")
-            self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg in gallery
-            self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg in next
+            # if pointC is still empty after attempt
+            if len(pointC) == 0 and attempt == 1:
+                self.drawSVG(newContours, height, width, nameSVG, path, 0)      # draw a blank svg in gallery
+                self.drawSVG(newContours, height, width, nameSVG2, path2, 0)     # draw a blank svg in next
+                  
+          
+            else:
+                print("Got here to svg...")
+                self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg in gallery
+                self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg in next
             
             #don't sort - doesn't work?
             #vec = np.sort(np.array([pointC]))
