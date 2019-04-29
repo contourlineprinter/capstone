@@ -28,7 +28,7 @@
                     <a class="nav-link" href="gallery.html">Gallery</a>
                 </li>
             </ul>
-        </div>
+        </div> 
     </nav>
 
     <!-- Content -->

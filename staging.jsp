@@ -104,8 +104,15 @@
 							<input name="minslide" type="range" class="form-control-range slider" id="formControlRange" min="-1" max="1000" value="-1" step="10"
 							onchange="show_value3(this.value);">
 						</div>					
-
 					</div> 
+					
+					<!-- Conversion Types -->
+					
+						<label  class="col-form-label">Conversion Type</label>
+						
+						<input type="radio" class="d-none" name="conversionType" value="canny"> Canny Edge Detection<br>
+						<input type="radio" name="conversionType" value="highquality">High Quality<br> 
+					
 					
 					
 					<!-- Button to approve the image and begin printing -->
@@ -115,7 +122,7 @@
 			
 				
 				<!-- Button to approve the image and begin printing -->
-				<button onclick="printq()" class="btn col-sm-4 btn-primary w-100 mt-3">Print</button>
+				<button onclick="printq()" id="printbtn" class="btn col-sm-4 btn-primary w-100 mt-3">Print</button>
 			</div>
 
 		</div>
@@ -126,12 +133,13 @@
 		var id = window.location.href;
 		
 		if (id.includes("?name")){ // via gallery
-			console.log("option 2");
+			console.log("via gallery");
 			id = id.split('=').pop();
 			console.log(id);
 			id = "svg/" +id + ".svg" + "?" + rnd();
+			document.getElementById("printbtn").setAttribute('disabled','disabled');  // reupload required
 		} else {  // via upload or reupload
-			console.log("option 3");
+			console.log("via reupload/upload");
 			window.history.pushState("", "Contour Line Printer", "/staging.jsp");
 			id = "svg/" + "<%= request.getAttribute("file")%>" + ".svg" + "?" + rnd();
 		}
