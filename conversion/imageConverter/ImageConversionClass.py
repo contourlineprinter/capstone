@@ -1408,8 +1408,8 @@ class ImageConversion:
                     x2 = math.floor(contourPoints[0][x+1][0] * percentx/100)         #resize x2
                     y1 = math.floor(contourPoints[0][x][1] * percenty/100)           #resize y1
                     y2 = math.floor(contourPoints[0][x+1][1] * percenty/100)         #resize y2
-                    shapes.add(dwg.line(start = (str(x1), str(y1)), 
-                        end = (str(x2),str(y2)), 
+                    shapes.add(dwg.line(start = (x1, y1), 
+                        end = (x2,y2), 
                         stroke=svgwrite.rgb(10, 10, 16, '%')
                     ))                
             
