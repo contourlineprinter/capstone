@@ -470,7 +470,7 @@ class ImageConversion:
             contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)   # find countour
             #print("Create Contours", contours)
             
-            print("Found", len(contours), " objects in intial contour list.")                       # length of the contour list
+            print("Found %d objects in intial contour list." % len(contours))                       # length of the contour list
 
             height, width = image.shape[:2]     # get image size
             pointC = []                         # new set of points
@@ -499,12 +499,8 @@ class ImageConversion:
             #print("newContours: ", newContours)
 
             # make svg of contour - for gallery
-            nameSVG = ntpath.basename(self.origImg)                    # set filename for svg file
-            path = self.svgPath                                        # set directory path for svg file
-
-            if not isinstance(nameSVG, str): str(nameSVG)
-            if not isinstance(path, str): str(path)
-            
+            nameSVG = str(ntpath.basename(self.origImg))                    # set filename for svg file
+            path = str(self.svgPath)                                        # set directory path for svg file
             
             print("got to ROOT/next")
     
@@ -1337,21 +1333,19 @@ class ImageConversion:
     def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./", mode = 1):
         try:
 
-            if not isinstance(path, str):
-                path = str(path)
-                
-            #path = str(path)
+            path = str(path)
             print("::", path)  
 
             # make sure the path is ready
             if "/" in path:
                 if not path.endswith("/"):
-                    path = path + "/"
+                    path = str(path) + "/"
             elif "\\" in path:
                 if not path.endswith("\\"):
-                    path = path + "\\"
+                    path = str(path) + "\\"
             else: path = "./"
                                      
+
             print("Path in drawSVG", path)
             # make sure the path is a directory path
             if not os.path.isdir(path):
@@ -1361,21 +1355,16 @@ class ImageConversion:
                 if os.path.isfile(path):
                     print("File detected. The location of the file will be used.")
                     path, file = ntpath.split(path)
-        
-            if not isinstance(path, str):
-                str(path)
+
 
             # set up for svg
             extension = ".svg"  # extension for svg
 
             if mode == 1:
-                number = self.getNextFileNumber(path, name, extension) # get the next file number
-                if not isinstance(number, str):
-                    str(number)
-                location = path + name + number + extension
+                number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
+                location = str(path) + str(name) + str(number) + str(extension)
             else:
-
-                location = path + name + extension
+                location = str(path) + str(name) + str(extension)
             
             #create a svg file
             #print("SVG to: ", str(path+name+number+extension))
