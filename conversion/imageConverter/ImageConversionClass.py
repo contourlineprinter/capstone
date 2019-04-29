@@ -1395,13 +1395,13 @@ class ImageConversion:
 
             if mode is not 0:
 
-                print("Got inside here")
+                #print("Got inside here")
                 
                 #interatively write points into the svg file
                 lengthOfTheList = len(contourPoints[0]) - 1
 
                 
-                print("Got inside here now")
+                #print("Got inside here now")
                 
                 for x in range(lengthOfTheList):
                     #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
@@ -1417,7 +1417,7 @@ class ImageConversion:
                         end = (str(x2),str(y2)), 
                         stroke=svgwrite.rgb(10, 10, 16, "%")
                     ))
-                    print("Got down here")
+                    #print("Got down here")
             
             #save the file
             dwg.save()
