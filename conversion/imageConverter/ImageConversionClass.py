@@ -1337,11 +1337,10 @@ class ImageConversion:
     def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./", mode = 1):
         try:
 
-            if not isinstance(path, str):
-                path = str(path)
+            if not isinstance(path, str): path = str(path)
                 
             #path = str(path)
-            print("::", path)  
+            print("drawSVG path ", path)  
 
             # make sure the path is ready
             if "/" in path:
@@ -1362,20 +1361,19 @@ class ImageConversion:
                     print("File detected. The location of the file will be used.")
                     path, file = ntpath.split(path)
         
-            if not isinstance(path, str):
-                str(path)
+            if not isinstance(path, str): str(path)
 
             # set up for svg
             extension = ".svg"  # extension for svg
 
             if mode == 1:
                 number = self.getNextFileNumber(path, name, extension) # get the next file number
-                if not isinstance(number, str):
-                    str(number)
+                if not isinstance(number, str): str(number)
                 location = path + name + number + extension
             else:
-
                 location = path + name + extension
+
+            if not isinstance(location, str): str(location)
             
             #create a svg file
             #print("SVG to: ", str(path+name+number+extension))
@@ -1391,7 +1389,7 @@ class ImageConversion:
                 percenty = 100
 
             dwg = svgwrite.Drawing(location, size=(width, height))
-            shapes = dwg.add(dwg.g(id='shapes', fill='none'))
+            shapes = dwg.add(dwg.g(id = "shapes", fill="none"))
             
             print("percentx and percenty: ", percentx, percenty)
 
@@ -1408,9 +1406,9 @@ class ImageConversion:
                     x2 = math.floor(contourPoints[0][x+1][0] * percentx/100)         #resize x2
                     y1 = math.floor(contourPoints[0][x][1] * percenty/100)           #resize y1
                     y2 = math.floor(contourPoints[0][x+1][1] * percenty/100)         #resize y2
-                    shapes.add(dwg.line(start = (x1, y1), 
-                        end = (x2,y2), 
-                        stroke=svgwrite.rgb(10, 10, 16, '%')
+                    shapes.add(dwg.line(start = (str(x1), str(y1)), 
+                        end = (str(x2),str(y2)), 
+                        stroke=svgwrite.rgb(10, 10, 16, "%")
                     ))                
             
             #save the file
