@@ -26,6 +26,7 @@ public class ReUploadServler extends HttpServlet {
     
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+<<<<<<< HEAD
 
 
 	}
@@ -35,12 +36,18 @@ public class ReUploadServler extends HttpServlet {
 		System.out.println("--- Reupload ---");
 		
 		// Get form parameters
+=======
+		System.out.println("--- Reupload ---");
+		//System.out.println(request.getParameter("xyslide"));
+		//System.out.println(request.getParameter("skipslide"));
+>>>>>>> 913e2533bd61eae0097e0097cd77d59931c760d9
 		String fname = request.getParameter("fname");
 		int range = Integer.parseInt(request.getParameter("xyslide"));
 		int skip = Integer.parseInt(request.getParameter("skipslide"));
 		int min =  Integer.parseInt(request.getParameter("minslide"));
 		String scale = request.getParameter("scale");
 		
+<<<<<<< HEAD
 		// Parse filename
 		fname = fname.replace("svg/", "");
 		fname = fname.replace(".svg", "");
@@ -52,12 +59,21 @@ public class ReUploadServler extends HttpServlet {
 		System.out.println("-- fname " + fname);
 		
 		// Returns the file to load on response 
+=======
+		fname = fname.replace("svg/", "");
+		fname = fname.replace(".svg", "");
+		
+		System.out.println("-- scale " + scale);
+		System.out.println("-- x y Range Slider " + range + " points to skip " + skip + " min area " + min);
+		System.out.println("-- fname " + fname);
+>>>>>>> 913e2533bd61eae0097e0097cd77d59931c760d9
 		request.setAttribute("file", fname); // give a file attribute to return as the response
 		
 		
 		// Command to write scale factor into the next folder
 		Runtime.getRuntime().exec("python3 /var/lib/tomcat8/webapps/ROOT/WEB-INF/cgi/writescale.py " + scale);
 		System.out.println("-- wrote scale value");
+<<<<<<< HEAD
 		request.setAttribute("message", "wrote scale " + scale);
 		
 		
@@ -120,6 +136,52 @@ public class ReUploadServler extends HttpServlet {
 		getServletContext().getRequestDispatcher("/staging.jsp").include(request, response);
 	
 	
+=======
+		
+		request.setAttribute("message", "wrote scale " + scale);
+		
+		
+		 String command = "python3 /var/lib/tomcat8/webapps/ROOT/conversion/imageConverter/convertFileInput-reg.py /var/lib/tomcat8/webapps/ROOT/images/" + fname +" /var/lib/tomcat8/webapps/ROOT/svg/ " + range + " " + skip + " " + min;
+		    Process p = null;
+		    try {
+		    	 p = Runtime.getRuntime().exec(command);
+		    } catch (final IOException e) {
+		    	request.setAttribute("message", "IOException: " + e);
+		    	e.printStackTrace();
+		    }
+		    
+		    //Wait to get exit value
+		    try {
+		        final int exitValue = p.waitFor();
+		        if (exitValue == 0) {
+		            System.out.println("-- Successfully executed the command: " + command);
+		        	request.setAttribute("message", "Reupload Sucessful.  When ready place car in the top left of your paper and hit print");
+		        }
+		        
+		        else {
+		            System.out.println("-- Failed to complete/execute the following command: " + command);
+					request.setAttribute("message", "May have failed to regenerate svg for file " + fname);
+					// return to Index.jsp page with the response text
+					//getServletContext().getRequestDispatcher("/staging.jsp").include(request, response);
+					//return; 
+		                            
+		        }
+		    } catch (InterruptedException e) {
+		        e.printStackTrace();
+		    }
+		   		  
+		    
+		    
+			// move to staging page with the response text
+			getServletContext().getRequestDispatcher("/staging.jsp").include(request, response);
+		
+		
+
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+>>>>>>> 913e2533bd61eae0097e0097cd77d59931c760d9
 		
 		
 	}
