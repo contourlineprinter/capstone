@@ -192,49 +192,62 @@ class ImageConversion:
 
         try:
             
-            BLUR = 15
+# properties
+            BLUR = 15               # blur size
             DILATE = 8
             ERODE = 8
             THRESH1 = 15
             THRESH2 = 180
-            COLOR = (1.0, 1.0, 1.0)
+            COLOR = (1.0, 1.0, 1.0) # mask color
 
-            type = 4
+            # using canny, dilate and erode together to detect edges
+            if (len(image.shape) == 3):
+                gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            else: gray = image
+            
+            edges = cv2.Canny(gray, THRESH1, THRESH2)
+            edges = cv2.dilate(edges, None)
+            edges = cv2.erode(edges, None)
 
-            x1 = 0.1
-            x2 = 0.9
-            y1 = 0.1
-            y2 = 0.9
+            c_info = []
 
-            # Converting image to rgb
-            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            # finding contours
+            contours, hierarchy = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
-            # Finding it's width and height
-            height, width = image_rgb.shape[:2]
+            for c in contours:
+                c_info.append((c, cv2.isContourConvex(c), cv2.contourArea(c),))
 
-            # Marking rectangle considering main object to be within this rectangle.
-            rectangle = (int(width*x1), int(height*y1), int(width*x2), int(height*y2))
+            # sorting contours based on area
+            c_info = sorted(c_info, key=lambda c: c[2], reverse=True)
 
-            # Creating a mask
-            mask = np.zeros(image_rgb.shape[:2], np.uint8)
+            # idea is to draw an empty mask
+            # and drawing a filled polygon of largest contour
+            # on it
+            max_contour = c_info[0]
+            image_mask = np.zeros(edges.shape)
+            cv2.fillConvexPoly(image_mask, max_contour[0], (255))
 
-            # Background mask
-            bgdModel = np.zeros((1, 65), np.float64)
+            # smoothing the mask
+            image_mask = cv2.dilate(image_mask, None, iterations=DILATE)
+            image_mask = cv2.erode(image_mask, None, iterations=ERODE)
+            
+            # applying gaussian blur to the mask
+            image_mask = cv2.GaussianBlur(image_mask, (BLUR, BLUR), 0)
+            mask_stack = np.dstack([image_mask] * 3)
+            mask_stack = mask_stack.astype('float32') / 255.0
+            image = image.astype('float32') / 255.0
 
-            # Foreground mask
-            fgdModel = np.zeros((1, 65), np.float64)
+            # blending original image with the mask
+            masked = (mask_stack * image) + ((1 - mask_stack) * COLOR)
+            masked = (masked * 255).astype('uint8')
 
-            # Applying grab cut on the image using rectangle and mask
-            cv2.grabCut(image_rgb, mask, rectangle,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
+            # rewriting image back
+            #cv2.imwrite(formatted_path, masked)
 
-            # Creating another mask where mask=2
-            mask_2 = np.where((mask==2) | (mask==0), 0, 1).astype('uint8')
+            print("Mask: ", len(masked.shape)) 
 
-            # Applying mask on the original image
-            image_rgb_nobg = image_rgb * mask_2[:, :, np.newaxis]
-
-            return image_rgb_nobg        
-
+            return masked
+        
         except Exception as e:
             print("Error: There is a problem with removing the image background - \n" + e.args[0] ) 
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -457,7 +470,7 @@ class ImageConversion:
             contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)   # find countour
             #print("Create Contours", contours)
             
-            print("Found %d objects in intial contour list." % len(contours))                       # length of the contour list
+            print("Found", len(contours), " objects in intial contour list.")                       # length of the contour list
 
             height, width = image.shape[:2]     # get image size
             pointC = []                         # new set of points
@@ -486,8 +499,12 @@ class ImageConversion:
             #print("newContours: ", newContours)
 
             # make svg of contour - for gallery
-            nameSVG = str(ntpath.basename(self.origImg))                    # set filename for svg file
-            path = str(self.svgPath)                                        # set directory path for svg file
+            nameSVG = ntpath.basename(self.origImg)                    # set filename for svg file
+            path = self.svgPath                                        # set directory path for svg file
+
+            if not isinstance(nameSVG, str): str(nameSVG)
+            if not isinstance(path, str): str(path)
+            
             
             print("got to ROOT/next")
     
@@ -501,12 +518,19 @@ class ImageConversion:
                 print("A new folder will be created")
                 os.makedirs(path2)
 
+            countPC = 0
+
+            for i in pointC:
+                countPC = countPC + 1
+
             # if pointC is still empty after attempt
             if len(pointC) == 0 and attempt == 1:
                 self.drawSVG(newContours, height, width, nameSVG, path, 0)      # draw a blank svg in gallery
                 self.drawSVG(newContours, height, width, nameSVG2, path2, 0)     # draw a blank svg in next
-                
+                  
+          
             else:
+                print("Got here to svg...")
                 self.drawSVG(newContours, height, width, nameSVG, path, 2)      # draw it in the svg in gallery
                 self.drawSVG(newContours, height, width, nameSVG2, path2, 2)    # draw it in the svg in next
             
@@ -584,30 +608,6 @@ class ImageConversion:
 ##                        print("Point Start: ", contourPoints[i][j][0][0])
 ##                        print("Point End: ", contourPoints[i][j][0][1])
                         startEndPoint.append([contourPoints[i][j][0][0], contourPoints[i][j][0][1], i,j]) # [x, y, contour element #, point #]      
-
-##            for i in startEndPoint:
-##                print("StartEndPoint: ", i)
-
-            #startEndPoint = np.array(startEndPoint) # change into a numpy array
-
-            # testing
-##            print("Print Start End Points: ",  startEndPoint) # print array
-##            print(startEndPoint[:,2]) # print the i index - 2nd column
-##            print(startEndPoint[:,3]) # print the j index - 3rd column
-##            print(startEndPoint[1::2,2]) # ever other row, start with 1 - get 2rd column value
-##            print(startEndPoint[::2,3]) # ever other row, start with 0 - get 3rd column value
-##            print(startEndPoint[1::2,3]) # ever other row, start with 1 - get 3rd column value
-
-            # print the points in startEndPoint
-            #for s in startEndPoint:
-             #   print("Start-End: ", s)
-
-            # testing
-##            elementNo = startEndPoint[1::2,2]
-##            lastIndex = startEndPoint[1::2,3]
-##            combine = startEndPoint[:,2:4]
-##            startPt = startEndPoint[::2,0]
-##            print("***", startPt)
 
             return startEndPoint
         
@@ -825,12 +825,12 @@ class ImageConversion:
                         for k in i[j]:
 
                             if k is not None:
-                                print("Here")
+                                #print("Here")
                                 # if the child hasn't been processed
                                 if k not in finishList:
                                     parent = self.getParent(k, parentChildList)  # get parent of the child
                                     level = self.getLevel(parent, lvlList)       # get level of parent
-                                    print("Level ", level)
+                                    #print("Level ", level)
     ##                                print("Level of k's parent: ", level)   
     ##                                print("Level of k: ", level+1)
                                     if parent == k:
@@ -874,7 +874,7 @@ class ImageConversion:
             tb = traceback.extract_tb(exc_tb)[-1]
             print(exc_type, tb[2], tb[1])
 #-----------------------------------------
-    # check if the element meets the min area and approx polygon requirements
+    # check if the element meets the min area and approx polynomial requirements
     # parameters:   element to be checked, contour points list, minimum contour area
     # return: true = 1  or false = 0 depending if element meets requirement
     def meetMinAreaPolynomialReq(self, target, contourPoints, minContourArea):
@@ -943,23 +943,29 @@ class ImageConversion:
     def filterPoints(self, contourPoints, newContourPoints, hierarchy, rangeForX = 5, rangeForY = 5, skipPoints = -1, minContourArea = -1):
         try:
 
-                # find the largest area
+            print("")
+            print("Parameters passed into filterPoints")
+            print("Range XY: ", rangeForX)
+            print("Skip Points: ", skipPoints)
+            print("Min Contour Area: ", minContourArea)
+            print("")
+
+            # find the largest area
             areaList = max(contourPoints, key = cv2.contourArea)
 
-            maxAreaFound = self.findMaxArea(contourPoints)
-            print("maxAreaFound", maxAreaFound)
+            #maxAreaFound = self.findMaxArea(contourPoints)
+            #print("maxAreaFound", maxAreaFound)
             #print("Largest Area", largestArea)
 
             areaLarge = -1
-            
             if len(areaList) != 0:
                 for i in areaList:
                     for j in i:
                         if areaLarge < j[0] :
                             areaLarge = j[0]
-
+            
             if minContourArea < 0:
-                minContourArea = int(maxAreaFound/10)
+                minContourArea = int(areaLarge/3)
                 print("Min Area", minContourArea)
             if rangeForX < 0: rangeForX = 5
             if rangeForY < 0: rangeForY = 5
@@ -1022,7 +1028,6 @@ class ImageConversion:
 
 
             deleteChildren = []
-            #startChildIndex = 3
 
             # for each level
             for i in range(len(lvlList)): # [, , ]
@@ -1051,50 +1056,6 @@ class ImageConversion:
                             if lvlList[i][j]:
                                 get = lvlList[i][j]
                                 deleteChildren.append(get) # add the children to be deleted
-                        
-
-##            # get the children to be deleted
-##            for i in range(len(parentChild)):
-##                for j in parentChild[i]:
-##                    for k in range(len(j)):
-##                        print("K ",  k)
-##                        
-##                        if self.meetMinAreaPolynomialReq(k, contourPoints, minContourArea) is 0 and k not in deleteChildren:
-##                                    deleteChildren.append(k) # add the children to be deleted
-##
-##                        if k > 0 and j[k]:
-##                            blankCanvas = 255*np.ones((self.origHeight, self.origWidth, 3), np.uint8)              # make blank canvas
-##                            imageSubContour = cv2.drawContours(blankCanvas, contourPoints[k], -1, (0,255,0), 2)     # draw the contour image with new point
-##                            self.showImage("Contour Sub I" + str(i) + " K " + str(k), imageSubContour)
-
-##                    
-##                    #startChildIndex = int(len(j)/2)
-##                    #print("Length: ", startChildIndex)
-##
-##                    for k in range(len(j)):
-##                        if len(j) <= 3:
-##                            #startChildIndex = 2
-##                            continue
-##                        elif len(j) > 10:
-##                            startChildIndex = 5
-##                        elif len(j) > 50: 
-##                            startChildIndex = 6
-##                        elif len(j) > 100: 
-##                            startChildIndex = 8
-##                        elif len(j) > 500: 
-##                            startChildIndex = 10
-##                        
-##                        
-##                        if k >= startChildIndex and j[k] not in deleteChildren:
-##                            deleteChildren.append(j[k])
-
-##            
-##            if deleteChildren:
-##                print("\nChildren to delete: ", deleteChildren)
-##                print("")
-
-##                # delete the children conours
-##                contourPoints = np.delete(contourPoints, deleteChildren)
 
             if 0 not in deleteChildren: deleteChildren.append(0)
 
@@ -1103,25 +1064,6 @@ class ImageConversion:
                 deleteChildren = np.array(deleteChildren)
                 print("\nChildren to delete: ", deleteChildren)
                 print("")
-#----------------------------------------------------------------------------
-##            contoursToDelete = []
-##            
-##            for i in range(len(hierarchy)):
-##
-##                for j in hierarchy[i]:
-##
-##                    print("J in hierarchy: ", j)
-##                    parent = j[3]
-##                    firstChild = j[2]
-##
-##                    # if the element doesn't have a parent = 0
-##                    # if the element has a parent > 0
-##                    # if the element has a child
-##                        # if the child 
-##                        
-##            # delete all the contours that don't meet the requirements
-##            contourPoints = np.delete(contourPoints, contoursToDelete)        
-
 
 #----------------------------------------------------------------------------------------------------------------------------------------
             #--filter contour elements by area, polygon approximation--#
@@ -1129,15 +1071,8 @@ class ImageConversion:
             contoursToDelete = [] # list of indexes of contours to delete
             print("Inital Number of Objects: ", len(contourPoints))
             origObjCount = self.countPoints(contourPoints)
-
-
-            # testing min contourArea
-##            minContourArea = max(contourPoints, key = cv2.contourArea)/10
-##            print(minContourArea)
-#----------------------------------------------------------------------------------------------------------------------------------------
-
-            # renable
             
+#----------------------------------------------------------------------------------------------------------------------------------------
             # look for the contours that don't fit the minimum area requirement
             for i in range(len(contourPoints)):
                 
@@ -1145,39 +1080,12 @@ class ImageConversion:
                     if self.meetMinAreaPolynomialReq(i, contourPoints, minContourArea) == 0 and i not in contoursToDelete:
                         contoursToDelete.append(i)  # save the index of that contour
 
-            # if the first contour element isn't in the deleted index, add it
-            #if 0 not in contoursToDelete: contoursToDelete.append(0)
-
-##            for i in deleteChildren:
-##                if i not in contoursToDelete:
-##                    contoursToDelete.append(i)
-
 
             if contoursToDelete:
                 print("Contours to delete reached: " , contoursToDelete)
+
                 # delete all the contours that don't meet the requirements
                 contourPoints = np.delete(contourPoints, contoursToDelete)
-                #contourPoints = np.delete(contourPoints, 0) # delete the first contour element - polygon takes care of this
-#----------------------------------------------------------------------------------------------------------------------------------------
-            # printing current state of countour points
-            #self.print_contours(contourPoints)
-
-##            # process points in contour - get the last two points
-##            startEndPoint = np.array(self.getStartEndPoints(contourPoints)) # change into a numpy array
-##
-##            # sort the contour element
-##            orderElement = []
-##            for i in np.argsort(startEndPoint[::2,0]): # skip every other element, sort by x
-##                orderElement.append(i)
-##                #print("Sort", i)
-##            #print(orderElement)
-##
-##            #print(contourPoints[0])
-##            contourPoints = contourPoints[orderElement] # order the elements
-
-            #print("Here")      
-
-            #print("\nLength of Contour Points[i] Before: ", contourPoints[3])
 #----------------------------------------------------------------------------------------------------------------------------------------                
             #--get the contour elements ordered--#
 
@@ -1199,43 +1107,13 @@ class ImageConversion:
             
             # process points in contour - remove some points based on x and y ranges
             for i in range(len(contourPoints)):
-
-                #if i == 0: continue # gets rid of the first contour element
-
                 
-#---------------------------------------
-                    
                 # if points to skip is -1, use default mode
                 if skipPoints < 0:
-                
-                        # testing skipping points
-                        if len(contourPoints[i] > 500):
-                            pointsToSkip = int(len(contourPoints[i])/20)
-
-                        elif len(contourPoints[i] <= 500) and len(contourPoints[i] > 250):
-                            
-                            pointsToSkip = int(len(contourPoints[i])/20)
-
-                        elif len(contourPoints[i] <= 250) and len(contourPoints[i] > 125):
-                            
-                            pointsToSkip = int(len(contourPoints[i])/20)
-
-                        elif len(contourPoints[i] <= 125) and len(contourPoints[i] > 62):
-                            
-                            pointsToSkip = int(len(contourPoints[i])/20)
-                        
-                        elif len(contourPoints[i] <= 62) and len(contourPoints[i] > 31):
-                            
-                            pointsToSkip = int(len(contourPoints[i])/20)
-                            
-                        else: pointsToSkip = int(len(contourPoints[i])/20)
+                    
+                    pointsToSkip = int(len(contourPoints[i])/20)
 
                 else: pointsToSkip = skipPoints
-
-                #pointsToSkip = int(len(contourPoints[i])/5)
-##                print("\nLength of Contour Points[i]: ", len(contourPoints[i]))
-##                print("Points to skip: ", pointsToSkip)
-#---------------------------------------
                 
                 for j in range(len(contourPoints[i])):
                     
@@ -1256,7 +1134,6 @@ class ImageConversion:
                             count+=1
                         
                         else:
-
                                 
                             # if x and y found is within range of saved x and y, don't save it
                             if (abs(c[0]-xget) <= rangeForX) or (abs(xsave-xget) <= rangeForX) or xget == xsave:
@@ -1272,16 +1149,9 @@ class ImageConversion:
                                     ysave = yget
                                     newContourPoints.append([xget,yget])
                                     count+=1
-                                    alternate = 0
                                 else:
                                     alternate+=1
                                     continue
-
-                                #print("got here - yes")
-##                                xsave = xget
-##                                ysave = yget
-##                                newContourPoints.append([xget,yget])
-##                                count+=1
 
 #----------------------------------------------------------------------------------------------------------------------------------------
                                 
@@ -1307,20 +1177,22 @@ class ImageConversion:
     def drawSVG(self, contourPoints, height, width, name = "contour_SVG", path = "./", mode = 1):
         try:
 
-            path = str(path)
-            print("::", path)  
+            if not isinstance(path, str): path = str(path)
+                
+            #path = str(path)
+            print("drawSVG path ", path)  
 
             # make sure the path is ready
             if "/" in path:
                 if not path.endswith("/"):
-                    path = str(path) + "/"
+                    path = path + "/"
             elif "\\" in path:
                 if not path.endswith("\\"):
-                    path = str(path) + "\\"
+                    path = path + "\\"
             else: path = "./"
                                      
-
             print("Path in drawSVG", path)
+            
             # make sure the path is a directory path
             if not os.path.isdir(path):
                 print("The path is not a directory.")
@@ -1329,16 +1201,20 @@ class ImageConversion:
                 if os.path.isfile(path):
                     print("File detected. The location of the file will be used.")
                     path, file = ntpath.split(path)
-
+        
+            if not isinstance(path, str): str(path)
 
             # set up for svg
             extension = ".svg"  # extension for svg
 
             if mode == 1:
-                number = str(self.getNextFileNumber(path, name, extension)) # get the next file number
-                location = str(path) + str(name) + str(number) + str(extension)
+                number = self.getNextFileNumber(path, name, extension) # get the next file number
+                if not isinstance(number, str): str(number)
+                location = path + name + number + extension
             else:
-                location = str(path) + str(name) + str(extension)
+                location = path + name + extension
+
+            if not isinstance(location, str): str(location)
             
             #create a svg file
             #print("SVG to: ", str(path+name+number+extension))
@@ -1354,19 +1230,17 @@ class ImageConversion:
                 percenty = 100
 
             dwg = svgwrite.Drawing(location, size=(width, height))
-            shapes = dwg.add(dwg.g(id="shapes", fill="none"))
+            shapes = dwg.add(dwg.g(id = "shapes", fill="none"))
             
             print("percentx and percenty: ", percentx, percenty)
 
             if mode is not 0:
+                
                 #interatively write points into the svg file
                 lengthOfTheList = len(contourPoints[0]) - 1
+                
                 for x in range(lengthOfTheList):
-                    #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
-                    #shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
-                    #                 end = (str(contourPoints[0][x+1][0]),str(contourPoints[0][x+1][1])), 
-                    #                 stroke=svgwrite.rgb(10, 10, 16, "%")
-                    #))
+                    
                     x1 = math.floor(contourPoints[0][x][0] * percentx/100)           #resize x1
                     x2 = math.floor(contourPoints[0][x+1][0] * percentx/100)         #resize x2
                     y1 = math.floor(contourPoints[0][x][1] * percenty/100)           #resize y1
@@ -1374,10 +1248,12 @@ class ImageConversion:
                     shapes.add(dwg.line(start = (str(x1), str(y1)), 
                         end = (str(x2),str(y2)), 
                         stroke=svgwrite.rgb(10, 10, 16, "%")
-                    ))                
+                    ))
             
             #save the file
             dwg.save()
+            
+            print("Got down here")
             
         except Exception as e:
             print("Error: There is a problem with writing a svg file - \n" + e.args[0] )
