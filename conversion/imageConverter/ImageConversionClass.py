@@ -1391,7 +1391,7 @@ class ImageConversion:
                 percenty = 100
 
             dwg = svgwrite.Drawing(location, size=(width, height))
-            shapes = dwg.add(dwg.g(id="shapes", fill="none"))
+            shapes = dwg.add(dwg.g(id='shapes', fill='none'))
             
             print("percentx and percenty: ", percentx, percenty)
 
@@ -1410,7 +1410,7 @@ class ImageConversion:
                     y2 = math.floor(contourPoints[0][x+1][1] * percenty/100)         #resize y2
                     shapes.add(dwg.line(start = (str(x1), str(y1)), 
                         end = (str(x2),str(y2)), 
-                        stroke=svgwrite.rgb(10, 10, 16, "%")
+                        stroke=svgwrite.rgb(10, 10, 16, '%')
                     ))                
             
             #save the file
