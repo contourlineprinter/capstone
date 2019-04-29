@@ -23,7 +23,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="/">Upload</a>
                 </li>
                 <li class="nav-item">
@@ -144,7 +144,7 @@
 	
 	
     <script src="js/jquery-3.3.1.min.js"></script>
-    <!-- <script src="js/bootstrap.bundle.min.js"></script> -->
+    <script src="js/bootstrap.bundle.min.js"></script>
 		<script src="js/staging.js"></script>
 	<script src="js/movesvg.js"></script>
 	
