@@ -1394,8 +1394,15 @@ class ImageConversion:
             print("percentx and percenty: ", percentx, percenty)
 
             if mode is not 0:
+
+                print("Got inside here")
+                
                 #interatively write points into the svg file
                 lengthOfTheList = len(contourPoints[0]) - 1
+
+                
+                print("Got inside here now")
+                
                 for x in range(lengthOfTheList):
                     #print(contourPoints[0][x][0],contourPoints[0][x][1],contourPoints[0][x+1][0],contourPoints[0][x+1][1])
                     #shapes.add(dwg.line(start = (str(contourPoints[0][x][0]), str(contourPoints[0][x][1])), 
@@ -1409,6 +1416,7 @@ class ImageConversion:
                     shapes.add(dwg.line(start = (str(x1), str(y1)), 
                         end = (str(x2),str(y2)), 
                         stroke=svgwrite.rgb(10, 10, 16, "%")
+                        print("Got inside shapes.add")
                     ))                
             
             #save the file
