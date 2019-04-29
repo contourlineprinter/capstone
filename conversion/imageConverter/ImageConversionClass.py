@@ -1416,11 +1416,13 @@ class ImageConversion:
                     shapes.add(dwg.line(start = (str(x1), str(y1)), 
                         end = (str(x2),str(y2)), 
                         stroke=svgwrite.rgb(10, 10, 16, "%")
-                        print("Got inside shapes.add")
-                    ))                
+                    ))
+                    print("Got down here")
             
             #save the file
             dwg.save()
+            
+            print("Got down here")
             
         except Exception as e:
             print("Error: There is a problem with writing a svg file - \n" + e.args[0] )
