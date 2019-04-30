@@ -16,4 +16,4 @@ Use `git pull origin master` to grab recent changes to the repo
 
 **Repo for OpenCV image conversion** https://github.com/contourlineprinter/OpenCV-Testing1
 
-** Earlier version IP: ** [34.73.146.5135.227.19.150](34.73.146.51)
+**Earlier version IP:** [34.73.146.5135.227.19.150](34.73.146.51)
