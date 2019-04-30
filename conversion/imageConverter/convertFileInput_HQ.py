@@ -5,8 +5,8 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import os, sys
-import parseArguments
-from ImageConversionClass import ImageConversion
+import parseArguments_HQ
+from ImageConversionClass_HQ import ImageConversion
 
 #----------------------------------------- 
 if len(sys.argv) < 2:
