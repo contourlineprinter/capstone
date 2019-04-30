@@ -110,8 +110,8 @@
 					
 						<label  class="col-form-label">Conversion Type</label>
 						
-						<!-- <input type="radio" class="d-none" name="conversionType" value="canny"> Canny Edge Detection<br> -->
-						<!-- <input type="radio" name="conversionType" value="highquality">High Quality<br> -->
+						<input type="radio" class="" name="conversionType" value="">Remove Background<br>
+						<input type="radio" name="" value="highquality">High Quality<br>
 					
 					
 					
