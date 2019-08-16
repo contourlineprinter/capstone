@@ -29,7 +29,7 @@ Table of Contents
 
 ```
 By converting pixel based images into vectors, 
-User are able to scale their image to the size they wish to print.
+Users are able to scale their image to the size they wish to print.
 ```
 
 </br>
@@ -45,3 +45,14 @@ User are able to scale their image to the size they wish to print.
 ![Car](documentation/car.jpg)
 
 ##### A Raspberry Pi recieves driving insturctions from the server
+
+</br>
+
+Car Features:
+- **Led Status Light** - Shows that the car is connected to the server, or currently printing
+- **Marker Lifting Mecanism** - Lifts the marker so the first line is not printed 
+- **Two stepper motors** - Drives the car
+- **Raspberry Pi** - steers the car
+- **Marker** - Draws your photo
+- **Battery Packs** - Powers for the Pi and wheels
+
