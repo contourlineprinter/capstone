@@ -1,19 +1,41 @@
 # Contour Line Printer
 
 
-## Temple CS Capstone
+### Contour Line Printer is a Temple University Capstone project completed in Spring 2019.  The goal of the project is to create a printer that can output your photos at any size.
 
-**Server IP:**   [35.227.19.150](http://35.227.19.150)
+Table of Contents
 
+</br>
 
-**location on server** /var/lib/tomcat8/webapps/ROOT
+## Conversion <a name="introduction"></a>
+1. [Introduction](#introduction)
+2. [Some paragraph](#paragraph1)
+3. [Another paragraph](#paragraph2)
 
+![JPG](images/man.jpg)
+##### Original Image
 
-Use `git pull origin master` to grab recent changes to the repo
+</br>
 
+![SVG](svg/man.jpg.svg)
+##### Converted to a contour line drawling
 
-**Repo for Upload and image gallery** https://github.com/contourlineprinter/ImageGallery
+</br>
+</br>
 
-**Repo for OpenCV image conversion** https://github.com/contourlineprinter/OpenCV-Testing1
+```
+By converting pixel based images into vectors, the user is able to scale their image to match the size they wish to print.
+```
 
-**Earlier version IP:** [34.73.146.51](http://34.73.146.51)
+</br>
+</br>
+
+![Staging Page](documentation/staging.JPG)
+
+</br>
+</br>
+___
+
+### Car
+
+![Car](documentation/car.jpg)
