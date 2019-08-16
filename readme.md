@@ -1,16 +1,20 @@
 # Contour Line Printer
 
+Table of Contents
+1. [Introduction](#introduction)
+2. [Conversion](#conversion)
+3. [Printer](#printer)
+
+## Introduction <a name="introduction"></a>
 
 ### Contour Line Printer is a Temple University Capstone project completed in Spring 2019.  The goal of the project is to create a printer that can output your photos at any size.
 
-Table of Contents
+
 
 </br>
 
-## Conversion <a name="introduction"></a>
-1. [Introduction](#introduction)
-2. [Some paragraph](#paragraph1)
-3. [Another paragraph](#paragraph2)
+## Conversion <a name="conversion"></a>
+
 
 ![JPG](images/man.jpg)
 ##### Original Image
@@ -24,7 +28,8 @@ Table of Contents
 </br>
 
 ```
-By converting pixel based images into vectors, the user is able to scale their image to match the size they wish to print.
+By converting pixel based images into vectors, 
+User are able to scale their image to the size they wish to print.
 ```
 
 </br>
@@ -34,8 +39,9 @@ By converting pixel based images into vectors, the user is able to scale their i
 
 </br>
 </br>
-___
 
-### Car
+## Printer <a name="printer"></a>
 
 ![Car](documentation/car.jpg)
+
+##### A Raspberry Pi recieves driving insturctions from the server
